@@ -7,17 +7,26 @@ export function addRule(newRule, arrRules) {
 }
 export function initRules(initRule, arrRules) {
   let arrInit = [];
-  if (initRule.vars) arrInit.push(initRule);
-  arrInit = arrInit.concat(arrRules);
-  return compressRules(arrInit);
-}
-function compressRules(arrRules) {
+  if (initRule.vars) compressRule(initRule);
+  arrInit.push(initRule);
   arrRules.forEach((item, index, arr) => {
-    arr[index].left = item.left.replace(/\s+/g, "");
-    arr[index].right = item.right.replace(/\s+/g, "");
+    if (item.vars) item = compressRule(item);
+    arrInit.push(item);
   });
-  return arrRules;
+  return arrInit;
 }
+function compressRule(rule) {
+  rule.left = rule.left.replace(/\s+/g, "");
+  rule.right = rule.right.replace(/\s+/g, "");
+  return rule;
+}
+// function compressRules(arrRules) {
+//   arrRules.forEach((item, index, arr) => {
+//     arr[index].left = item.left.replace(/\s+/g, "");
+//     arr[index].right = item.right.replace(/\s+/g, "");
+//   });
+//   return arrRules;
+// }
 export function isAllVarsFilled(selectedRule) {
   for (let v of selectedRule.vars) {
     if (!selectedRule[v]) return false;
@@ -78,10 +87,12 @@ export function mqifyRules(rules, isSelected) {
     MQ.StaticMath(document.getElementById("selectedRule"));
   } else {
     let ruleId = "";
-    for (let r = 0; r < rules.length; r++) {
-      ruleId = "rule_" + r;
-      MQ.StaticMath(document.getElementById(ruleId));
-    }
+    rules.forEach((item, index, arr) => {
+      if (item.vars) {
+        ruleId = "rule_" + index;
+        MQ.StaticMath(document.getElementById(ruleId));
+      }
+    });
   }
 }
 export function downloadRules(obj, filename) {

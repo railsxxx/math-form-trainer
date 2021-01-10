@@ -10,9 +10,13 @@
   <div v-else>
     <div v-if="isSelected">
       <span id="selectedRule" @click="onSelect(selectedRule)">{{
-        selectedRule.filled
+        selectedRule.label
+          ? selectedRule.label
+          : selectedRule.filled
           ? selectedRule.filled.left + "&rArr;" + selectedRule.filled.right
-          : selectedRule.left + "&rArr;" + selectedRule.right
+          : selectedRule.left
+          ? selectedRule.left + "&rArr;" + selectedRule.right
+          : ""
       }}</span>
       <br />
       <span>{{ locale.setVarToAdapt }}</span>
@@ -21,14 +25,19 @@
       <span>{{ locale.clickRuleToSelect }}</span>
       <div class="scrolldown">
         <span
+          v-once
           v-for="(optRule, index) in rules"
           :key="index"
           :id="'rule_' + index"
           @click="onSelect(optRule)"
           >{{
-            optRule.filled
+            optRule.label
+              ? optRule.label
+              : optRule.filled
               ? optRule.filled.left + "&rArr;" + optRule.filled.right
-              : optRule.left + "&rArr;" + optRule.right
+              : optRule.left
+              ? optRule.left + "&rArr;" + optRule.right
+              : ""
           }}</span
         >
       </div>
@@ -100,6 +109,7 @@ export default {
       this.isAdding = false;
     },
     onSelect(selRule) {
+      if (!selRule.vars) return;
       if (this.isSelected) {
         this.isSelected = false;
       } else {

@@ -1,11 +1,33 @@
 [
-  { "left": "(a^n)^m", "right": "a^{n*m}", "vars": ["a", "n", "m"] },
-  { "left": "(a + b) * c", "right": "a * c + b * c", "vars": ["a", "b", "c"] },
+  { "label": "setRemoveBrackets" },
+  {
+    "left": "(a + b) * c",
+    "right": "a * c + b * c",
+    "vars": ["a", "b", "c"]
+  },
+  { "label": "calculateSplit" },
   { "left": "a + b", "right": "c", "vars": ["a", "b", "c"] },
   { "left": "a * b", "right": "c", "vars": ["a", "b", "c"] },
+  { "label": "interchange" },
   { "left": "a + b", "right": "b + a", "vars": ["a", "b"] },
-  { "left": "(a + b)^2", "right": "a^2+2ab+b^2", "vars": ["a", "b"] },
-  { "left": "(a - b)^2", "right": "a^2-2ab+b^2", "vars": ["a", "b"] },
+  { "left": "a * b", "right": "b * a", "vars": ["a", "b"] },
+  { "label": "binomialFormula" },
+  {
+    "left": "(a + b)^2",
+    "right": "a^2+2ab+b^2",
+    "vars": ["a", "b"]
+  },
+  {
+    "left": "(a - b)^2",
+    "right": "a^2-2ab+b^2",
+    "vars": ["a", "b"]
+  },
+  {
+    "left": "(a^2 - b^2)",
+    "right": "(a-b)(a+b)",
+    "vars": ["a", "b"]
+  },
+  { "label": "quadraticEquation" },
   {
     "left": "ax^2 + bx + c = 0",
     "right": "x_{1,2}=\\frac{ -b \\pm \\sqrt{b^2-4ac} }{ 2a }",
@@ -15,5 +37,13 @@
     "left": "x^2 + px + q = 0",
     "right": "x_{1,2}=\\frac{ -p}{2} \\pm \\sqrt{(\\frac{p}{2})^2-q}",
     "vars": ["p", "q"]
-  }
+  },
+  { "label": "fraction" },
+  {
+    "left": "\\frac{a}{c}+\\frac{b}{c}",
+    "right": "\\frac{a+b}{c}",
+    "vars": ["a", "b", "c"]
+  },
+  { "label": "power" },
+  { "left": "(a^n)^m", "right": "a^{n*m}", "vars": ["a", "n", "m"] }
 ]

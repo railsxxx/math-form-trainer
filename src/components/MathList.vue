@@ -69,7 +69,7 @@ export default {
       this.MathItems.push({
         id: uniqueId("item-"),
         label: math,
-        rule: { left: "", right: "" },
+        rule: {},
       });
       setLast(this.MathItems);
     },
