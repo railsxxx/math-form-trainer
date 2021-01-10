@@ -20,8 +20,8 @@ export default {
   emits: ["newmath"],
   data() {
     return {
-      init: "(a-3)^2",
-      input: "(a-3)^2",
+      init: "(a-(b+5))^2",
+      input: "(a-(b+5))^2",
       isEditing: false,
       locale: this.gLocale,
     };

@@ -30,17 +30,42 @@ export function fillRule(selectedRule) {
   filled.left = selectedRule.left;
   filled.right = selectedRule.right;
   let rx;
+  let vars$ = {};
+  let v1 = "";
   for (let v of selectedRule.vars) {
-    if (selectedRule[v]) {
-      //console.log("fillRule: ", v, ":", selectedRule[v]);
-      rx = new RegExp(v, "g");
-      filled.left = filled.left.replace(rx, selectedRule[v]);
-      filled.right = filled.right.replace(rx, selectedRule[v]);
-    }
+    v1 = "ö" + v;
+    //v$ = v;
+    vars$[v1] = selectedRule[v];
+    rx = new RegExp(v, "g");
+    filled.left = filled.left.replace(rx, v1); // replace v with v1
+    filled.right = filled.right.replace(rx, v1);
   }
+  for (let v1 in vars$) {
+    // console.log("fillRule: ", v, ":", vars$[v]);
+    rx = new RegExp(v1, "g");
+    filled.left = filled.left.replace(rx, vars$[v1]); // replace v1 with value of v
+    filled.right = filled.right.replace(rx, vars$[v1]);
+  }
+  // console.log("fillRule: filled: ", filled);
   selectedRule.filled = filled;
   return selectedRule;
 }
+// export function fillRule(selectedRule) {
+//   //console.log("fillRule: ", selectedRule);
+//   let filled = {};
+//   filled.left = selectedRule.left;
+//   filled.right = selectedRule.right;
+//   let rx;
+//   for (let v of selectedRule.vars) {
+//     console.log("fillRule: ", v, ":", selectedRule[v]);
+//     rx = new RegExp(v, "g");
+//     filled.left = filled.left.replace(rx, selectedRule[v]); // replace v$ with value of v
+//     filled.right = filled.right.replace(rx, selectedRule[v]);
+//   }
+//   console.log("fillRule: filled: ", filled);
+//   selectedRule.filled = filled;
+//   return selectedRule;
+// }
 export function matchRule(math, ruleFilled) {
   console.log("matchRule: rule:", ruleFilled);
   if (!ruleFilled.left || !ruleFilled.right) return;
