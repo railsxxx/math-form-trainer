@@ -1,0 +1,12 @@
+style mathrules
+
+edit ,sort, arrange rules.json
+
+latex to pdf in browser:
+http://manuels.github.io/texlive.js/
+https://www.npmjs.com/package/node-pdflatex
+
+save mathrules solution in nextcloud:
+https://nextcloud.com/blog/using-webdav-fs-to-access-files-in-nextcloud/
+
+

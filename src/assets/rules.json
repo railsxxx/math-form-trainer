@@ -1,0 +1,19 @@
+[
+  { "left": "(a^n)^m", "right": "a^{n*m}", "vars": ["a", "n", "m"] },
+  { "left": "(a + b) * c", "right": "a * c + b * c", "vars": ["a", "b", "c"] },
+  { "left": "a + b", "right": "c", "vars": ["a", "b", "c"] },
+  { "left": "a * b", "right": "c", "vars": ["a", "b", "c"] },
+  { "left": "a + b", "right": "b + a", "vars": ["a", "b"] },
+  { "left": "(a + b)^2", "right": "a^2+2ab+b^2", "vars": ["a", "b"] },
+  { "left": "(a - b)^2", "right": "a^2-2ab+b^2", "vars": ["a", "b"] },
+  {
+    "left": "ax^2 + bx + c = 0",
+    "right": "x_{1,2}=\\frac{ -b \\pm \\sqrt{b^2-4ac} }{ 2a }",
+    "vars": ["a", "b", "c"]
+  },
+  {
+    "left": "x^2 + px + q = 0",
+    "right": "x_{1,2}=\\frac{ -p}{2} \\pm \\sqrt{(\\frac{p}{2})^2-q}",
+    "vars": ["p", "q"]
+  }
+]
