@@ -41,6 +41,9 @@
         @varedited="onVarEdited"
       ></rule-var-edit>
     </div>
+    <div v-if="isErrorNotAllVarsFilled">
+      {{ locale.isErrorNotAllVarsFilled }}
+    </div>
     <div class="btn-group">
       <button type="button" class="btn btn__primary" @click="onSave">
         {{ locale.save }}
@@ -56,7 +59,12 @@
 import RuleVarEditVue from "./RuleVarEdit.vue";
 import RuleAddVue from "./RuleAdd.vue";
 import rulesJSON from "../assets/rules.json";
-import { initRules, fillRule, mqifyRules } from "../libs/rule.js";
+import {
+  initRules,
+  isAllVarsFilled,
+  fillRule,
+  mqifyRules,
+} from "../libs/rule.js";
 export default {
   components: {
     RuleVarEdit: RuleVarEditVue,
@@ -71,11 +79,11 @@ export default {
     return {
       selectedRule: this.rule,
       rules: initRules(this.rule, rulesJSON),
-      hasChanged: false,
       isSelected: false,
       // isSelecting: true,
       isAdding: false,
       isEditing: false,
+      isErrorNotAllVarsFilled: false,
       locale: this.gLocale,
     };
   },
@@ -83,8 +91,6 @@ export default {
     onVarEdited(varName, varValue) {
       //console.log("onVarEdited: ", varName, ":", varValue);
       this.selectedRule[varName] = varValue;
-      // console.log("onVarEdited: ", this.selectedRule);
-      this.hasChanged = true;
     },
     onRuleAdded(enlargedRules) {
       this.rules = enlargedRules;
@@ -100,20 +106,19 @@ export default {
         // copy selected rule
         this.selectedRule = JSON.parse(JSON.stringify(selRule));
         this.isSelected = true;
-        this.hasChanged = true;
       }
     },
     onSave() {
       if (!this.selectedRule.vars) return;
-      this.selectedRule = fillRule(this.selectedRule);
-      console.log("onSave", this.selectedRule);
-      // console.log("onSave: hasChanged", this.hasChanged);
-      if (this.hasChanged) {
-        this.hasChanged = false;
-        this.$emit("itemedited", this.selectedRule);
-        this.gFocusMQobj.clear();
-        this.gFocusMQref.value = {};
+      if (isAllVarsFilled(this.selectedRule)) {
+        this.selectedRule = fillRule(this.selectedRule);
+      } else {
+        this.isErrorNotAllVarsFilled = true;
+        return;
       }
+      this.$emit("itemedited", this.selectedRule);
+      this.gFocusMQobj.clear();
+      this.gFocusMQref.value = {};
     },
     onCancel() {
       this.$emit("editcancelled");

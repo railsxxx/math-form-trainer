@@ -18,6 +18,12 @@ function compressRules(arrRules) {
   });
   return arrRules;
 }
+export function isAllVarsFilled(selectedRule) {
+  for (let v of selectedRule.vars) {
+    if (!selectedRule[v]) return false;
+  }
+  return true;
+}
 export function fillRule(selectedRule) {
   //console.log("fillRule: ", selectedRule);
   let filled = {};

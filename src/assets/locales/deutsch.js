@@ -14,6 +14,7 @@ export const deutsch = {
   varCorrespondsToWhat: "...entspricht was?",
   noMatch:
     "Diese Formel passt nicht. Tippe auf die Formel und versuche es noch einmal!",
+  isErrorNotAllVarsFilled: "Gib jeder Variable einen Wert",
   back: "Zurück",
   cancel: "Abbrechen",
   save: "Speichern"
