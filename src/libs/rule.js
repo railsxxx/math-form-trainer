@@ -35,6 +35,13 @@ export function fillRule(selectedRule) {
   selectedRule.filled = filled;
   return selectedRule;
 }
+export function matchRule(math, ruleFilled) {
+  console.log("matchRule: rule:", ruleFilled);
+  if (!ruleFilled.left || !ruleFilled.right) return;
+  const newMath = math.replace(ruleFilled.left, ruleFilled.right);
+  if (newMath === math) return "";
+  else return newMath;
+}
 export function mqifyRules(rules, isSelected) {
   if (isSelected) {
     MQ.StaticMath(document.getElementById("selectedRule"));

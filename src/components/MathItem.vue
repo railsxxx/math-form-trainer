@@ -12,6 +12,7 @@
       {{ rule.filled ? rule.filled.left + " &rArr; " + rule.filled.right : "" }}
     </div>
     <div v-else @click="toggleToRuleSelect">{{ locale.selectRule }}</div>
+    <div v-if="isError">{{ locale.noMatch }}</div>
     <div class="btn-group" v-if="isLast">
       <button type="button" class="btn btn__danger" @click="deleteStep">
         {{ locale.back }}
@@ -29,6 +30,7 @@
 
 <script>
 import RuleSelectVue from "./RuleSelect.vue";
+import { matchRule } from "../libs/rule.js";
 let MQ = window.MQ;
 export default {
   components: {
@@ -45,7 +47,8 @@ export default {
     return {
       isEditing: false,
       isLast: this.last,
-      newMath: this.math,
+      isError: false,
+      //newMath: this.math,
       staticMathMQ: {},
       locale: this.gLocale,
     };
@@ -62,9 +65,10 @@ export default {
     rewriteMath() {
       console.log("rewriteMath: rule: ", this.rule);
       if (!this.rule.filled) return;
-      this.newMath = matchRule(this.math, this.rule.filled);
+      const newMath = matchRule(this.math, this.rule.filled);
       // console.log("rewriteMath: this.newMath: ", this.newMath);
-      this.$emit("ruleapplied", this.newMath);
+      if (newMath === "") this.isError = true;
+      else this.$emit("ruleapplied", newMath);
     },
     deleteStep() {
       this.$emit("itemdeleted");
@@ -77,6 +81,7 @@ export default {
       // console.log("ToDoItem: itemEdited: ", newRule);
       this.$emit("itemedited", newRule);
       this.isEditing = false;
+      this.isError = false;
     },
     editCancelled() {
       // console.log("ToDoItem: editCancelled: ");
@@ -111,12 +116,6 @@ export default {
     MQ.StaticMath(el);
   },
 };
-function matchRule(math, ruleFilled) {
-  console.log("matchRule: rule:", ruleFilled);
-  if (!ruleFilled.left || !ruleFilled.right) return;
-  const newMath = math.replace(ruleFilled.left, ruleFilled.right);
-  return newMath;
-}
 </script>
 
 <style scoped>

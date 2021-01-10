@@ -12,6 +12,8 @@ export const deutsch = {
   clickRuleToSelect: "Tippe auf die Formel deiner Wahl",
   setVarToAdapt: "Passe die Variablen an den Ausdruck an",
   varCorrespondsToWhat: "...entspricht was?",
+  noMatch:
+    "Diese Formel passt nicht. Tippe auf die Formel und versuche es noch einmal!",
   back: "Zurück",
   cancel: "Abbrechen",
   save: "Speichern"
