@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     rewriteMath() {
-      console.log("rewriteMath: rule: ", this.rule);
+      //console.log("rewriteMath: rule: ", this.rule);
       if (!this.rule.filled) return;
       const newMath = matchRule(this.math, this.rule.filled);
       // console.log("rewriteMath: this.newMath: ", this.newMath);
