@@ -17,5 +17,7 @@
   "cancel": "Abbrechen",
   "save": "Speichern",
   "setRemoveBrackets": "Klammern setzen/auflösen",
-  "multiplyOut": "ausmultiplizieren"
+  "multiplyOut": "ausmultiplizieren",
+  "outsideBrackets": "ausklammern",
+  "sumUp": "zusammenfassen"
 }

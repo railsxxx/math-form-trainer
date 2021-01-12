@@ -6,9 +6,17 @@
     "vars": ["a", "b", "c"],
     "name": "multiplyOut"
   },
-  { "label": "calculateSplit" },
+  {
+    "left": "a * c + b * c",
+    "right": "(a + b) * c",
+    "vars": ["a", "b", "c"],
+    "name": "outsideBrackets"
+  },
+  { "label": "sumUp" },
   { "left": "a + b", "right": "c", "vars": ["a", "b", "c"] },
+  { "left": "a - b", "right": "c", "vars": ["a", "b", "c"] },
   { "left": "a * b", "right": "c", "vars": ["a", "b", "c"] },
+  { "left": "\\frac{a}{b}", "right": "c", "vars": ["a", "b", "c"] },
   { "label": "interchange" },
   { "left": "a + b", "right": "b + a", "vars": ["a", "b"] },
   { "left": "a * b", "right": "b * a", "vars": ["a", "b"] },
