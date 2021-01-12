@@ -1,4 +1,5 @@
 <template>
+  <h1>Add Rule</h1>
   <div id="newRule">
     {{
       (rule.vars ? rule.vars : "vars") +

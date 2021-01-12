@@ -1,14 +1,14 @@
 <template>
-  <math-list></math-list>
+  <app-navigation></app-navigation>
 </template>
 
 <script>
-import MathListVue from "./components/MathList.vue";
+import AppNavigationVue from "./components/AppNavigation.vue";
 
 export default {
   name: "App",
   components: {
-    MathList: MathListVue,
+    AppNavigation: AppNavigationVue,
   },
 };
 </script>

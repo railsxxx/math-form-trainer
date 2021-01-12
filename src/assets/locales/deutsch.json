@@ -13,6 +13,7 @@
   "varCorrespondsToWhat": "...entspricht was?",
   "noMatch": "Diese Formel passt nicht. Tippe auf die Formel und versuche es noch einmal!",
   "isErrorNotAllVarsFilled": "Gib jeder Variable einen Wert",
+  "swapSides": "Seiten links-rechts vertauschen",
   "back": "Zurück",
   "cancel": "Abbrechen",
   "save": "Speichern",
@@ -20,6 +21,5 @@
   "multiplyOut": "ausmultiplizieren",
   "outsideBrackets": "ausklammern",
   "sumUp": "zusammenfassen",
-  "interchange": "vertauschen",
-  "swapSides": "Seiten links-rechts vertauschen"
+  "interchange": "vertauschen"
 }
