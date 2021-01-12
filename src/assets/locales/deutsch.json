@@ -19,5 +19,7 @@
   "setRemoveBrackets": "Klammern setzen/auflösen",
   "multiplyOut": "ausmultiplizieren",
   "outsideBrackets": "ausklammern",
-  "sumUp": "zusammenfassen"
+  "sumUp": "zusammenfassen",
+  "interchange": "vertauschen",
+  "swapSides": "Seiten links-rechts vertauschen"
 }

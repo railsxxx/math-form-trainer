@@ -24,17 +24,20 @@
   {
     "left": "(a + b)^2",
     "right": "a^2+2ab+b^2",
-    "vars": ["a", "b"]
+    "vars": ["a", "b"],
+    "swap": "true"
   },
   {
     "left": "(a - b)^2",
     "right": "a^2-2ab+b^2",
-    "vars": ["a", "b"]
+    "vars": ["a", "b"],
+    "swap": "true"
   },
   {
     "left": "(a^2 - b^2)",
     "right": "(a-b)(a+b)",
-    "vars": ["a", "b"]
+    "vars": ["a", "b"],
+    "swap": "true"
   },
   { "label": "quadraticEquation" },
   {

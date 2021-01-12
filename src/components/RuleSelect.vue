@@ -39,6 +39,9 @@
         @varedited="onVarEdited"
       ></rule-var-edit>
     </div>
+    <div v-if="selectedRule.swap">
+      <rule-swap-edit @swapedited="onSwapEdited"> </rule-swap-edit>
+    </div>
     <div v-if="isErrorNotAllVarsFilled">
       {{ locale.isErrorNotAllVarsFilled }}
     </div>
@@ -55,6 +58,7 @@
 
 <script>
 import RuleVarEditVue from "./RuleVarEdit.vue";
+import RuleSwapEditVue from "./RuleSwapEdit.vue";
 import RuleAddVue from "./RuleAdd.vue";
 import rulesJSON from "../assets/rules.json";
 import {
@@ -66,6 +70,7 @@ import {
 export default {
   components: {
     RuleVarEdit: RuleVarEditVue,
+    RuleSwapEdit: RuleSwapEditVue,
     RuleAdd: RuleAddVue,
   },
   emits: ["editcancelled", "itemedited"],
@@ -107,6 +112,11 @@ export default {
     onVarEdited(varName, varValue) {
       //console.log("onVarEdited: ", varName, ":", varValue);
       this.selectedRule[varName] = varValue;
+    },
+    onSwapEdited() {
+      const left = this.selectedRule.left;
+      this.selectedRule.left = this.selectedRule.right;
+      this.selectedRule.right = left;
     },
     onRuleAdded(enlargedRules) {
       this.rules = enlargedRules;
