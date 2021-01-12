@@ -9,15 +9,11 @@
   <div v-else-if="isEditing">isEditing</div>
   <div v-else>
     <div v-if="isSelected">
-      <span id="selectedRule" @click="onSelect(selectedRule)">{{
-        selectedRule.label
-          ? selectedRule.label
-          : selectedRule.filled
-          ? selectedRule.filled.left + "&rArr;" + selectedRule.filled.right
-          : selectedRule.left
-          ? selectedRule.left + "&rArr;" + selectedRule.right
-          : ""
-      }}</span>
+      <span
+        id="selectedRule"
+        @click="onSelect(selectedRule)"
+        v-html="showRule(selectedRule)"
+      ></span>
       <br />
       <span>{{ locale.setVarToAdapt }}</span>
     </div>
@@ -30,16 +26,9 @@
           :key="index"
           :id="'rule_' + index"
           @click="onSelect(optRule)"
-          >{{
-            optRule.label
-              ? optRule.label
-              : optRule.filled
-              ? optRule.filled.left + "&rArr;" + optRule.filled.right
-              : optRule.left
-              ? optRule.left + "&rArr;" + optRule.right
-              : ""
-          }}</span
+          v-html="showRule(optRule)"
         >
+        </span>
       </div>
     </div>
     <div v-for="(varName, index) in selectedRule.vars" :key="index">
@@ -97,6 +86,17 @@ export default {
     };
   },
   methods: {
+    showRule(rule) {
+      return rule.label
+        ? this.locale[rule.label]
+          ? this.locale[rule.label]
+          : rule.label
+        : rule.filled
+        ? rule.filled.left + "&rArr;" + rule.filled.right
+        : rule.left
+        ? rule.left + "&rArr;" + rule.right
+        : "";
+    },
     onVarEdited(varName, varValue) {
       //console.log("onVarEdited: ", varName, ":", varValue);
       this.selectedRule[varName] = varValue;
