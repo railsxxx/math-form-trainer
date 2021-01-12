@@ -3,7 +3,8 @@
   {
     "left": "(a + b) * c",
     "right": "a * c + b * c",
-    "vars": ["a", "b", "c"]
+    "vars": ["a", "b", "c"],
+    "name": "multiplyOut"
   },
   { "label": "calculateSplit" },
   { "left": "a + b", "right": "c", "vars": ["a", "b", "c"] },

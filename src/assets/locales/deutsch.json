@@ -16,5 +16,6 @@
   "back": "Zurück",
   "cancel": "Abbrechen",
   "save": "Speichern",
-  "setRemoveBrackets": "Klammern setzen/auflösen"
+  "setRemoveBrackets": "Klammern setzen/auflösen",
+  "multiplyOut": "ausmultiplizieren"
 }

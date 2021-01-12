@@ -24,10 +24,10 @@
           v-once
           v-for="(optRule, index) in rules"
           :key="index"
-          :id="'rule_' + index"
           @click="onSelect(optRule)"
-          v-html="showRule(optRule)"
         >
+          <div>{{ showRuleName(optRule) }}</div>
+          <span :id="'rule_' + index" v-html="showRule(optRule)"></span>
         </span>
       </div>
     </div>
@@ -86,6 +86,13 @@ export default {
     };
   },
   methods: {
+    showRuleName(rule) {
+      return rule.name
+        ? this.locale[rule.name]
+          ? this.locale[rule.name]
+          : rule.name
+        : "";
+    },
     showRule(rule) {
       return rule.label
         ? this.locale[rule.label]
