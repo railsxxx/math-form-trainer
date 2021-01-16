@@ -22,25 +22,18 @@
       ></math-item>
     </li>
   </ul>
-  <math-keypad
-    v-if="isTyping"
-    :mqmathfieldref="MQMathField"
-    :mqmathfield="gFocusMQobj.get()"
-  ></math-keypad>
 </template>
 
 <script>
 import MathHeaderVue from "./MathHeader.vue";
 import MathItemVue from "./MathItem.vue";
 import MathEnterVue from "./MathEnter.vue";
-import MathKeypadVue from "./MathKeypad.vue";
 import uniqueId from "lodash.uniqueid";
 export default {
   components: {
     MathHeader: MathHeaderVue,
     MathItem: MathItemVue,
     MathEnter: MathEnterVue,
-    MathKeypad: MathKeypadVue,
   },
   data() {
     return {
@@ -50,14 +43,6 @@ export default {
   computed: {
     listSummary: function () {
       return `Schritt ${this.MathItems.length}`;
-    },
-    isTyping() {
-      return Object.entries(this.gFocusMQref.value).length > 0;
-    },
-    MQMathField() {
-      // console.log("computed gFocusMQobj.get(): ", this.gFocusMQobj.get());
-      // console.log("computed gFocusMQref.value: ", this.gFocusMQref.value);
-      return this.gFocusMQref.value;
     },
   },
   methods: {

@@ -16,17 +16,21 @@ export default {
   props: {
     varName: { type: String, required: true },
     varValue: { type: String, required: true },
+    initEdit: { type: Boolean, required: true },
   },
   data() {
     return {
-      varNewValue: this.varValue,
-      isEditing: false,
+      //varNewValue: this.varValue,
+      isEditing: this.initEdit,
       locale: this.gLocale,
     };
   },
   computed: {
     MQMathField() {
       return MQ.MathField(document.getElementById(this.varName));
+    },
+    varNewValue() {
+      return this.varValue;
     },
   },
   methods: {

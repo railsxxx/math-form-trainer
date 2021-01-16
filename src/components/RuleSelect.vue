@@ -1,18 +1,10 @@
 <template>
-  <div v-if="isAdding">
-    <rule-add
-      :rules="rules"
-      @ruleadded="onRuleAdded"
-      @addcancelled="onAddCancelled"
-    ></rule-add>
-  </div>
-  <div v-else-if="isEditing">isEditing</div>
-  <div v-else>
+  <div>
     <div v-if="isSelected">
       <span
         id="selectedRule"
         @click="onSelect(selectedRule)"
-        v-html="showRule(selectedRule)"
+        v-html="onShowRule(selectedRule)"
       ></span>
       <br />
       <span>{{ locale.setVarToAdapt }}</span>
@@ -26,8 +18,8 @@
           :key="index"
           @click="onSelect(optRule)"
         >
-          <div>{{ showRuleName(optRule) }}</div>
-          <span :id="'rule_' + index" v-html="showRule(optRule)"></span>
+          <div>{{ onShowRuleName(optRule) }}</div>
+          <span :id="'rule_' + index" v-html="onShowRule(optRule)"></span>
         </span>
       </div>
     </div>
@@ -36,6 +28,7 @@
         v-if="isSelected && selectedRule.vars && selectedRule.vars.length > 0"
         :varName="varName"
         :varValue="selectedRule[varName] ? selectedRule[varName] : ''"
+        :initEdit="false"
         @varedited="onVarEdited"
       ></rule-var-edit>
     </div>
@@ -59,7 +52,7 @@
 <script>
 import RuleVarEditVue from "./RuleVarEdit.vue";
 import RuleSwapEditVue from "./RuleSwapEdit.vue";
-import RuleAddVue from "./RuleAdd.vue";
+import { showRuleName, showRule } from "../libs/rule.js";
 import rulesJSON from "../assets/rules.json";
 import {
   initRules,
@@ -71,7 +64,6 @@ export default {
   components: {
     RuleVarEdit: RuleVarEditVue,
     RuleSwapEdit: RuleSwapEditVue,
-    RuleAdd: RuleAddVue,
   },
   emits: ["editcancelled", "itemedited"],
   props: {
@@ -83,31 +75,16 @@ export default {
       selectedRule: this.rule,
       rules: initRules(this.rule, rulesJSON),
       isSelected: false,
-      // isSelecting: true,
-      isAdding: false,
-      isEditing: false,
       isErrorNotAllVarsFilled: false,
       locale: this.gLocale,
     };
   },
   methods: {
-    showRuleName(rule) {
-      return rule.name
-        ? this.locale[rule.name]
-          ? this.locale[rule.name]
-          : rule.name
-        : "";
+    onShowRuleName(rule) {
+      return showRuleName(rule, this.locale);
     },
-    showRule(rule) {
-      return rule.label
-        ? this.locale[rule.label]
-          ? this.locale[rule.label]
-          : rule.label
-        : rule.filled
-        ? rule.filled.left + "&rArr;" + rule.filled.right
-        : rule.left
-        ? rule.left + "&rArr;" + rule.right
-        : "";
+    onShowRule(rule) {
+      return showRule(rule);
     },
     onVarEdited(varName, varValue) {
       //console.log("onVarEdited: ", varName, ":", varValue);
