@@ -1,14 +1,17 @@
 let MQ = window.MQ;
-export function addRule(newRule, arrRules) {
-  let arrNew = [];
-  arrNew.push(newRule);
-  arrNew = arrRules.concat(arrNew);
-  return arrNew;
-}
+
 export function initRules(initRule, arrRules) {
   let arrInit = [];
   if (initRule.vars) compressRule(initRule);
   arrInit.push(initRule);
+  arrRules.forEach((item, index, arr) => {
+    if (item.vars) item = compressRule(item);
+    arrInit.push(item);
+  });
+  return arrInit;
+}
+export function initRulesArr(arrRules) {
+  let arrInit = [];
   arrRules.forEach((item, index, arr) => {
     if (item.vars) item = compressRule(item);
     arrInit.push(item);
@@ -109,4 +112,14 @@ export function downloadRules(obj, filename) {
   document.body.appendChild(element);
   element.click();
   document.body.removeChild(element);
+}
+export function showRuleName(rule, locale) {
+  return rule.name ? (locale[rule.name] ? locale[rule.name] : rule.name) : "";
+}
+export function showRule(rule) {
+  return rule.filled
+    ? rule.filled.left + "&rArr;" + rule.filled.right
+    : rule.left
+    ? rule.left + "&rArr;" + rule.right
+    : "";
 }

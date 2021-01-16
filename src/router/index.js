@@ -1,6 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import MathList from "@/components/MathList.vue";
-import RuleAdd from "@/components/RuleAdd.vue";
+import RulEditor from "@/components/RuleEditor.vue";
 
 const routes = [
   {
@@ -11,7 +11,7 @@ const routes = [
   {
     path: "/rules",
     name: "Rules",
-    component: RuleAdd
+    component: RulEditor
   }
 ];
 

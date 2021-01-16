@@ -1,5 +1,5 @@
 [
-  { "label": "setRemoveBrackets" },
+  { "name": "setRemoveBrackets" },
   {
     "left": "(a + b) * c",
     "right": "a * c + b * c",
@@ -12,15 +12,15 @@
     "vars": ["a", "b", "c"],
     "name": "outsideBrackets"
   },
-  { "label": "sumUp" },
+  { "name": "sumUp" },
   { "left": "a + b", "right": "c", "vars": ["a", "b", "c"] },
   { "left": "a - b", "right": "c", "vars": ["a", "b", "c"] },
   { "left": "a * b", "right": "c", "vars": ["a", "b", "c"] },
   { "left": "\\frac{a}{b}", "right": "c", "vars": ["a", "b", "c"] },
-  { "label": "interchange" },
+  { "name": "interchange" },
   { "left": "a + b", "right": "b + a", "vars": ["a", "b"] },
   { "left": "a * b", "right": "b * a", "vars": ["a", "b"] },
-  { "label": "binomialFormula" },
+  { "name": "binomialFormula" },
   {
     "left": "(a + b)^2",
     "right": "a^2+2ab+b^2",
@@ -39,7 +39,7 @@
     "vars": ["a", "b"],
     "swap": "true"
   },
-  { "label": "quadraticEquation" },
+  { "name": "quadraticEquation" },
   {
     "left": "ax^2 + bx + c = 0",
     "right": "x_{1,2}=\\frac{ -b \\pm \\sqrt{b^2-4ac} }{ 2a }",
@@ -50,12 +50,12 @@
     "right": "x_{1,2}=\\frac{ -p}{2} \\pm \\sqrt{(\\frac{p}{2})^2-q}",
     "vars": ["p", "q"]
   },
-  { "label": "fraction" },
+  { "name": "fraction" },
   {
     "left": "\\frac{a}{c}+\\frac{b}{c}",
     "right": "\\frac{a+b}{c}",
     "vars": ["a", "b", "c"]
   },
-  { "label": "power" },
+  { "name": "power" },
   { "left": "(a^n)^m", "right": "a^{n*m}", "vars": ["a", "n", "m"] }
 ]

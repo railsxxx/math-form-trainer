@@ -1,4 +1,7 @@
 {
+  "navHome": "Trainer",
+  "navRules": "Formeln",
+
   "title": "Formeltrainer Mathematik",
   "subtitle": "Die interaktive Formelsammlung hilft dir bei der Umformung eines mathematischen Ausdrucks",
   "example": "Beispiel",
@@ -17,9 +20,21 @@
   "back": "Zurück",
   "cancel": "Abbrechen",
   "save": "Speichern",
+
   "setRemoveBrackets": "Klammern setzen/auflösen",
   "multiplyOut": "ausmultiplizieren",
   "outsideBrackets": "ausklammern",
   "sumUp": "zusammenfassen",
-  "interchange": "vertauschen"
+  "interchange": "vertauschen",
+
+  "ruleEditor": "Formel Editor",
+  "clickRuleToEdit": "Tippe auf eine Formel zum Editieren,",
+  "clickRuleToNew": "auf Neu zum Hinzufügen,",
+  "clickRuleToDelete": "auf Löschen zum Entfernen,",
+  "clickRuleToSave": "und jedes Mal auf Speichern um die Aktion zu bestätigen",
+  "clickRuleToCancel": "oder auf Abbrechen um die Aktion zu widerrufen",
+  "isErrorIllegalRuleNeiterVarsNorName": "Ungültige Regel: Weder Vars noch Name",
+  "isErrorIllegalIndex": "Ungültiger Index",
+  "new": "Neu",
+  "delete": "Löschen"
 }

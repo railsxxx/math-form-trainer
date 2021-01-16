@@ -89,12 +89,13 @@
 const MQ = window.MQ;
 export default {
   props: {
-    mqmathfieldref: Object,
-    mqmathfield: Object,
+    mqmathfieldref: Object, //call :mqmathfieldref="this.gFocusMQref.value"  // ref triggers update
+    mqmathfield: Object, // call :mqmathfield="this.gFocusMQobj.get()"
   },
   computed: {
     isTyping() {
-      return Object.entries(this.gFocusMQref.value).length > 0;
+      if (this.mqmathfield) return true;
+      return false;
     },
   },
   methods: {
@@ -157,7 +158,7 @@ export default {
       }
     },
   },
-  mounted() {
+  updated() {
     MQ.StaticMath(document.getElementById("power2"));
     MQ.StaticMath(document.getElementById("powerN"));
     MQ.StaticMath(document.getElementById("sqrt"));
