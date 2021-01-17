@@ -20,17 +20,38 @@ export default {
   },
   data() {
     return {
-      //varNewValue: this.varValue,
+      // varNewValue: this.varValue, // init mathField from props
       isEditing: this.initEdit,
       locale: this.gLocale,
     };
   },
   computed: {
-    MQMathField() {
-      return MQ.MathField(document.getElementById(this.varName));
-    },
     varNewValue() {
+      console.log("RuleVarEdit: computed: varValue", this.varValue);
       return this.varValue;
+    },
+    MQMathField() {
+      // return MQ.MathField(document.getElementById(this.varName));
+      const changeOn = this.onChange;
+      const editMathField = MQ.MathField(
+        document.getElementById(this.varName),
+        {
+          spaceBehavesLikeTab: true,
+          supSubsRequireOperand: true,
+          substituteTextarea: function () {
+            return document.createElement("SPAN");
+          },
+          handlers: {
+            edit: function () {
+              // retrieve, in LaTeX format, the math that was typed:
+              const valueMQ = editMathField.latex();
+              changeOn(valueMQ);
+              //console.log("editMathField: valueMQ", valueMQ);
+            },
+          },
+        }
+      );
+      return editMathField;
     },
   },
   methods: {
@@ -52,22 +73,22 @@ export default {
     },
   },
   updated: function () {
-    const changeOn = this.onChange;
-    const editMathField = MQ.MathField(document.getElementById(this.varName), {
-      spaceBehavesLikeTab: true,
-      supSubsRequireOperand: true,
-      substituteTextarea: function () {
-        return document.createElement("SPAN");
-      },
-      handlers: {
-        edit: function () {
-          // retrieve, in LaTeX format, the math that was typed:
-          const valueMQ = editMathField.latex();
-          changeOn(valueMQ);
-          //console.log("editMathField: valueMQ", valueMQ);
-        },
-      },
-    });
+    // const changeOn = this.onChange;
+    // const editMathField = MQ.MathField(document.getElementById(this.varName), {
+    //   spaceBehavesLikeTab: true,
+    //   supSubsRequireOperand: true,
+    //   substituteTextarea: function () {
+    //     return document.createElement("SPAN");
+    //   },
+    //   handlers: {
+    //     edit: function () {
+    //       // retrieve, in LaTeX format, the math that was typed:
+    //       const valueMQ = editMathField.latex();
+    //       changeOn(valueMQ);
+    //       //console.log("editMathField: valueMQ", valueMQ);
+    //     },
+    //   },
+    // });
   },
 };
 </script>

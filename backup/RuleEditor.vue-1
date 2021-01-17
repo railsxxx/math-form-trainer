@@ -19,18 +19,18 @@
     </div>
     <br />
   </div>
-  <div id="editRule">
+  <div id="newRule">
     {{
-      (editRule.left ? editRule.left : "left") +
+      (selectedRule.left ? selectedRule.left : "left") +
       "&rArr;" +
-      (editRule.right ? editRule.right : "right")
+      (selectedRule.right ? selectedRule.right : "right")
     }}
   </div>
   <br />
   <div>
     <rule-var-edit
       varName="left"
-      :varValue="editRuleLeft"
+      :varValue="selectedRuleLeft"
       :initEdit="true"
       @varedited="onVarEdited"
     ></rule-var-edit>
@@ -38,7 +38,7 @@
   <div>
     <rule-var-edit
       varName="right"
-      :varValue="editRuleRight"
+      :varValue="selectedRuleRight"
       :initEdit="true"
       @varedited="onVarEdited"
     ></rule-var-edit>
@@ -46,7 +46,7 @@
   <div>
     <rule-var-edit
       varName="vars"
-      :varValue="editRuleVars"
+      :varValue="selectedRuleVars"
       :initEdit="true"
       @varedited="onVarEdited"
     ></rule-var-edit>
@@ -58,7 +58,7 @@
         type="radio"
         id="swaptrue"
         name="swap"
-        :checked="editRuleSwapTrue"
+        :checked="selectedRuleSwap"
         @click="onVarEdited('swaptrue', '')"
       />
       <label for="true">true</label><br />
@@ -66,7 +66,7 @@
         type="radio"
         id="swapfalse"
         name="swap"
-        :checked="editRuleSwapFalse"
+        :checked="selectedRuleSwap"
         @click="onVarEdited('swapfalse', '')"
       />
       <label for="false">false</label>
@@ -77,7 +77,7 @@
     <input
       type="text"
       id="name"
-      v-model="editRuleName"
+      v-model="newRuleName"
       @input="onVarEdited('name', '')"
     />
   </div>
@@ -86,7 +86,7 @@
     <input
       type="text"
       id="index"
-      v-model="editRuleIndex"
+      v-model="newRuleIndex"
       @input="onVarEdited('index', '')"
     />
   </div>
@@ -137,38 +137,46 @@ export default {
   data() {
     return {
       rules: initRulesArr(rulesJSON),
-      editRule: {},
-      editRuleIndex: -1,
-      editRuleLeft: "",
-      editRuleRight: "",
-      editRuleVars: "",
-      editRuleSwapTrue: false,
-      editRuleSwapFalse: false,
-      editRuleName: "",
+      newRule: {},
+      newRuleName: this.selectedRuleName,
+      newRuleIndex: this.selectedRuleIndex,
+      isNew: false,
       deletedRuleArr: [],
       deletedRuleIndex: -1,
+      selectedRule: {},
+      selectedRuleIndex: -1,
       hasChanged: false,
-      isNew: false,
       locale: this.gLocale,
       isErrorIllegalRuleNeiterVarsNorName: false,
       isErrorIllegalIndex: false,
+      // selectedRuleLeft: "",
+      // selectedRuleRight: "",
+      // selectedRuleVars: "",
+      // selectedRuleSwap: "",
+      // selectedRuleName: "",
     };
   },
   computed: {
-    jsonRule() {
-      return JSON.stringify(this.editRule);
+    // update edit
+    selectedRuleLeft() {
+      return this.selectedRule.left ? this.selectedRule.left : "";
     },
-  },
-  watch: {
-    editRule(rule) {
-      // update edit
-      this.editRuleLeft = rule.left ? rule.left : "";
-      this.editRuleRight = rule.right ? rule.right : "";
-      this.editRuleVars = rule.vars ? rule.vars.join().replace(/,/g, "") : "";
-      this.editRuleSwapTrue = rule.swap ? true : false;
-      this.editRuleSwapFalse = rule.swap ? false : true;
-      this.editRuleName = rule.name ? rule.name : "";
-      console.log("watch: editRule: ", rule);
+    selectedRuleRight() {
+      return this.selectedRule.right ? this.selectedRule.right : "";
+    },
+    selectedRuleVars() {
+      return this.selectedRule.vars
+        ? this.selectedRule.vars.join().replace(/,/g, "")
+        : "";
+    },
+    selectedRuleSwap() {
+      return this.selectedRule.swap ? this.selectedRule.swap : "";
+    },
+    selectedRuleName() {
+      return this.selectedRule.name ? this.selectedRule.name : "";
+    },
+    jsonRule() {
+      return JSON.stringify(this.newRule);
     },
   },
   methods: {
@@ -184,54 +192,69 @@ export default {
       this.isErrorIllegalRuleNeiterVarsNorName = false;
       // clear new
       this.isNew = false;
-      // copy selected rule to init editRule
-      this.editRule = JSON.parse(JSON.stringify(rule));
-      this.editRuleIndex = index;
+      // console.log("onSelect: rule: ", rule);
+      this.selectedRule = rule;
+      this.selectedRuleIndex = index;
+      // copy selected rule for init newRule
+      this.newRule = JSON.parse(JSON.stringify(rule));
+      this.newRuleName = this.selectedRuleName;
+      this.newRuleIndex = this.selectedRuleIndex;
+      // // update edit
+      // this.selectedRuleLeft = rule.left ? rule.left : "";
+      // this.selectedRuleRight = rule.right ? rule.right : "";
+      // this.selectedRuleVars = rule.vars
+      //   ? rule.vars.join().replace(/,/g, "")
+      //   : "";
+      // this.selectedRuleSwap = rule.swap ? rule.swap : "";
+      // this.selectedRuleName = rule.name ? rule.name : "";
     },
     onVarEdited(varName, varValue) {
       this.hasChanged = true;
       switch (varName) {
         case "left":
-          console.log("RuleEditor: onVarEdited left varValue: ", varValue);
-          this.editRuleLeft = varValue;
-          if (varValue === "") delete this.editRule.left;
-          else this.editRule.left = varValue;
+          if (varValue === "") delete this.newRule.left;
+          else this.newRule.left = varValue;
           break;
         case "right":
-          this.editRuleRight = varValue;
-          if (varValue === "") delete this.editRule.right;
-          else this.editRule.right = varValue;
+          if (varValue === "") delete this.newRule.right;
+          else this.newRule.right = varValue;
           break;
         case "vars":
-          this.editRuleVars = varValue;
-          if (varValue === "") delete this.editRule.vars;
+          if (varValue === "") delete this.newRule.vars;
           else {
             this.isErrorIllegalRuleNeiterVarsNorName = false;
-            this.editRule.vars = varValue.split("");
+            this.newRule.vars = varValue.split(",");
           }
           break;
         case "swaptrue":
-          this.editRule.swap = "true";
+          this.newRule.swap = "true";
           break;
         case "swapfalse":
-          delete this.editRule.swap;
+          delete this.newRule.swap;
           break;
         case "name":
-          varValue = this.editRuleName;
-          if (varValue === "") delete this.editRule.name;
+          varValue = this.newRuleName;
+          if (varValue === "") delete this.newRule.name;
           else {
             this.isErrorIllegalRuleNeiterVarsNorName = false;
-            this.editRule.name = varValue;
+            this.newRule.name = varValue;
           }
           break;
         case "index":
           this.isErrorIllegalIndex = false;
+          this.selectedRuleIndex = this.newRuleIndex;
           break;
         default:
       }
+      this.selectedRule = this.newRule;
     },
     onNew() {
+      // set for new rule at selectedIndex
       this.isNew = true;
+      // this.jsonRule = {};
+      // this.selectedRule = {};
+      // this.selectedRuleIndex = this.rules.length;
+      //console.log("onNew: selectedRuleIndex: ", this.selectedRuleIndex);
     },
     onDelete() {
       // clear errors
@@ -239,54 +262,60 @@ export default {
       this.isErrorIllegalIndex = false;
       // check index for existing rule to be deleted
       if (
-        this.editRuleIndex < 0 ||
-        this.editRuleIndex > this.rules.length - 1
+        this.selectedRuleIndex < 0 ||
+        this.selectedRuleIndex > this.rules.length - 1
       ) {
         this.isErrorIllegalIndex = true;
         return;
       }
       // delete selected rule
-      this.deletedRuleIndex = this.editRuleIndex;
+      this.deletedRuleIndex = this.selectedRuleIndex;
       this.deletedRuleArr = this.rules.splice(this.deletedRuleIndex, 1);
       // console.log("onDelete: deletedRuleArr: ", this.deletedRuleArr);
-      // console.log("onDelete: rules: ", this.rules);
+      console.log("onDelete: rules: ", this.rules);
+      // clear selectedRule
+      this.selectedRule = [];
+      this.selectedRuleIndex = -1;
       // clear new
       this.isNew = false;
-      this.editRule = {};
-      this.editRuleIndex = -1;
+      this.newRule = {};
+      this.newRuleName = "";
+      this.newRuleIndex = -1;
     },
     onSave() {
       // clear errors
       this.isErrorIllegalRuleNeiterVarsNorName = false;
       this.isErrorIllegalIndex = false;
       // no legal rule
-      if (!this.editRule.vars && !this.editRule.name) {
+      if (!this.newRule.vars && !this.newRule.name) {
         this.isErrorIllegalRuleNeiterVarsNorName = true;
         return;
       }
+      console.log("onSave: hasChanged: ", this.hasChanged);
+      console.log("onSave: selectedRuleIndex: ", this.selectedRuleIndex);
       if (this.hasChanged) {
         if (this.isNew) {
           // check index for new
           if (
-            this.editRuleIndex < 0 ||
-            this.editRuleIndex > this.rules.length
+            this.selectedRuleIndex < 0 ||
+            this.selectedRuleIndex > this.rules.length
           ) {
             this.isErrorIllegalIndex = true;
             return;
           }
-          // confirm new, insert editRule
-          this.rules.splice(this.editRuleIndex, 0, this.editRule);
+          // confirm new, insert newRule
+          this.rules.splice(this.selectedRuleIndex, 0, this.newRule);
         } else {
           // check index for edit
           if (
-            this.editRuleIndex < 0 ||
-            this.editRuleIndex > this.rules.length - 1
+            this.selectedRuleIndex < 0 ||
+            this.selectedRuleIndex > this.rules.length - 1
           ) {
             this.isErrorIllegalIndex = true;
             return;
           }
-          // confirm edit, replace with editRule
-          this.rules.splice(this.editRuleIndex, 1, this.editRule);
+          // confirm edit, replace with newRule
+          this.rules.splice(this.selectedRuleIndex, 1, this.newRule);
         }
         // clear new
         this.isNew = false;
@@ -305,12 +334,15 @@ export default {
       // clear errors
       this.isErrorIllegalRuleNeiterVarsNorName = false;
       this.isErrorIllegalIndex = false;
-      // clear edit
+      // clear selection
       this.hasChanged = false;
+      this.selectedRule = {};
+      this.selectedRuleIndex = -1;
       // clear new
       this.isNew = false;
-      this.editRule = {};
-      this.neditRuleIndex = -1;
+      this.newRule = {};
+      this.newRuleName = "";
+      this.newRuleIndex = -1;
       // clear delete
       if (this.deletedRuleIndex >= 0)
         this.rules.splice(this.deletedRuleIndex, 0, this.deletedRuleArr[0]);
