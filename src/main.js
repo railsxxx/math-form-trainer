@@ -6,7 +6,7 @@ import "./assets/reset.css";
 import { focusMQ } from "./assets/lib.js";
 import locale from "./assets/locales/deutsch.json";
 
-//const app = createApp(App);
+// const app = createApp(App);
 const app = createApp(App).use(router);
 
 app.config.globalProperties.gClipboard = "clip";

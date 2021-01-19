@@ -27,30 +27,33 @@
     }}
   </div>
   <br />
-  <div>
-    <rule-var-edit
-      varName="left"
-      :varValue="editRuleLeft"
-      :initEdit="true"
-      @varedited="onVarEdited"
-    ></rule-var-edit>
-  </div>
-  <div>
-    <rule-var-edit
-      varName="right"
-      :varValue="editRuleRight"
-      :initEdit="true"
-      @varedited="onVarEdited"
-    ></rule-var-edit>
-  </div>
-  <div>
-    <rule-var-edit
-      varName="vars"
-      :varValue="editRuleVars"
-      :initEdit="true"
-      @varedited="onVarEdited"
-    ></rule-var-edit>
-  </div>
+    <div>
+      <rule-var-edit
+        varName="left"
+        :varValue="editRuleLeft"
+        :initEdit="true"
+        :key="forceRerender"
+        @varedited="onVarEdited"
+      ></rule-var-edit>
+    </div>
+    <div>
+      <rule-var-edit
+        varName="right"
+        :varValue="editRuleRight"
+        :initEdit="true"
+        :key="forceRerender"
+        @varedited="onVarEdited"
+      ></rule-var-edit>
+    </div>
+    <div>
+      <rule-var-edit
+        varName="vars"
+        :varValue="editRuleVars"
+        :initEdit="true"
+        :key="forceRerender"
+        @varedited="onVarEdited"
+      ></rule-var-edit>
+    </div>
   <div>
     <label for="swap">swap</label>
     <span id="swap">
@@ -149,6 +152,7 @@ export default {
       deletedRuleIndex: -1,
       hasChanged: false,
       isNew: false,
+      forceRerender: 0,
       locale: this.gLocale,
       isErrorIllegalRuleNeiterVarsNorName: false,
       isErrorIllegalIndex: false,
@@ -187,6 +191,8 @@ export default {
       // copy selected rule to init editRule
       this.editRule = JSON.parse(JSON.stringify(rule));
       this.editRuleIndex = index;
+      // forcererender to clear MQmathEdit
+      this.forceRerender +=1;
     },
     onVarEdited(varName, varValue) {
       this.hasChanged = true;
