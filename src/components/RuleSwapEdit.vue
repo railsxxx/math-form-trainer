@@ -12,7 +12,7 @@ export default {
     };
   },
   methods: {
-    onChange(newValue) {
+    onChange() {
       this.$emit("swapedited");
     },
   },
