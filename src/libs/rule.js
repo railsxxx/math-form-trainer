@@ -4,7 +4,7 @@ export function initRules(initRule, arrRules) {
   let arrInit = [];
   if (initRule.vars) compressRule(initRule);
   arrInit.push(initRule);
-  arrRules.forEach((item, index, arr) => {
+  arrRules.forEach((item) => {
     if (item.vars) item = compressRule(item);
     arrInit.push(item);
   });
@@ -12,7 +12,7 @@ export function initRules(initRule, arrRules) {
 }
 export function initRulesArr(arrRules) {
   let arrInit = [];
-  arrRules.forEach((item, index, arr) => {
+  arrRules.forEach((item) => {
     if (item.vars) item = compressRule(item);
     arrInit.push(item);
   });
@@ -90,7 +90,7 @@ export function mqifyRules(rules, isSelected) {
     MQ.StaticMath(document.getElementById("selectedRule"));
   } else {
     let ruleId = "";
-    rules.forEach((item, index, arr) => {
+    rules.forEach((item, index) => {
       if (item.vars) {
         ruleId = "rule_" + index;
         MQ.StaticMath(document.getElementById(ruleId));
