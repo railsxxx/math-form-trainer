@@ -27,33 +27,33 @@
     }}
   </div>
   <br />
-    <div>
-      <rule-var-edit
-        varName="left"
-        :varValue="editRuleLeft"
-        :initEdit="true"
-        :key="forceRerender"
-        @varedited="onVarEdited"
-      ></rule-var-edit>
-    </div>
-    <div>
-      <rule-var-edit
-        varName="right"
-        :varValue="editRuleRight"
-        :initEdit="true"
-        :key="forceRerender"
-        @varedited="onVarEdited"
-      ></rule-var-edit>
-    </div>
-    <div>
-      <rule-var-edit
-        varName="vars"
-        :varValue="editRuleVars"
-        :initEdit="true"
-        :key="forceRerender"
-        @varedited="onVarEdited"
-      ></rule-var-edit>
-    </div>
+  <div>
+    <rule-var-edit
+      varName="left"
+      :varValue="editRuleLeft"
+      :initEdit="true"
+      :key="forceRerender"
+      @varedited="onVarEdited"
+    ></rule-var-edit>
+  </div>
+  <div>
+    <rule-var-edit
+      varName="right"
+      :varValue="editRuleRight"
+      :initEdit="true"
+      :key="forceRerender"
+      @varedited="onVarEdited"
+    ></rule-var-edit>
+  </div>
+  <div>
+    <rule-var-edit
+      varName="vars"
+      :varValue="editRuleVars"
+      :initEdit="true"
+      :key="forceRerender"
+      @varedited="onVarEdited"
+    ></rule-var-edit>
+  </div>
   <div>
     <label for="swap">swap</label>
     <span id="swap">
@@ -148,6 +148,8 @@ export default {
       editRuleSwapTrue: false,
       editRuleSwapFalse: false,
       editRuleName: "",
+      selectedRule: {},
+      selectedRuleIndex: -1,
       deletedRuleArr: [],
       deletedRuleIndex: -1,
       hasChanged: false,
@@ -188,11 +190,14 @@ export default {
       this.isErrorIllegalRuleNeiterVarsNorName = false;
       // clear new
       this.isNew = false;
+      // store selection for later cancel
+      this.selectedRule = rule;
+      this.selectedRuleIndex = index;
       // copy selected rule to init editRule
       this.editRule = JSON.parse(JSON.stringify(rule));
       this.editRuleIndex = index;
       // forcererender to clear MQmathEdit
-      this.forceRerender +=1;
+      this.forceRerender += 1;
     },
     onVarEdited(varName, varValue) {
       this.hasChanged = true;
@@ -324,6 +329,11 @@ export default {
       // console.log("onCancel: rules: ", this.rules);
       this.deletedRuleArr = [];
       this.deletedRuleIndex = -1;
+      // clear edit selection
+      if (this.selectedRuleIndex >= 0)
+        this.rules.splice(this.selectedRuleIndex, 0, this.selectedRule);
+      this.selectedRule = {};
+      this.selectedRuleIndex = -1;
       // clear keypad
       this.gFocusMQobj.clear();
       this.gFocusMQref.value = {};
