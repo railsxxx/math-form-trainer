@@ -19,13 +19,7 @@
     </div>
     <br />
   </div>
-  <div id="editRule">
-    {{
-      (editRule.left ? editRule.left : "left") +
-      "&rArr;" +
-      (editRule.right ? editRule.right : "right")
-    }}
-  </div>
+  <div id="editRule" v-html="onShowRule(editRule)"></div>
   <br />
   <div>
     <rule-var-edit
@@ -174,7 +168,7 @@ export default {
       this.editRuleSwapTrue = rule.swap ? true : false;
       this.editRuleSwapFalse = rule.swap ? false : true;
       this.editRuleName = rule.name ? rule.name : "";
-      console.log("watch: editRule: ", rule);
+      // console.log("watch: editRule: ", rule);
     },
   },
   methods: {
@@ -203,7 +197,7 @@ export default {
       this.hasChanged = true;
       switch (varName) {
         case "left":
-          console.log("RuleEditor: onVarEdited left varValue: ", varValue);
+          // console.log("RuleEditor: onVarEdited left varValue: ", varValue);
           this.editRuleLeft = varValue;
           if (varValue === "") delete this.editRule.left;
           else this.editRule.left = varValue;

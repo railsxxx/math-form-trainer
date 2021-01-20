@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     varNewValue() {
-      console.log("RuleVarEdit: computed: varValue", this.varValue);
+      // console.log("RuleVarEdit: computed: varValue", this.varValue);
       return this.varValue;
     },
     MQMathField() {
@@ -69,8 +69,9 @@ export default {
         },
       },
     });
+    console.log("RuleVarEdit: mounted");
   },
-  updated(){
+  updated() {
     const changeOn = this.onChange;
     const editMathField = MQ.MathField(document.getElementById(this.varName), {
       spaceBehavesLikeTab: true,
@@ -87,6 +88,7 @@ export default {
         },
       },
     });
+    console.log("RuleVarEdit: updated");
   },
 };
 </script>
