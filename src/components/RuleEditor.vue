@@ -321,7 +321,7 @@ export default {
       // clear new
       this.isNew = false;
       this.editRule = {};
-      this.neditRuleIndex = -1;
+      this.editRuleIndex = -1;
       // clear delete
       if (this.deletedRuleIndex >= 0)
         this.rules.splice(this.deletedRuleIndex, 0, this.deletedRuleArr[0]);
