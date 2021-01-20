@@ -330,11 +330,11 @@ export default {
     },
   },
   mounted() {
-    //MQ.StaticMath(document.getElementById("newRule"));
+    MQ.StaticMath(document.getElementById("editRule"));
     mqifyRules(this.rules, false);
   },
   updated() {
-    //MQ.StaticMath(document.getElementById("newRule"));
+    MQ.StaticMath(document.getElementById("editRule"));
     mqifyRules(this.rules, false);
   },
 };
