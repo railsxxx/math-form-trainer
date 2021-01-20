@@ -69,7 +69,7 @@ export default {
         },
       },
     });
-    console.log("RuleVarEdit: mounted");
+    // console.log("RuleVarEdit: mounted");
   },
   updated() {
     const changeOn = this.onChange;
@@ -88,7 +88,7 @@ export default {
         },
       },
     });
-    console.log("RuleVarEdit: updated");
+    // console.log("RuleVarEdit: updated");
   },
 };
 </script>
