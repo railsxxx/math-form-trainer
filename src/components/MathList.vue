@@ -96,15 +96,18 @@ function setLast(itemList) {
   background-color: #ca3c3c;
   border-color: #bd2130;
 }
-.btn__filter {
-  border-color: lightgrey;
-}
 .btn__danger:focus {
   outline-color: #c82333;
+}
+.btn__filter {
+  border-color: lightgrey;
 }
 .btn__primary {
   color: #fff;
   background-color: #000;
+}
+.btn__top {
+  margin-top: 10px;
 }
 .btn-group {
   display: flex;

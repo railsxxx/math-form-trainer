@@ -7,8 +7,14 @@
     @click="onEdit"
     >{{ init }}</span
   >
-  <span v-else class="input__lg editable" @click="onClick">{{ locale.enterMath }}</span>
-  <button type="button" @click="onStart" class="btn btn__primary btn__lg">
+  <span v-else class="input__lg editable" @click="onClick">{{
+    locale.enterMath
+  }}</span>
+  <button
+    type="button"
+    @click="onStart"
+    class="btn btn__primary btn__lg btn__top"
+  >
     Start
   </button>
 </template>
