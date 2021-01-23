@@ -132,11 +132,11 @@ function setLast(itemList) {
 [class*="__lg"]:not(:last-child) {
   margin-bottom: 0rem;
 }
-@media screen and (min-width: 620px) {
+/* @media screen and (min-width: 620px) {
   [class*="__lg"] {
     font-size: 2.4rem;
   }
-}
+} */
 .visually-hidden {
   position: absolute;
   height: 1px;
@@ -157,13 +157,13 @@ function setLast(itemList) {
 .stack-large > * + * {
   margin-top: 2.5rem;
 }
-@media screen and (min-width: 550px) {
+/* @media screen and (min-width: 550px) {
   .stack-small > * + * {
     margin-top: 1.4rem;
   }
   .stack-large > * + * {
     margin-top: 0;
   }
-}
+} */
 /* End global styles */
 </style>

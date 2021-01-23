@@ -1,20 +1,22 @@
 <template>
-  <div>
-    <p :id="staticMathId">{{ math }}</p>
-  </div>
-  <div class="stack-small" v-if="!isEditing">
+  <span class="math" :id="staticMathId">{{ math }}</span>
+  <div v-if="!isEditing">
     <div
       :id="editRule"
-      class="checkbox-label"
       v-if="rule.filled"
       @click="toggleToRuleSelect"
-    >
-      {{ rule.filled ? rule.filled.left + " &rArr; " + rule.filled.right : "" }}
+      v-html="onShowRule(rule.filled)"
+    ></div>
+    <div v-else class="editable" @click="toggleToRuleSelect">
+      {{ locale.selectRule }}
     </div>
-    <div v-else @click="toggleToRuleSelect">{{ locale.selectRule }}</div>
     <div v-if="isError">{{ locale.noMatch }}</div>
     <div class="btn-group" v-if="isLast">
-      <button type="button" class="btn btn__danger" @click="deleteStep">
+      <button
+        type="button"
+        class="btn btn__danger btn__top"
+        @click="deleteStep"
+      >
         {{ locale.back }}
       </button>
     </div>
@@ -30,7 +32,7 @@
 
 <script>
 import RuleSelectVue from "./RuleSelect.vue";
-import { matchRule } from "../libs/rule.js";
+import { matchRule, showRule } from "../libs/rule.js";
 let MQ = window.MQ;
 export default {
   components: {
@@ -53,6 +55,7 @@ export default {
       locale: this.gLocale,
     };
   },
+  // {{ rule.filled ? rule.filled.left + " &rArr; " + rule.filled.right : "" }}
   computed: {
     staticMathId() {
       return "static-math-" + this.id;
@@ -62,6 +65,9 @@ export default {
     },
   },
   methods: {
+    onShowRule(rule) {
+      return showRule(rule);
+    },
     rewriteMath() {
       //console.log("rewriteMath: rule: ", this.rule);
       if (!this.rule.filled) return;
@@ -119,15 +125,17 @@ export default {
 </script>
 
 <style scoped>
+.math {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #d7f8bb;
+}
+/*
 label {
   display: block;
   text-align: right;
 }
-p {
-  margin-bottom: 0px;
-  background-color: #d7f8bb;
-}
-.custom-checkbox > .checkbox-label {
+ .custom-checkbox > .checkbox-label {
   font-family: Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -240,7 +248,7 @@ p {
     font-size: 1.9rem;
     line-height: 1.31579;
   }
-}
+} */
 </style>
 
 
