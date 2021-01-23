@@ -1,6 +1,6 @@
 {
-  "navHome": "Trainer",
-  "navRules": "Formeln",
+  "navTrainer": "Trainer",
+  "navEditor": "Editor",
 
   "title": "Formeltrainer Mathematik",
   "subtitle": "Die interaktive Formelsammlung hilft dir bei der Umformung eines mathematischen Ausdrucks",

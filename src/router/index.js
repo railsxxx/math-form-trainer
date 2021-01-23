@@ -5,12 +5,12 @@ import RulEditor from "@/components/RuleEditor.vue";
 const routes = [
   {
     path: "/",
-    name: "Home",
+    name: "Trainer",
     component: MathList
   },
   {
-    path: "/rules",
-    name: "Rules",
+    path: "/editor",
+    name: "Editor",
     component: RulEditor
   }
 ];

@@ -1,7 +1,7 @@
 <template>
   <div id="nav">
-    <router-link :to="{ name: 'Home' }">{{ locale.navHome }}</router-link> |
-    <router-link :to="{ name: 'Rules' }">{{ locale.navRules }}</router-link>
+    <router-link :to="{ name: 'Trainer' }">{{ locale.navTrainer }}</router-link> |
+    <router-link :to="{ name: 'Editor' }">{{ locale.navEditor }}</router-link>
   </div>
 </template>
 
