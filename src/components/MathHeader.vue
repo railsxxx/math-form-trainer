@@ -1,29 +1,26 @@
 <template>
   <h1>{{ locale.title }}</h1>
   <p>{{ locale.subtitle }}</p>
-  <br />
-  <p>{{ locale.example }}:</p>
+  <p class="exp-top">{{ locale.example }}:</p>
   <div>
-    <span>{{ locale.example1 }}:</span>
-    <span id="example1">(a-3)^2</span>
+    <span class="exp-label">{{ locale.example1 }}:</span>
+    <span class="exp-value" id="example1">(x-3)^2</span>
   </div>
   <div>
-    <span>{{ locale.example2 }}:</span>
-    <span id="example2">(a-b)^2&rArr;a^2-2ab+b^2</span>
+    <span class="exp-label">{{ locale.example2 }}:</span>
+    <span class="exp-value" id="example2">(a-b)^2&rArr;a^2-2ab+b^2</span>
   </div>
   <div>
-    <span>{{ locale.example3 }}:</span>
-    <span id="example3">b=3</span>
+    <span class="exp-label">{{ locale.example3 }}:</span>
+    <span class="exp-value" style="vertical-align: 3px" id="example3"
+      >a=x,b=3</span
+    >
   </div>
-  <div>
-    <span>{{ locale.example4 }}:</span>
-    <span id="example4">a^2-2a3+3^2</span>
+  <div class="exp-bottom">
+    <span class="exp-label">{{ locale.example4 }}:</span>
+    <span class="exp-value" id="example4">x^2-2x3+3^2</span>
   </div>
-  <br />
 </template>
-
-<style scoped>
-</style>
 
 <script>
 let MQ = window.MQ;
@@ -41,3 +38,24 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.exp-top {
+  margin-top: 20px;
+}
+.exp-bottom {
+  margin-bottom: 20px;
+}
+.exp-label {
+  display: inline-block;
+  width: 20%;
+  margin-top: 10px;
+  /* border: 1px solid gray; */
+}
+.exp-value {
+  display: inline-block;
+  width: 80%;
+  vertical-align: 6px;
+  /* border: 1px solid gray; */
+}
+</style>
