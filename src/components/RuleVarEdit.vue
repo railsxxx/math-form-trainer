@@ -1,11 +1,8 @@
 <template>
-  <label :for="varName">{{ varName }}</label>
-  <span>
-    <span :id="varName" @click="onEdit" v-if="isEditing">{{
-      varNewValue
-    }}</span>
-    <span @click="onClick" v-else>{{ locale.varCorrespondsToWhat }}</span>
-  </span>
+  <label :for="varName">{{ varName }} = </label>
+  <span :id="varName" @click="onEdit">{{
+    varNewValue ? varNewValue : "?"
+  }}</span>
 </template>
 
 <script>
@@ -16,12 +13,9 @@ export default {
   props: {
     varName: { type: String, required: true },
     varValue: { type: String, required: true },
-    initEdit: { type: Boolean, required: true },
   },
   data() {
     return {
-      // varNewValue: this.varValue, // init mathField from props
-      isEditing: this.initEdit,
       locale: this.gLocale,
     };
   },
@@ -39,11 +33,12 @@ export default {
       //console.log("onChange: newValue", newValue);
       this.$emit("varedited", this.varName, newValue.replace(/\s+/g, ""));
     },
-    onClick() {
-      this.isEditing = true;
-    },
     onEdit() {
       this.MQMathField.focus();
+      if (this.MQMathField.latex() === "?") {
+        this.MQMathField.select();
+        this.MQMathField.keystroke("Del");
+      }
       // this.gFocusMQobj.mq = this.MQMathField;
       this.gFocusMQobj.set(this.MQMathField);
       this.gFocusMQref.value = this.MQMathField;

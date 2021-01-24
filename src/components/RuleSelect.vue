@@ -3,11 +3,11 @@
     <div v-if="isSelected">
       <span
         id="selectedRule"
+        class="editable"
         @click="onSelect(selectedRule)"
         v-html="onShowRule(selectedRule)"
       ></span>
-      <br />
-      <span>{{ locale.setVarToAdapt }}</span>
+      <div id="adaptVar">{{ locale.setVarToAdapt }}</div>
     </div>
     <div v-else>
       <span>{{ locale.clickRuleToSelect }}</span>
@@ -28,17 +28,16 @@
         v-if="isSelected && selectedRule.vars && selectedRule.vars.length > 0"
         :varName="varName"
         :varValue="selectedRule[varName] ? selectedRule[varName] : ''"
-        :initEdit="false"
         @varedited="onVarEdited"
       ></rule-var-edit>
     </div>
     <div v-if="selectedRule.swap">
       <rule-swap-edit @swapedited="onSwapEdited"> </rule-swap-edit>
     </div>
-    <div v-if="isErrorNotAllVarsFilled">
+    <div class="isError" v-if="isErrorNotAllVarsFilled">
       {{ locale.isErrorNotAllVarsFilled }}
     </div>
-    <div class="btn-group">
+    <div class="btn-group btn__top">
       <button type="button" class="btn btn__primary" @click="onSave">
         {{ locale.save }}
       </button>
@@ -140,50 +139,24 @@ export default {
 </script>
 
 <style scoped>
-.edit-label {
-  font-family: Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #0b0c0c;
-  display: block;
-  margin-bottom: 5px;
+#adaptVar {
+  margin-top: 1rem;
 }
-input,
-select {
-  margin-top: 0.4rem;
-  width: 100%;
-  min-height: 4.4rem;
-  padding: 0.4rem 0.8rem;
-  border: 2px solid #565656;
-}
-option {
-  display: block;
-  text-align: right;
-}
-form {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-form > * {
-  flex: 0 0 100%;
-}
-/* ***select style*** */
 .scrolldown {
   display: block;
   width: 100%;
-  height: 100px;
+  height: 20rem;
   border-spacing: 0;
-  border: 1px solid black;
+  border: 1px solid gray;
+  text-align: left;
   /* Set vertical scroll */
   overflow-y: auto;
   /* Hide the horizontal scroll */
   overflow-x: hidden;
-  text-align: left;
 }
 .scrolldown span {
   display: block;
   width: 100%;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid gray;
 }
 </style>

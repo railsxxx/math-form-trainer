@@ -12,7 +12,7 @@
   </div>
   <div>
     <span class="exp-label">{{ locale.example3 }}:</span>
-    <span class="exp-value" style="vertical-align: 3px" id="example3"
+    <span class="exp-value" style="vertical-align: 0.3rem" id="example3"
       >a=x,b=3</span
     >
   </div>
@@ -41,21 +41,21 @@ export default {
 
 <style scoped>
 .exp-top {
-  margin-top: 20px;
+  margin-top: 1.2rem;
 }
 .exp-bottom {
-  margin-bottom: 20px;
+  margin-bottom: 1.2rem;
 }
 .exp-label {
   display: inline-block;
   width: 20%;
-  margin-top: 10px;
+  margin-top: 1rem;
   /* border: 1px solid gray; */
 }
 .exp-value {
   display: inline-block;
   width: 80%;
-  vertical-align: 6px;
+  vertical-align: 0.6rem;
   /* border: 1px solid gray; */
 }
 </style>

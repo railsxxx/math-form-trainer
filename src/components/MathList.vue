@@ -84,6 +84,7 @@ function setLast(itemList) {
 /* Global styles */
 .editable {
   border: 1px solid gray;
+  width: 100%;
 }
 .btn {
   padding: 0.8rem 1rem 0.7rem;
@@ -107,7 +108,7 @@ function setLast(itemList) {
   background-color: #000;
 }
 .btn__top {
-  margin-top: 10px;
+  margin-top: 1rem;
 }
 .btn-group {
   display: flex;
@@ -118,6 +119,10 @@ function setLast(itemList) {
 }
 .btn-group > * + * {
   margin-left: 0.8rem;
+}
+.isError {
+  color: #c82333;
+  margin-top: 1rem;
 }
 .label-wrapper {
   margin: 0;
@@ -132,11 +137,11 @@ function setLast(itemList) {
 [class*="__lg"]:not(:last-child) {
   margin-bottom: 0rem;
 }
-/* @media screen and (min-width: 620px) {
+@media screen and (min-width: 620px) {
   [class*="__lg"] {
     font-size: 2.4rem;
   }
-} */
+}
 .visually-hidden {
   position: absolute;
   height: 1px;
@@ -154,10 +159,10 @@ function setLast(itemList) {
 .stack-small > * + * {
   margin-top: 1.25rem;
 }
-.stack-large > * + * {
+/* .stack-large > * + * {
   margin-top: 2.5rem;
 }
-/* @media screen and (min-width: 550px) {
+@media screen and (min-width: 550px) {
   .stack-small > * + * {
     margin-top: 1.4rem;
   }
