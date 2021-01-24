@@ -118,8 +118,8 @@ export function showRuleName(rule, locale) {
 }
 export function showRule(rule) {
   return rule.filled
-    ? rule.filled.left + "&rArr;" + rule.filled.right
+    ? rule.filled.left + " \\<space> &rArr; \\<space> " + rule.filled.right
     : rule.left
-    ? rule.left + "&rArr;" + rule.right
+    ? rule.left + " \\<space> &rArr; \\<space> " + rule.right
     : "";
 }
