@@ -173,6 +173,8 @@ export default {
       this.editRuleSwapFalse = rule.swap ? false : true;
       this.editRuleName = rule.name ? rule.name : "";
       // console.log("watch: editRule: ", rule);
+      // console.log("watch: editRuleSwapTrue: ", this.editRuleSwapTrue);
+      // console.log("watch: editRuleSwapFalse: ", this.editRuleSwapFalse);
     },
   },
   methods: {
@@ -220,9 +222,13 @@ export default {
           }
           break;
         case "swaptrue":
+          this.editRuleSwapTrue = true;
+          this.editRuleSwapFalse = false;
           this.editRule.swap = "true";
           break;
         case "swapfalse":
+          this.editRuleSwapTrue = false;
+          this.editRuleSwapFalse = true;
           delete this.editRule.swap;
           break;
         case "name":
