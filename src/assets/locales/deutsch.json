@@ -36,7 +36,7 @@
   "clickRuleToDelete": "auf Löschen zum Entfernen,",
   "clickRuleToSave": "und jedes Mal auf Speichern um die Aktion zu bestätigen",
   "clickRuleToCancel": "oder auf Abbrechen um die Aktion zu widerrufen",
-  "isErrorIllegalRuleNeiterVarsNorName": "Ungültige Regel: Weder Vars noch Name",
+  "isErrorIllegalRuleNeitherVarsNorName": "Ungültige Regel: Weder Vars noch Name",
   "isErrorIllegalIndex": "Ungültiger Index",
   "new": "Neu",
   "delete": "Löschen"

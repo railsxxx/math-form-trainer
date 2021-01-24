@@ -9,7 +9,7 @@
   >
     {{ listSummary }}
   </h2>
-  <ul aria-labelledby="list-summary" class="stack-large">
+  <ul>
     <li v-for="item in MathItems" :key="item.id">
       <math-item
         :id="item.id"
@@ -79,7 +79,7 @@ function setLast(itemList) {
   if (lastIndex > 0) itemList[lastIndex - 1].last = false;
 }
 </script>
-
+ 
 <style>
 /* Global styles */
 .editable {

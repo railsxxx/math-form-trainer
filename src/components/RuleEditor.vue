@@ -6,7 +6,7 @@
     <div>{{ locale.clickRuleToDelete }}</div>
     <div>{{ locale.clickRuleToSave }}</div>
     <div>{{ locale.clickRuleToCancel }}</div>
-    <div class="scrolldown">
+    <div id="scroll" class="scrolldown">
       <span
         v-for="(optRule, index) in rules"
         :key="index"
@@ -17,15 +17,22 @@
         <span :id="'rule_' + index" v-html="onShowRule(optRule)"></span>
       </span>
     </div>
-    <br />
   </div>
-  <div id="editRule" v-html="onShowRule(editRule)"></div>
-  <br />
+  <div id="showRule">
+    <span id="editRule" v-html="onShowRule(editRule)"></span>
+  </div>
+  <div>
+    <rule-var-edit
+      varName="indx"
+      :varValue="editRuleIndex"
+      :key="forceRerender"
+      @varedited="onVarEdited"
+    ></rule-var-edit>
+  </div>
   <div>
     <rule-var-edit
       varName="left"
       :varValue="editRuleLeft"
-      :initEdit="true"
       :key="forceRerender"
       @varedited="onVarEdited"
     ></rule-var-edit>
@@ -34,7 +41,6 @@
     <rule-var-edit
       varName="right"
       :varValue="editRuleRight"
-      :initEdit="true"
       :key="forceRerender"
       @varedited="onVarEdited"
     ></rule-var-edit>
@@ -43,63 +49,59 @@
     <rule-var-edit
       varName="vars"
       :varValue="editRuleVars"
-      :initEdit="true"
       :key="forceRerender"
       @varedited="onVarEdited"
     ></rule-var-edit>
   </div>
   <div>
-    <label for="swap">swap</label>
-    <span id="swap">
-      <input
-        type="radio"
-        id="swaptrue"
-        name="swap"
-        :checked="editRuleSwapTrue"
-        @click="onVarEdited('swaptrue', '')"
-      />
-      <label for="true">true</label><br />
-      <input
-        type="radio"
-        id="swapfalse"
-        name="swap"
-        :checked="editRuleSwapFalse"
-        @click="onVarEdited('swapfalse', '')"
-      />
-      <label for="false">false</label>
+    <label class="varLabel" for="swap">swap</label>
+    <span class="varInput" id="swap">
+      <label class="radioLabel" for="swaptrue"
+        >true
+        <input
+          type="radio"
+          name="swap"
+          id="swaptrue"
+          :checked="editRuleSwapTrue"
+          @click="onVarEdited('swaptrue', '')"
+        />
+      </label>
+      <label class="radioLabel" for="swapfalse"
+        >false
+        <input
+          type="radio"
+          name="swap"
+          id="swapfalse"
+          :checked="editRuleSwapFalse"
+          @click="onVarEdited('swapfalse', '')"
+        />
+      </label>
     </span>
   </div>
   <div>
-    <label for="name">name</label>
+    <label class="varLabel" for="name">name</label>
     <input
       type="text"
       id="name"
+      class="varInput"
       v-model="editRuleName"
       @input="onVarEdited('name', '')"
     />
   </div>
-  <div>
-    <label for="index">index</label>
-    <input
-      type="text"
-      id="index"
-      v-model="editRuleIndex"
-      @input="onVarEdited('index', '')"
-    />
-  </div>
-  <br />
-  <div>
-    <label for="json">json</label>
-    <span id="json">{{ jsonRule }}</span>
+  <div id="showJson">
+    <label class="varLabel" for="json">json</label>
+    <span class="varInput" id="json">{{ jsonRule }}</span>
   </div>
   <div>
-    <span v-if="isErrorIllegalRuleNeiterVarsNorName">{{
-      locale.isErrorIllegalRuleNeiterVarsNorName
+    <span class="isError" v-if="isErrorIllegalRuleNeitherVarsNorName">{{
+      locale.isErrorIllegalRuleNeitherVarsNorName
     }}</span>
-    <span v-if="isErrorIllegalIndex">{{ locale.isErrorIllegalIndex }}</span>
+    <span class="isError" v-if="isErrorIllegalIndex">{{
+      locale.isErrorIllegalIndex
+    }}</span>
   </div>
 
-  <div class="btn-group">
+  <div class="btn-group btn__top">
     <button type="button" class="btn btn__primary" @click="onNew">
       {{ locale.new }}
     </button>
@@ -123,6 +125,7 @@ import {
   showRule,
   showRuleName,
   mqifyRules,
+  stringifyRule,
   downloadRules,
 } from "../libs/rule.js";
 let MQ = window.MQ;
@@ -150,13 +153,14 @@ export default {
       isNew: false,
       forceRerender: 0,
       locale: this.gLocale,
-      isErrorIllegalRuleNeiterVarsNorName: false,
+      isErrorIllegalRuleNeitherVarsNorName: false,
       isErrorIllegalIndex: false,
     };
   },
   computed: {
     jsonRule() {
-      return JSON.stringify(this.editRule);
+      // return JSON.stringify(this.editRule);
+      return stringifyRule(this.editRule);
     },
   },
   watch: {
@@ -181,7 +185,7 @@ export default {
     onSelect(rule, index) {
       // clear errors
       this.isErrorIllegalIndex = false;
-      this.isErrorIllegalRuleNeiterVarsNorName = false;
+      this.isErrorIllegalRuleNeihterVarsNorName = false;
       // clear new
       this.isNew = false;
       // store selection for later cancel
@@ -211,7 +215,7 @@ export default {
           this.editRuleVars = varValue;
           if (varValue === "") delete this.editRule.vars;
           else {
-            this.isErrorIllegalRuleNeiterVarsNorName = false;
+            this.isErrorIllegalRuleNeitherVarsNorName = false;
             this.editRule.vars = varValue.split("");
           }
           break;
@@ -225,7 +229,7 @@ export default {
           varValue = this.editRuleName;
           if (varValue === "") delete this.editRule.name;
           else {
-            this.isErrorIllegalRuleNeiterVarsNorName = false;
+            this.isErrorIllegalRuleNeitherVarsNorName = false;
             this.editRule.name = varValue;
           }
           break;
@@ -240,7 +244,7 @@ export default {
     },
     onDelete() {
       // clear errors
-      this.isErrorIllegalRuleNeiterVarsNorName = false;
+      this.isErrorIllegalRuleNeitherVarsNorName = false;
       this.isErrorIllegalIndex = false;
       // check index for existing rule to be deleted
       if (
@@ -262,11 +266,11 @@ export default {
     },
     onSave() {
       // clear errors
-      this.isErrorIllegalRuleNeiterVarsNorName = false;
+      this.isErrorIllegalRuleNeitherVarsNorName = false;
       this.isErrorIllegalIndex = false;
       // no legal rule
       if (!this.editRule.vars && !this.editRule.name) {
-        this.isErrorIllegalRuleNeiterVarsNorName = true;
+        this.isErrorIllegalRuleNeitherVarsNorName = true;
         return;
       }
       if (this.hasChanged) {
@@ -308,7 +312,7 @@ export default {
     },
     onCancel() {
       // clear errors
-      this.isErrorIllegalRuleNeiterVarsNorName = false;
+      this.isErrorIllegalRuleNeitherVarsNorName = false;
       this.isErrorIllegalIndex = false;
       // clear edit
       this.hasChanged = false;
@@ -345,22 +349,51 @@ export default {
 </script>
 
 <style scoped>
-/* ***select style*** */
+#showRule,
+#showJson,
+#scroll {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
 .scrolldown {
   display: block;
   width: 100%;
-  height: 200px;
+  height: 20rem;
   border-spacing: 0;
-  border: 1px solid black;
+  border: 1px solid gray;
+  text-align: left;
   /* Set vertical scroll */
   overflow-y: auto;
   /* Hide the horizontal scroll */
   overflow-x: hidden;
-  text-align: left;
 }
 .scrolldown span {
   display: block;
   width: 100%;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid gray;
+}
+.radioLabel {
+  display: inline-block;
+  position: relative;
+  padding-left: 17px;
+  margin-right: 20px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.radioLabel input {
+  position: absolute;
+  left: 0px;
+  top: 4px;
+}
+.varInput {
+  display: inline-block;
+  padding-left: 8px;
+  width: 92%;
+}
+.varLabel {
+  display: inline-block;
+  width: 8%;
 }
 </style>

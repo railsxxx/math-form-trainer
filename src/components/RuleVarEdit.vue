@@ -12,7 +12,7 @@ export default {
   emits: ["varedited"],
   props: {
     varName: { type: String, required: true },
-    varValue: { type: String, required: true },
+    varValue: { required: true },
   },
   data() {
     return {
@@ -83,7 +83,6 @@ export default {
         },
       },
     });
-    // console.log("RuleVarEdit: updated");
   },
 };
 </script>

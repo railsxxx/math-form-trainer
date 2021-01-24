@@ -123,3 +123,22 @@ export function showRule(rule) {
     ? rule.left + " \\<space> &rArr; \\<space> " + rule.right
     : "";
 }
+export function stringifyRule(rule) {
+  const arr = Object.keys(rule);
+  if (arr.length === 1 && arr[0] === "name")
+    return '"{name":"' + rule.name + '"}';
+  if (arr.length > 1 && arr.includes("left"))
+    return (
+      "{" +
+      (rule.left ? '"left":"' + rule.left + '"' : "") +
+      (rule.right ? ',"right":"' + rule.right + '"' : "") +
+      (rule.vars ? ',"vars":[' + rule.vars.map(stringifyVar) + "]" : "") +
+      (rule.swap ? ',"swap":"true"' : "") +
+      (rule.name ? ',"name":"' + rule.name + '"' : "") +
+      "}"
+    );
+  return "{}";
+}
+function stringifyVar(v) {
+  return '"' + v + '"';
+}

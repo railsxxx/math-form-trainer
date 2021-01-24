@@ -1,6 +1,7 @@
 <template>
   <div id="nav">
-    <router-link :to="{ name: 'Trainer' }">{{ locale.navTrainer }}</router-link> |
+    <router-link :to="{ name: 'Trainer' }">{{ locale.navTrainer }}</router-link>
+    |
     <router-link :to="{ name: 'Editor' }">{{ locale.navEditor }}</router-link>
   </div>
 </template>
@@ -14,3 +15,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#nav {
+  margin-top: 1rem;
+}
+</style>
