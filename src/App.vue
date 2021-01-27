@@ -1,9 +1,6 @@
 <template>
   <router-view />
-  <math-keypad
-    :mqmathfield="this.gFocusMQobj.get()"
-    :mqmathfieldref="this.gFocusMQref.value"
-  ></math-keypad>
+  <math-keypad :mqmathfieldref:="this.gFocusMQref.value"></math-keypad>
   <app-navigation></app-navigation>
 </template>
 

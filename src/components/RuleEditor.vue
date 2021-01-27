@@ -62,8 +62,8 @@
           type="radio"
           name="swap"
           id="swaptrue"
-          :checked="editRuleSwapTrue"
-          @click="onVarEdited('swaptrue', '')"
+          :checked="editRuleSwap === 'true'"
+          @click="onVarEdited('swap', 'true')"
         />
       </label>
       <label class="radioLabel" for="swapfalse"
@@ -72,8 +72,8 @@
           type="radio"
           name="swap"
           id="swapfalse"
-          :checked="editRuleSwapFalse"
-          @click="onVarEdited('swapfalse', '')"
+          :checked="editRuleSwap === 'false'"
+          @click="onVarEdited('swap', 'false')"
         />
       </label>
     </span>
@@ -142,11 +142,8 @@ export default {
       editRuleLeft: "",
       editRuleRight: "",
       editRuleVars: "",
-      editRuleSwapTrue: false,
-      editRuleSwapFalse: false,
+      editRuleSwap: false,
       editRuleName: "",
-      selectedRule: {},
-      selectedRuleIndex: -1,
       deletedRuleArr: [],
       deletedRuleIndex: -1,
       hasChanged: false,
@@ -169,12 +166,8 @@ export default {
       this.editRuleLeft = rule.left ? rule.left : "";
       this.editRuleRight = rule.right ? rule.right : "";
       this.editRuleVars = rule.vars ? rule.vars.join().replace(/,/g, "") : "";
-      this.editRuleSwapTrue = rule.swap ? true : false;
-      this.editRuleSwapFalse = rule.swap ? false : true;
+      this.editRuleSwap = rule.swap ? rule.swap : "false";
       this.editRuleName = rule.name ? rule.name : "";
-      // console.log("watch: editRule: ", rule);
-      // console.log("watch: editRuleSwapTrue: ", this.editRuleSwapTrue);
-      // console.log("watch: editRuleSwapFalse: ", this.editRuleSwapFalse);
     },
   },
   methods: {
@@ -190,9 +183,6 @@ export default {
       this.isErrorIllegalRuleNeihterVarsNorName = false;
       // clear new
       this.isNew = false;
-      // store selection for later cancel
-      this.selectedRule = rule;
-      this.selectedRuleIndex = index;
       // copy selected rule to init editRule
       this.editRule = JSON.parse(JSON.stringify(rule));
       this.editRuleIndex = index;
@@ -221,15 +211,10 @@ export default {
             this.editRule.vars = varValue.split("");
           }
           break;
-        case "swaptrue":
-          this.editRuleSwapTrue = true;
-          this.editRuleSwapFalse = false;
-          this.editRule.swap = "true";
-          break;
-        case "swapfalse":
-          this.editRuleSwapTrue = false;
-          this.editRuleSwapFalse = true;
-          delete this.editRule.swap;
+        case "swap":
+          this.editRuleSwap = varValue;
+          if (varValue === "true") this.editRule.swap = "true";
+          else delete this.editRule.swap;
           break;
         case "name":
           varValue = this.editRuleName;
@@ -314,6 +299,8 @@ export default {
         this.gFocusMQref.value = {};
         // check rules
         console.log("onSave: rules: ", this.rules);
+        // forcererender to clear MQmathEdit
+        this.forceRerender += 1;
       } else console.log("onSave: nothing saved");
     },
     onCancel() {
@@ -333,11 +320,6 @@ export default {
       // console.log("onCancel: rules: ", this.rules);
       this.deletedRuleArr = [];
       this.deletedRuleIndex = -1;
-      // clear edit selection
-      if (this.selectedRuleIndex >= 0)
-        this.rules.splice(this.selectedRuleIndex, 0, this.selectedRule);
-      this.selectedRule = {};
-      this.selectedRuleIndex = -1;
       // clear keypad
       this.gFocusMQobj.clear();
       this.gFocusMQref.value = {};

@@ -35,6 +35,7 @@ export default {
     },
     onEdit() {
       this.MQMathField.focus();
+      // clear default text
       if (this.MQMathField.latex() === "?") {
         this.MQMathField.select();
         this.MQMathField.keystroke("Del");
