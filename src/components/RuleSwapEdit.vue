@@ -1,5 +1,5 @@
 <template>
-  <button type="button" @click="onChange">{{ locale.swapSides }}</button>
+  <span class="editable" @click="onChange">{{ locale.swapSides }}</span>
 </template>
 
 <script>
@@ -20,4 +20,10 @@ export default {
 </script>
 
 <style scoped>
+span {
+  display: inline-block;
+  padding-left: 8px;
+  margin-left: 8%;
+  width: 92%;
+}
 </style>
