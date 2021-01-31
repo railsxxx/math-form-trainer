@@ -41,16 +41,12 @@ export default {
     },
     onEdit() {
       this.MQMathField.focus();
-      // this.gFocusMQobj.set(this.MQMathField);
-      // this.gForceRerender += 1;
-      // console.log("onClick: gFocusMQobj: ", this.gFocusMQobj.get());
-      // console.log("onClick: gForceRerender: ", this.gForceRerender);
       this.gFocusMQref.value = this.MQMathField;
       // console.log("onClick: gFocusMQref.value: ", this.gFocusMQref.value);
     },
     onInput(inp) {
       this.input = inp;
-      // console.log("onInput: " + this.input);
+      // console.log("MathEnter: onInput: latex: " + this.input);
     },
     onStart() {
       if (this.input === "") return;

@@ -27,11 +27,11 @@
       <span id="comma" class="btn" @click="onWrite(',')"> , </span>
     </div>
     <div class="btn-group">
-      <span id="plus" class="btn" @click="onWrite('+')"> + </span>
-      <span id="minus" class="btn" @click="onWrite('-')"> - </span>
-      <span id="mult" class="btn" @click="onCmd('\\cdot{}')"> * </span>
-      <span id="divide" class="btn" @click="onFrac()"> / </span>
-      <span id="divide" class="btn" @click="onWrite('=')"> = </span>
+      <span id="plus" class="btn" @click="onCmd('+')"> + </span>
+      <span id="minus" class="btn" @click="onCmd('-')"> - </span>
+      <span id="mult" class="btn" @click="onCmd('*')"> * </span>
+      <span id="divide" class="btn" @click="onCmd('/')"> / </span>
+      <span id="equal" class="btn" @click="onCmd('=')"> = </span>
       <span id="pm" class="btn" @click="onCmd('\\pm')"> &plusmn; </span>
       <span
         id="brackets()"
@@ -137,15 +137,7 @@ export default {
       this.mqmathfield.focus();
     },
     onKey(keyString) {
-      if (!this.mqmathfield || !(this.mqmathfield instanceof MQ.MathField))
-        return;
       this.mqmathfield.keystroke(keyString);
-      this.mqmathfield.focus();
-    },
-    onFrac() {
-      const sel = this.mqmathfield.__controller.textarea.val();
-      if (!sel) this.mqmathfield.keystroke("Shift-Left");
-      this.mqmathfield.cmd("\\frac");
       this.mqmathfield.focus();
     },
     onDelete() {
