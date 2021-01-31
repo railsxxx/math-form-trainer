@@ -1,12 +1,11 @@
 <template>
   <label :for="varName">{{ varName }} = </label>
-  <span :id="varName" @click="onEdit">{{
-    varNewValue ? varNewValue : "?"
-  }}</span>
+  <span :id="varName" @click="onEdit">{{ init }}</span>
 </template>
 
 <script>
-let MQ = window.MQ;
+import { createMQEditField } from "../assets/lib.js";
+// let MQ = window.MQ;
 export default {
   components: {},
   emits: ["varedited"],
@@ -16,76 +15,71 @@ export default {
   },
   data() {
     return {
+      init: this.varValue !== "" ? this.varValue : "?",
+      varNewValue: this.varValue,
       locale: this.gLocale,
     };
   },
   computed: {
-    varNewValue() {
-      // console.log("RuleVarEdit: computed: varValue", this.varValue);
-      return this.varValue;
-    },
+    // varNewValue() {
+    //   // console.log("RuleVarEdit: computed: varValue", this.varValue);
+    //   return this.varValue;
+    // },
     MQMathField() {
-      return MQ.MathField(document.getElementById(this.varName));
+      return createMQEditField(this.varName, this.onChange, this.onEnter);
+      //return MQ.MathField(document.getElementById(this.varName));
     },
   },
   methods: {
     onChange(newValue) {
-      //console.log("onChange: newValue", newValue);
-      this.$emit("varedited", this.varName, newValue.replace(/\s+/g, ""));
+      // console.log("onChange: newValue", newValue);
+      this.varNewValue = newValue;
+    },
+    onEnter() {
+      // console.log("RuleVarEdited: onEnter");
+      this.$emit(
+        "varedited",
+        this.varName,
+        this.varNewValue.replace(/\s+/g, "")
+      );
+      this.MQMathField.blur();
+      this.gFocusMQref.value = {};
     },
     onEdit() {
-      this.MQMathField.focus();
-      // clear default text
-      if (this.MQMathField.latex() === "?") {
-        this.MQMathField.select();
-        this.MQMathField.keystroke("Del");
+      console.log("onEdit");
+      if (setMQref(this.gFocusMQref, this.MQMathField)) {
+        this.MQMathField.focus();
+        // clear default text
+        if (this.MQMathField.latex() === "?") {
+          this.MQMathField.select();
+          this.MQMathField.keystroke("Del");
+          this.varNewValue = "";
+        }
+      } else {
+        this.MQMathField.blur();
+        // message to user to hit Enter first
+        // console.log("Hit enter to finish editing");
       }
-      // this.gFocusMQobj.mq = this.MQMathField;
-      this.gFocusMQobj.set(this.MQMathField);
-      this.gFocusMQref.value = this.MQMathField;
-      // console.log("onClick: MQMathField: ", this.MQMathField);
-      // console.log("onClick: gFocusMQobj: ", this.gFocusMQobj.get());
-      // console.log("onClick: gFocusMQref.value: ", this.gFocusMQref.value);
     },
   },
   mounted: function () {
-    const changeOn = this.onChange;
-    const editMathField = MQ.MathField(document.getElementById(this.varName), {
-      spaceBehavesLikeTab: true,
-      supSubsRequireOperand: true,
-      substituteTextarea: function () {
-        return document.createElement("SPAN");
-      },
-      handlers: {
-        edit: function () {
-          // retrieve, in LaTeX format, the math that was typed:
-          const valueMQ = editMathField.latex();
-          changeOn(valueMQ);
-          //console.log("editMathField: valueMQ", valueMQ);
-        },
-      },
-    });
+    createMQEditField(this.varName, this.onChange, this.onEnter);
     // console.log("RuleVarEdit: mounted");
   },
   updated() {
-    const changeOn = this.onChange;
-    const editMathField = MQ.MathField(document.getElementById(this.varName), {
-      spaceBehavesLikeTab: true,
-      supSubsRequireOperand: true,
-      substituteTextarea: function () {
-        return document.createElement("SPAN");
-      },
-      handlers: {
-        edit: function () {
-          // retrieve, in LaTeX format, the math that was typed:
-          const valueMQ = editMathField.latex();
-          changeOn(valueMQ);
-          //console.log("editMathField: valueMQ", valueMQ);
-        },
-      },
-    });
+    createMQEditField(this.varName, this.onChange, this.onEnter);
   },
 };
+function setMQref(mqref, mqobj) {
+  if (!mqref.value.id) mqref.value = mqobj;
+  else if (mqref.value.id !== mqobj.id) {
+    return false;
+  }
+  return true;
+}
+// function clearMQref(mqref) {
+//   mqref.value = {};
+// }
 </script>
 
 <style scoped>

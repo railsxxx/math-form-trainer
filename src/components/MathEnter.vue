@@ -19,9 +19,8 @@
 </template>
 
 <script>
-const MQ = window.MQ;
+import { createMQEditField } from "../assets/lib.js";
 export default {
-  components: {},
   emits: ["newmath"],
   data() {
     return {
@@ -33,7 +32,7 @@ export default {
   },
   computed: {
     MQMathField() {
-      return createEditField("enter-math-field", this.onInput, this.onStart);
+      return createMQEditField("enter-math-field", this.onInput, this.onStart);
     },
   },
   methods: {
@@ -47,7 +46,7 @@ export default {
       // console.log("onClick: gFocusMQobj: ", this.gFocusMQobj.get());
       // console.log("onClick: gForceRerender: ", this.gForceRerender);
       this.gFocusMQref.value = this.MQMathField;
-      console.log("onClick: gFocusMQref.value: ", this.gFocusMQref.value);
+      // console.log("onClick: gFocusMQref.value: ", this.gFocusMQref.value);
     },
     onInput(inp) {
       this.input = inp;
@@ -57,6 +56,7 @@ export default {
       if (this.input === "") return;
       this.$emit("newmath", this.input.replace(/\s+/g, ""));
       this.input = "";
+      // this.MQMathField.blur();
       // this.gFocusMQobj.clear();
       this.gFocusMQref.value = {};
       this.isEditing = false;
@@ -64,36 +64,10 @@ export default {
   },
   mounted() {
     // console.log("mounted:");
-    //this.MQMathField = mqfield("enter-math-field", this.onInput, this.onStart);
   },
   updated() {
     // console.log("updated:");
-    createEditField("enter-math-field", this.onInput, this.onStart);
+    createMQEditField("enter-math-field", this.onInput, this.onStart);
   },
 };
-function createEditField(el, onEdit, onEnter) {
-  const editEl = document.getElementById(el);
-  const editField = MQ.MathField(editEl, {
-    spaceBehavesLikeTab: true,
-    supSubsRequireOperand: true,
-    substituteTextarea: function () {
-      return document.createElement("SPAN");
-    },
-    handlers: {
-      edit: function (mathField) {
-        // retrieve, in LaTeX format, the math that was typed:
-        const val = mathField.latex();
-        onEdit(val);
-      },
-      enter: function () {
-        onEnter();
-      },
-    },
-  });
-  // console.log("mqfield running singleMQ: ", singleMQ);
-  // console.log("mqfield running singleEl: ", singleEl);
-  // console.log("mqfield running inputOn: ", inputOn);
-  // console.log("mqfield running enterOn: ", enterOn);
-  return editField;
-}
 </script>

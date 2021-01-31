@@ -93,8 +93,8 @@ export default {
       this.isEditing = false;
     },
     onStaticMathClick() {
-      this.gFocusMQobj.set(this.staticMathMQ);
-      console.log("onStaticMathClick: gFocusMQobj: ", this.gFocusMQobj.get());
+    //   this.gFocusMQobj.set(this.staticMathMQ);
+    //   console.log("onStaticMathClick: gFocusMQobj: ", this.gFocusMQobj.get());
       this.gFocusMQref.value = this.staticMathMQ;
       console.log(
         "onStaticMathClick: gFocusMQref.value: ",

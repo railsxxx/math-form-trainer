@@ -2,6 +2,10 @@
   <div v-if="isTyping">
     <br />
     <div class="btn-group">
+      <span id="enter" class="btn" @click="onEnter()"> Enter </span>
+      <span id="cancel" class="btn" @click="onCancel()"> Cancel </span>
+    </div>
+    <div class="btn-group">
       <span id="digit1" class="btn" @click="onWrite('1')"> 1 </span>
       <span id="digit2" class="btn" @click="onWrite('2')"> 2 </span>
       <span id="digit3" class="btn" @click="onWrite('3')"> 3 </span>
@@ -92,33 +96,43 @@ export default {
     mqmathfieldref: Object, //triggering update of Keypad
   },
   data() {
-    return {};
+    return {
+      initContent: "",
+    };
   },
   computed: {
     isTyping() {
-      console.log("keypad: isTyping: mqmathfield: ", this.mqmathfield);
-      // console.log("keypad: isTyping: mqmathfieldref: ", this.gFocusMQref.value);
       if (this.mqmathfield) return true;
       return false;
     },
     mqmathfield() {
       const refVal = this.gFocusMQref.value;
-      console.log("keypad: mqmathfield: mqmathfieldref.value: ", refVal);
-      if (Object.keys(refVal).length > 0) return refVal;
+      if (refVal instanceof MQ.EditableField && Object.keys(refVal).length > 0)
+        return refVal;
       return undefined;
     },
   },
-  watch: {},
+  watch: {
+    mqmathfield() {
+      if (this.mqmathfield) this.initContent = this.mqmathfield.latex();
+    },
+  },
   methods: {
+    onEnter() {
+      // exit mqmathfield calling mqmathfield.options.handlers.enter
+      this.mqmathfield.typedText("\n");
+    },
+    onCancel() {
+      // console.log("Keypad: onCancel: initContent: ", this.initContent);
+      // restore initContent in mqmathfield.latex
+      this.mqmathfield.latex(this.initContent);
+      this.onEnter();
+    },
     onCmd(latexCmd) {
-      // if (!this.mqmathfield || !(this.mqmathfield instanceof MQ.MathField))
-      //   return;
       this.mqmathfield.cmd(latexCmd);
       this.mqmathfield.focus();
     },
     onWrite(latexWrite) {
-      // if (!this.mqmathfield || !(this.mqmathfield instanceof MQ.MathField))
-      //   return;
       this.mqmathfield.write(latexWrite);
       this.mqmathfield.focus();
     },
@@ -129,16 +143,12 @@ export default {
       this.mqmathfield.focus();
     },
     onFrac() {
-      if (!this.mqmathfield || !(this.mqmathfield instanceof MQ.MathField))
-        return;
       const sel = this.mqmathfield.__controller.textarea.val();
       if (!sel) this.mqmathfield.keystroke("Shift-Left");
       this.mqmathfield.cmd("\\frac");
       this.mqmathfield.focus();
     },
     onDelete() {
-      if (!this.mqmathfield || !(this.mqmathfield instanceof MQ.MathField))
-        return;
       const sel = this.mqmathfield.__controller.textarea.val();
       if (!sel) this.mqmathfield.keystroke("Shift-Left");
       this.mqmathfield.keystroke("Del");
@@ -155,8 +165,6 @@ export default {
       this.mqmathfield.focus();
     },
     onCut() {
-      if (!this.mqmathfield || !(this.mqmathfield instanceof MQ.MathField))
-        return;
       const ctrlr = this.mqmathfield.__controller;
       const text = ctrlr.textarea.val();
       ctrlr.textarea.val("");
@@ -167,8 +175,6 @@ export default {
       this.mqmathfield.focus();
     },
     onPaste() {
-      if (!this.mqmathfield || !(this.mqmathfield instanceof MQ.MathField))
-        return;
       const ctrlr = this.mqmathfield.__controller;
       const text = this.gClipboard;
       if (text !== "") {
@@ -178,14 +184,14 @@ export default {
     },
   },
   mounted() {
-    console.log("keypad: mounted ");
+    // console.log("keypad: mounted ");
   },
   updated() {
     MQ.StaticMath(document.getElementById("power2"));
     MQ.StaticMath(document.getElementById("powerN"));
     MQ.StaticMath(document.getElementById("sqrt"));
     MQ.StaticMath(document.getElementById("sqrtN"));
-    console.log("keypad: updated ");
+    // console.log("keypad: updated ");
   },
 };
 </script>

@@ -110,6 +110,7 @@ export default {
         this.selectedRule = JSON.parse(JSON.stringify(selRule));
         this.isSelected = true;
       }
+      this.gFocusMQref.value = {};
     },
     onSave() {
       if (!this.selectedRule.vars) return;
@@ -120,12 +121,12 @@ export default {
         return;
       }
       this.$emit("itemedited", this.selectedRule);
-      this.gFocusMQobj.clear();
+      // this.gFocusMQobj.clear();
       this.gFocusMQref.value = {};
     },
     onCancel() {
       this.$emit("editcancelled");
-      this.gFocusMQobj.clear();
+      // this.gFocusMQobj.clear();
       this.gFocusMQref.value = {};
     },
   },
@@ -136,23 +137,6 @@ export default {
     mqifyRules(this.rules, this.isSelected);
   },
 };
-//  .scrolldown {
-//   display: block;
-//   width: 100%;
-//   height: 20rem;
-//   border-spacing: 0;
-//   border: 1px solid gray;
-//   text-align: left;
-//   /* Set vertical scroll */
-//   overflow-y: auto;
-//   /* Hide the horizontal scroll */
-//   overflow-x: hidden;
-// }
-// .scrolldown span {
-//   display: block;
-//   width: 100%;
-//   border-bottom: 1px solid gray;
-// }
 </script>
 
 <style scoped>
