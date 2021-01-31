@@ -52,8 +52,6 @@ export default {
       if (this.input === "") return;
       this.$emit("newmath", this.input.replace(/\s+/g, ""));
       this.input = "";
-      // this.MQMathField.blur();
-      // this.gFocusMQobj.clear();
       this.gFocusMQref.value = {};
       this.isEditing = false;
     },

@@ -6,36 +6,46 @@
       <span id="cancel" class="btn" @click="onCancel()"> Cancel </span>
     </div>
     <div class="btn-group">
-      <span id="digit1" class="btn" @click="onWrite('1')"> 1 </span>
-      <span id="digit2" class="btn" @click="onWrite('2')"> 2 </span>
-      <span id="digit3" class="btn" @click="onWrite('3')"> 3 </span>
-      <span id="digit4" class="btn" @click="onWrite('4')"> 4 </span>
-      <span id="digit5" class="btn" @click="onWrite('5')"> 5 </span>
-      <span id="digit6" class="btn" @click="onWrite('6')"> 6 </span>
-      <span id="digit7" class="btn" @click="onWrite('7')"> 7 </span>
-      <span id="digit8" class="btn" @click="onWrite('8')"> 8 </span>
-      <span id="digit9" class="btn" @click="onWrite('9')"> 9 </span>
-      <span id="digit0" class="btn" @click="onWrite('0')"> 0 </span>
+      <span id="digit1" class="key" @click="onWrite('1')"> 1 </span>
+      <span id="digit2" class="key" @click="onWrite('2')"> 2 </span>
+      <span id="digit3" class="key" @click="onWrite('3')"> 3 </span>
+      <span id="digit4" class="key" @click="onWrite('4')"> 4 </span>
+      <span id="digit5" class="key" @click="onWrite('5')"> 5 </span>
+      <span id="digit6" class="key" @click="onWrite('6')"> 6 </span>
+      <span id="digit7" class="key" @click="onWrite('7')"> 7 </span>
+      <span id="digit8" class="key" @click="onWrite('8')"> 8 </span>
+      <span id="digit9" class="key" @click="onWrite('9')"> 9 </span>
+      <span id="digit0" class="key" @click="onWrite('0')"> 0 </span>
+      <span id="digitPi" class="key" @click="onWrite('\\pi ')">
+        &#x1D745;
+      </span>
     </div>
     <div class="btn-group">
-      <span id="chara" class="btn" @click="onWrite('a')"> a </span>
-      <span id="charb" class="btn" @click="onWrite('b')"> b </span>
-      <span id="charc" class="btn" @click="onWrite('c')"> c </span>
-      <span id="charm" class="btn" @click="onWrite('m')"> m </span>
-      <span id="charn" class="btn" @click="onWrite('n')"> n </span>
-      <span id="charx" class="btn" @click="onWrite('x')"> x </span>
-      <span id="comma" class="btn" @click="onWrite(',')"> , </span>
+      <span id="chara" class="key" @click="onWrite('a')"> a </span>
+      <span id="charb" class="key" @click="onWrite('b')"> b </span>
+      <span id="charc" class="key" @click="onWrite('c')"> c </span>
+      <span id="chard" class="key" @click="onWrite('d')"> d </span>
+      <span id="chare" class="key" @click="onWrite('e')"> e </span>
+      <span id="charf" class="key" @click="onWrite('f')"> f </span>
+      <span id="charg" class="key" @click="onWrite('g')"> g </span>
+      <span id="charh" class="key" @click="onWrite('h')"> h </span>
+      <span id="charm" class="key" @click="onWrite('m')"> m </span>
+      <span id="charn" class="key" @click="onWrite('n')"> n </span>
+      <span id="charx" class="key" @click="onWrite('x')"> x </span>
+      <span id="chary" class="key" @click="onWrite('y')"> y </span>
+      <span id="charz" class="key" @click="onWrite('z')"> z </span>
+      <span id="comma" class="key" @click="onWrite(',')"> , </span>
     </div>
     <div class="btn-group">
-      <span id="plus" class="btn" @click="onCmd('+')"> + </span>
-      <span id="minus" class="btn" @click="onCmd('-')"> - </span>
-      <span id="mult" class="btn" @click="onCmd('*')"> * </span>
-      <span id="divide" class="btn" @click="onCmd('/')"> / </span>
-      <span id="equal" class="btn" @click="onCmd('=')"> = </span>
-      <span id="pm" class="btn" @click="onCmd('\\pm')"> &plusmn; </span>
+      <span id="plus" class="key" @click="onCmd('+')"> + </span>
+      <span id="minus" class="key" @click="onCmd('-')"> - </span>
+      <span id="mult" class="key" @click="onCmd('*')"> * </span>
+      <span id="divide" class="key" @click="onCmd('/')"> / </span>
+      <span id="equal" class="key" @click="onCmd('=')"> = </span>
+      <span id="pm" class="key" @click="onCmd('\\pm')"> &plusmn; </span>
       <span
         id="brackets()"
-        class="btn"
+        class="key"
         @click="
           onWrite('\\left(\\right)');
           onKey('Left');
@@ -45,7 +55,7 @@
       </span>
       <span
         id="brackets[]"
-        class="btn"
+        class="key"
         @click="
           onWrite('\\left[\\right]');
           onKey('Left');
@@ -55,11 +65,11 @@
       </span>
     </div>
     <div class="btn-group">
-      <span id="power2" class="btn" @click="onWrite('^{2}')">a^2</span>
-      <span id="sqrt" class="btn" @click="onCmd('\\sqrt')">\sqrt{a}</span>
+      <span id="power2" class="key" @click="onWrite('^{2}')">a^2</span>
+      <span id="sqrt" class="key" @click="onCmd('\\sqrt')">\sqrt{a}</span>
       <span
         id="powerN"
-        class="btn"
+        class="key"
         @click="
           onWrite('^{}');
           onKey('Left');
@@ -68,22 +78,54 @@
       >
       <span
         id="sqrtN"
-        class="btn"
+        class="key"
         @click="
           onWrite('\\sqrt[]{}');
           onKey('Left Left');
         "
         >\sqrt[n]{a}</span
       >
+      <span id="fOfX" class="key" @click="onTypedText('f(x)')">f(x)</span>
+      <span id="ePowerX" class="key" @click="onTypedText('e^x')">e^x</span>
+      <span
+        id="ln"
+        class="key"
+        @click="
+          onCmd('\\ln');
+          onWrite('\\left(\\right)');
+          onKey('Left');
+        "
+        >\ln</span
+      >
+      <span
+        id="sin"
+        class="key"
+        @click="
+          onCmd('\\sin');
+          onWrite('\\left(\\right)');
+          onKey('Left');
+        "
+        >\sin</span
+      >
+      <span
+        id="cos"
+        class="key"
+        @click="
+          onCmd('\\cos');
+          onWrite('\\left(\\right)');
+          onKey('Left');
+        "
+        >\cos</span
+      >
     </div>
     <div class="btn-group">
-      <span id="keyLeft" class="btn" @click="onKey('Left')"> &larr; </span>
-      <span id="keyRight" class="btn" @click="onKey('Right')"> &rarr; </span>
-      <span id="keyDelete" class="btn" @click="onDelete()"> DEL </span>
-      <span id="keySelect" class="btn" @click="onKey('Shift-Left')"> SEL </span>
-      <span id="keyCopy" class="btn" @click="onCopy()"> CPY </span>
-      <span id="keyCopy" class="btn" @click="onCut()"> CUT </span>
-      <span id="keyPaste" class="btn" @click="onPaste()"> PST </span>
+      <span id="keyLeft" class="key" @click="onKey('Left')"> &larr; </span>
+      <span id="keyRight" class="key" @click="onKey('Right')"> &rarr; </span>
+      <span id="keyDelete" class="key" @click="onDelete()"> DEL </span>
+      <span id="keySelect" class="key" @click="onKey('Shift-Left')"> SEL </span>
+      <span id="keyCopy" class="key" @click="onCopy()"> CPY </span>
+      <span id="keyCopy" class="key" @click="onCut()"> CUT </span>
+      <span id="keyPaste" class="key" @click="onPaste()"> PST </span>
     </div>
     <br />
   </div>
@@ -140,6 +182,10 @@ export default {
       this.mqmathfield.keystroke(keyString);
       this.mqmathfield.focus();
     },
+    onTypedText(text) {
+      this.mqmathfield.typedText(text);
+      this.mqmathfield.focus();
+    },
     onDelete() {
       const sel = this.mqmathfield.__controller.textarea.val();
       if (!sel) this.mqmathfield.keystroke("Shift-Left");
@@ -183,10 +229,20 @@ export default {
     MQ.StaticMath(document.getElementById("powerN"));
     MQ.StaticMath(document.getElementById("sqrt"));
     MQ.StaticMath(document.getElementById("sqrtN"));
+    MQ.StaticMath(document.getElementById("fOfX"));
+    MQ.StaticMath(document.getElementById("ePowerX"));
+    MQ.StaticMath(document.getElementById("ln"));
+    MQ.StaticMath(document.getElementById("sin"));
+    MQ.StaticMath(document.getElementById("cos"));
     // console.log("keypad: updated ");
   },
 };
 </script>
 
 <style scoped>
+.key {
+  padding: 0.8rem 1rem 0.7rem;
+  border: 0.2rem solid #4d4d4d;
+  cursor: pointer;
+}
 </style>

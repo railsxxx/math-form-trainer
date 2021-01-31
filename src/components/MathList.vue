@@ -85,6 +85,7 @@ function setLast(itemList) {
 .editable {
   border: 1px solid gray;
   width: 100%;
+  cursor: pointer;
 }
 .btn {
   padding: 0.8rem 1rem 0.7rem;
