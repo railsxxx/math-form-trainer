@@ -8,12 +8,12 @@
   </div>
   <div>
     <span class="exp-label">{{ locale.example2 }}:</span>
-    <span class="exp-value" id="example2">(a-b)^2&rArr;a^2-2ab+b^2</span>
+    <span class="exp-value" id="example2" v-html="'(a-b)^2 \\<space> &rArr; \\<space> a^2-2ab+b^2'"></span>
   </div>
   <div>
     <span class="exp-label">{{ locale.example3 }}:</span>
     <span class="exp-value" style="vertical-align: 0.3rem" id="example3"
-      >a=x,b=3</span
+       v-html="'a=x, \\<space> b=3'"></span
     >
   </div>
   <div class="exp-bottom">
