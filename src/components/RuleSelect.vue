@@ -104,6 +104,7 @@ export default {
     onSelect(selRule) {
       if (!selRule.vars) return;
       if (this.isSelected) {
+        this.selectedRule = {};
         this.isSelected = false;
       } else {
         // copy selected rule

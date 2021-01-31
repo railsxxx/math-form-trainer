@@ -30,8 +30,8 @@ export default {
 .keypad {
   position: fixed;
   bottom: 0px;
-  left: 0px;
   width: 100%;
+  max-width: 68rem;
   background: lightgray;
 }
 </style>
