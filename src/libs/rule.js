@@ -124,20 +124,32 @@ export function showRule(rule) {
     : "";
 }
 export function stringifyRule(rule) {
-  const arr = Object.keys(rule);
-  if (arr.length === 1 && arr[0] === "name")
-    return '"{name":"' + rule.name + '"}';
-  if (arr.length > 1 && arr.includes("left"))
-    return (
-      "{" +
-      (rule.left ? '"left":"' + rule.left + '"' : "") +
-      (rule.right ? ',"right":"' + rule.right + '"' : "") +
-      (rule.vars ? ',"vars":[' + rule.vars.map(stringifyVar) + "]" : "") +
-      (rule.swap ? ',"swap":"true"' : "") +
-      (rule.name ? ',"name":"' + rule.name + '"' : "") +
-      "}"
-    );
-  return "{}";
+  const sortedObj = {};
+  const arrKeys = Object.keys(rule);
+  if (arrKeys.length === 1 && arrKeys[0] === "name")
+    sortedObj["name"] = rule["name"];
+  else {
+    if (arrKeys.includes("left")) sortedObj["left"] = rule["left"];
+    if (arrKeys.includes("right")) sortedObj["right"] = rule["right"];
+    if (arrKeys.includes("vars")) sortedObj["vars"] = rule["vars"];
+    if (arrKeys.includes("swap")) sortedObj["swap"] = rule["swap"];
+    if (arrKeys.includes("name")) sortedObj["name"] = rule["name"];
+  }
+  return JSON.stringify(sortedObj);
+
+  // if (arr.length === 1 && arr[0] === "name")
+  //   return '"{name":"' + rule.name + '"}';
+  // if (arr.length > 1 && arr.includes("left"))
+  //   return (
+  //     "{" +
+  //     (rule.left ? '"left":"' + rule.left + '"' : "") +
+  //     (rule.right ? ',"right":"' + rule.right + '"' : "") +
+  //     (rule.vars ? ',"vars":[' + rule.vars.map(stringifyVar) + "]" : "") +
+  //     (rule.swap ? ',"swap":"true"' : "") +
+  //     (rule.name ? ',"name":"' + rule.name + '"' : "") +
+  //     "}"
+  //   );
+  // return "{}";
 }
 function stringifyVar(v) {
   return '"' + v + '"';
