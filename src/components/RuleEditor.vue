@@ -144,8 +144,9 @@ export default {
       editRuleVars: "",
       editRuleSwap: false,
       editRuleName: "",
-      deletedRuleArr: [],
+      deletedRule: {},
       deletedRuleIndex: -1,
+      newRuleIndex: -1,
       hasChanged: false,
       isNew: false,
       forceRerender: 0,
@@ -181,8 +182,6 @@ export default {
       // clear errors
       this.isErrorIllegalIndex = false;
       this.isErrorIllegalRuleNeihterVarsNorName = false;
-      // clear new
-      this.isNew = false;
       // copy selected rule to init editRule
       this.editRule = JSON.parse(JSON.stringify(rule));
       this.editRuleIndex = index;
@@ -193,7 +192,6 @@ export default {
       this.hasChanged = true;
       switch (varName) {
         case "left":
-          // console.log("RuleEditor: onVarEdited left varValue: ", varValue);
           this.editRuleLeft = varValue;
           if (varValue === "") delete this.editRule.left;
           else this.editRule.left = varValue;
@@ -224,14 +222,22 @@ export default {
             this.editRule.name = varValue;
           }
           break;
-        case "index":
+        case "indx":
+          // console.log("RuleEditor: onVarEdited index varValue: ", varValue);
+          this.editRuleIndex = varValue;
           this.isErrorIllegalIndex = false;
           break;
         default:
       }
     },
     onNew() {
+      // save editRule as new
       this.isNew = true;
+      // save newRuleIndex for remove onCancel
+      this.newRuleIndex = this.editRuleIndex;
+      // store rules
+      this.onSave();
+      this.isNew = false;
     },
     onDelete() {
       // clear errors
@@ -246,16 +252,19 @@ export default {
         return;
       }
       // delete selected rule
+      // save deleted rule for restore onCancel
       this.deletedRuleIndex = this.editRuleIndex;
-      this.deletedRuleArr = this.rules.splice(this.deletedRuleIndex, 1);
-      // console.log("onDelete: deletedRuleArr: ", this.deletedRuleArr);
+      this.deletedRule = this.rules.splice(this.deletedRuleIndex, 1)[0];
+      // console.log("onDelete: deletedRule: ", this.deletedRule);
       // console.log("onDelete: rules: ", this.rules);
-      // clear new
-      this.isNew = false;
+      // clear editRule
       this.editRule = {};
       this.editRuleIndex = -1;
+      // save rules
+      this.onSave();
     },
     onSave() {
+      // save changes on editRule
       // clear errors
       this.isErrorIllegalRuleNeitherVarsNorName = false;
       this.isErrorIllegalIndex = false;
@@ -285,20 +294,20 @@ export default {
             this.isErrorIllegalIndex = true;
             return;
           }
+          // save replaced rule for restore onCancel
+          this.deletedRule = this.rules[this.editRuleIndex];
+          this.deletedRuleIndex = this.editRuleIndex;
           // confirm edit, replace with editRule
           this.rules.splice(this.editRuleIndex, 1, this.editRule);
         }
-        // clear new
-        this.isNew = false;
         // clear change
         this.hasChanged = false;
         // offer store of rules in file
         downloadRules(this.rules, "rules.json");
         // clear keypad
-        this.gFocusMQobj.clear();
         this.gFocusMQref.value = {};
         // check rules
-        console.log("onSave: rules: ", this.rules);
+        // console.log("onSave: rules: ", this.rules);
         // forcererender to clear MQmathEdit
         this.forceRerender += 1;
       } else console.log("onSave: nothing saved");
@@ -309,19 +318,19 @@ export default {
       this.isErrorIllegalIndex = false;
       // clear edit
       this.hasChanged = false;
-      // clear new
-      this.isNew = false;
       this.editRule = {};
       this.editRuleIndex = -1;
       // clear delete
       if (this.deletedRuleIndex >= 0)
-        this.rules.splice(this.deletedRuleIndex, 0, this.deletedRuleArr[0]);
+        this.rules.splice(this.deletedRuleIndex, 0, this.deletedRule);
       // console.log("onCancel: deletedRuleIndex: ", this.deletedRuleIndex);
       // console.log("onCancel: rules: ", this.rules);
-      this.deletedRuleArr = [];
+      this.deletedRule = {};
       this.deletedRuleIndex = -1;
+      // clear new
+      if (this.newRuleIndex >= 0) this.rules.splice(this.newRuleIndex, 1);
+      this.newRuleIndex = -1;
       // clear keypad
-      this.gFocusMQobj.clear();
       this.gFocusMQref.value = {};
     },
   },

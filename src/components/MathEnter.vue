@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { createMQEditField } from "../assets/lib.js";
+import { createMQEditField } from "../assets/mq.js";
 export default {
   emits: ["newmath"],
   data() {
@@ -57,10 +57,10 @@ export default {
     },
   },
   mounted() {
-    // console.log("mounted:");
+    console.log("MathEnter mounted:");
   },
   updated() {
-    // console.log("updated:");
+    console.log("MathEnter updated:");
     createMQEditField("enter-math-field", this.onInput, this.onStart);
   },
 };
