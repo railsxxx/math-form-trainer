@@ -1,0 +1,36 @@
+<template>
+  <mq-field></mq-field>
+  <math-keypad
+    class="keypad"
+    :mqmathfieldref:="this.gFocusMQref.value"
+  ></math-keypad>
+</template>
+
+<script>
+import MqFieldVue from "./components/MqField.vue";
+import MathKeypadVue from "./components/MathKeypad.vue";
+
+export default {
+  name: "App",
+  components: {
+    MqField: MqFieldVue,
+    MathKeypad: MathKeypadVue,
+  },
+};
+</script>
+
+<style scoped>
+* {
+  box-sizing: border-box;
+}
+.nav {
+  padding-bottom: 24rem;
+}
+.keypad {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  max-width: 68rem;
+  background: lightgray;
+}
+</style>
