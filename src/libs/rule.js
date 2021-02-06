@@ -151,6 +151,6 @@ export function stringifyRule(rule) {
   //   );
   // return "{}";
 }
-function stringifyVar(v) {
-  return '"' + v + '"';
-}
+// function stringifyVar(v) {
+//   return '"' + v + '"';
+// }

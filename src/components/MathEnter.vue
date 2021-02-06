@@ -4,8 +4,7 @@
     class="input__lg"
     id="enter-math-field"
     @click="onEdit"
-    >{{ init }}</span
-  >
+  ></span>
   <span v-else class="input__lg editable" @click="onClick">{{
     locale.enterMath
   }}</span>
@@ -19,23 +18,23 @@
 </template>
 
 <script>
-import { createMQEditField } from "../assets/mq.js";
+import { createMQEditField } from "../libs/mq.js";
 export default {
   emits: ["newmath"],
   data() {
     return {
       init: "(a-(b+5))^2",
       input: "(a-(b+5))^2",
+      MQMathField: {},
       isEditing: false,
       locale: this.gLocale,
     };
   },
-  computed: {
-    MQMathField() {
-      return createMQEditField("enter-math-field", this.onInput, this.onStart);
-    },
-  },
+  computed: {},
   methods: {
+    onInit() {
+      this.MQMathField.latex(this.init);
+    },
     onClick() {
       this.isEditing = true;
     },
@@ -57,11 +56,16 @@ export default {
     },
   },
   mounted() {
-    console.log("MathEnter mounted:");
+    // console.log("MathEnter mounted:");
   },
   updated() {
-    console.log("MathEnter updated:");
-    createMQEditField("enter-math-field", this.onInput, this.onStart);
+    // console.log("MathEnter updated:");
+    this.MQMathField = createMQEditField(
+      "enter-math-field",
+      this.onInput,
+      this.onStart
+    );
+    this.onInit();
   },
 };
 </script>

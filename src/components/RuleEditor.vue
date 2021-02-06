@@ -169,6 +169,7 @@ export default {
       this.editRuleVars = rule.vars ? rule.vars.join().replace(/,/g, "") : "";
       this.editRuleSwap = rule.swap ? rule.swap : "false";
       this.editRuleName = rule.name ? rule.name : "";
+      // console.log("RuleEditor: watch: editRule: rule: ", rule);
     },
   },
   methods: {
@@ -236,8 +237,8 @@ export default {
       // save newRuleIndex for remove onCancel
       this.newRuleIndex = this.editRuleIndex;
       // store rules
-      this.onSave();
-      this.isNew = false;
+      // this.onSave();
+      // this.isNew = false;
     },
     onDelete() {
       // clear errors
@@ -261,7 +262,7 @@ export default {
       this.editRule = {};
       this.editRuleIndex = -1;
       // save rules
-      this.onSave();
+      //this.onSave();
     },
     onSave() {
       // save changes on editRule
@@ -285,6 +286,8 @@ export default {
           }
           // confirm new, insert editRule
           this.rules.splice(this.editRuleIndex, 0, this.editRule);
+          // clear flag new
+          this.isNew = false;
         } else {
           // check index for edit
           if (
@@ -335,11 +338,11 @@ export default {
     },
   },
   mounted() {
-    MQ.StaticMath(document.getElementById("editRule"));
+    // MQ.StaticMath(document.getElementById("editRule"));
     mqifyRules(this.rules, false);
   },
   updated() {
-    MQ.StaticMath(document.getElementById("editRule"));
+    // MQ.StaticMath(document.getElementById("editRule"));
     mqifyRules(this.rules, false);
   },
 };

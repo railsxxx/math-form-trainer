@@ -25,14 +25,12 @@
 </template>
 
 <script>
-import RuleVarEditVue from "./RuleVarEdit.vue";
 import MathHeaderVue from "./MathHeader.vue";
 import MathItemVue from "./MathItem.vue";
 import MathEnterVue from "./MathEnter.vue";
 import uniqueId from "lodash.uniqueid";
 export default {
   components: {
-    RuleVarEdit: RuleVarEditVue,
     MathHeader: MathHeaderVue,
     MathItem: MathItemVue,
     MathEnter: MathEnterVue,

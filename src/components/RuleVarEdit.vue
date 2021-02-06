@@ -4,7 +4,7 @@
 </template>
  
 <script>
-import { createMQEditField } from "../assets/mq.js";
+import { createMQEditField } from "../libs/mq.js";
 export default {
   components: {},
   emits: ["varedited"],
@@ -14,32 +14,32 @@ export default {
   },
   data() {
     return {
-      init: this.varValue !== "" ? this.varValue : "?",
       varNewValue: this.varValue,
       MQMathField: {},
       locale: this.gLocale,
     };
   },
-  computed: {},
-  watch: {},
+  computed: {
+    init() {
+      return this.varValue !== "" ? this.varValue : "?";
+    },
+  },
+  watch: {
+    varValue(newValue) {
+      // console.log("RuleVarEdit: watch: varValue: newValue: ", newValue);
+      // reinit on changes of varValue
+      this.onInit();
+    },
+  },
   methods: {
     onInit() {
+      // init MQMathField
       this.MQMathField.latex(this.init);
-    },
-    onChange(newValue) {
-      this.varNewValue = newValue;
-    },
-    onEnter() {
-      this.MQMathField.blur();
-      this.gFocusMQref.value = {};
-      this.$emit(
-        "varedited",
-        this.varName,
-        this.varNewValue.replace(/\s+/g, "")
-      );
+      // console.log("RuleVarEdit: onInit: init: ", this.init);
     },
     onEdit() {
       if (setMQref(this.gFocusMQref, this.MQMathField)) {
+        // selected MQMathField
         this.MQMathField.focus();
         // clear default text
         const latex = this.MQMathField.latex();
@@ -49,8 +49,26 @@ export default {
           this.varNewValue = "";
         }
       } else {
+        // no focus on unselected MQMathField
+        // first hit Enter on selected MQMathField to quit edit
         this.MQMathField.blur();
       }
+    },
+    onChange(newValue) {
+      // get input from user
+      this.varNewValue = newValue;
+    },
+    onEnter() {
+      // clear focus on MQMathField
+      this.MQMathField.blur();
+      // clear Keypad
+      this.gFocusMQref.value = {};
+      // send input from user
+      this.$emit(
+        "varedited",
+        this.varName,
+        this.varNewValue.replace(/\s+/g, "")
+      );
     },
   },
   mounted: function () {
@@ -60,10 +78,10 @@ export default {
       this.onEnter
     );
     this.onInit();
-    // console.log("RuleVarEdit: mounted");
+    console.log("RuleVarEdit: mounted");
   },
   updated() {
-    // console.log("RuleVarEdit: updated");
+    console.log("RuleVarEdit: updated");
   },
 };
 function setMQref(mqref, mqobj) {
@@ -73,9 +91,6 @@ function setMQref(mqref, mqobj) {
   }
   return true;
 }
-// function clearMQref(mqref) {
-//   mqref.value = {};
-// }
 </script>
 
 <style scoped>

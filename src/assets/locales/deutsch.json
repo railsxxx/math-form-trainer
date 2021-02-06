@@ -15,6 +15,7 @@
   "setVarToAdapt": "Passe die Variablen an den Ausdruck an",
   "noMatch": "Diese Formel passt nicht. Versuche es noch einmal!",
   "isErrorNotAllVarsFilled": "Gib jeder Variable einen Wert",
+  "isErrorQuitEditMqFirst": "Beende zuerst die Eingabe mit Enter",
   "swapSides": "Seiten links-rechts vertauschen",
   "back": "Zurück",
   "cancel": "Abbrechen",

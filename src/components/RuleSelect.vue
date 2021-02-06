@@ -37,6 +37,9 @@
     <div class="isError" v-if="isErrorNotAllVarsFilled">
       {{ locale.isErrorNotAllVarsFilled }}
     </div>
+    <div class="isError" v-if="isErrorQuitEditMqFirst">
+      {{ locale.isErrorQuitEditMqFirst }}
+    </div>
     <div class="btn-group btn__top">
       <button type="button" class="btn btn__primary" @click="onSave">
         {{ locale.save }}
@@ -51,13 +54,14 @@
 <script>
 import RuleVarEditVue from "./RuleVarEdit.vue";
 import RuleSwapEditVue from "./RuleSwapEdit.vue";
-import { showRuleName, showRule } from "../libs/rule.js";
 import rulesJSON from "../assets/rules.json";
 import {
   initRules,
   isAllVarsFilled,
   fillRule,
   mqifyRules,
+  showRuleName,
+  showRule,
 } from "../libs/rule.js";
 export default {
   components: {
@@ -75,6 +79,7 @@ export default {
       rules: initRules(this.rule, rulesJSON),
       isSelected: false,
       isErrorNotAllVarsFilled: false,
+      isErrorQuitEditMqFirst: false,
       locale: this.gLocale,
     };
   },
@@ -86,6 +91,7 @@ export default {
       return showRule(rule);
     },
     onVarEdited(varName, varValue) {
+      this.isErrorQuitEditMqFirst = false;
       //console.log("onVarEdited: ", varName, ":", varValue);
       this.selectedRule[varName] = varValue;
     },
@@ -102,6 +108,10 @@ export default {
       this.isAdding = false;
     },
     onSelect(selRule) {
+      if (this.gFocusMQref.value.id) {
+        this.isErrorQuitEditMqFirst = true;
+        return;
+      }
       if (!selRule.vars) return;
       if (this.isSelected) {
         this.selectedRule = {};
@@ -111,9 +121,12 @@ export default {
         this.selectedRule = JSON.parse(JSON.stringify(selRule));
         this.isSelected = true;
       }
-      this.gFocusMQref.value = {};
     },
     onSave() {
+      if (this.gFocusMQref.value.id) {
+        this.isErrorQuitEditMqFirst = true;
+        return;
+      }
       if (!this.selectedRule.vars) return;
       if (isAllVarsFilled(this.selectedRule)) {
         this.selectedRule = fillRule(this.selectedRule);
@@ -122,13 +135,13 @@ export default {
         return;
       }
       this.$emit("itemedited", this.selectedRule);
-      // this.gFocusMQobj.clear();
-      this.gFocusMQref.value = {};
     },
     onCancel() {
+      if (this.gFocusMQref.value.id) {
+        this.isErrorQuitEditMqFirst = true;
+        return;
+      }
       this.$emit("editcancelled");
-      // this.gFocusMQobj.clear();
-      this.gFocusMQref.value = {};
     },
   },
   mounted: function () {
