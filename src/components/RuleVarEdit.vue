@@ -2,7 +2,7 @@
   <label :for="varName">{{ varName }} = </label>
   <span :id="varName" @click="onEdit"></span>
 </template>
- 
+  
 <script>
 import { createMQEditField } from "../libs/mq.js";
 export default {
@@ -78,10 +78,10 @@ export default {
       this.onEnter
     );
     this.onInit();
-    // console.log("RuleVarEdit: mounted");
+    console.log("RuleVarEdit: mounted");
   },
   updated() {
-    // console.log("RuleVarEdit: updated");
+    console.log("RuleVarEdit: updated");
   },
 };
 function setMQref(mqref, mqobj) {
