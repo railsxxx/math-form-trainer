@@ -78,10 +78,10 @@ export default {
       this.onEnter
     );
     this.onInit();
-    console.log("RuleVarEdit: mounted");
+    // console.log("RuleVarEdit: mounted");
   },
   updated() {
-    console.log("RuleVarEdit: updated");
+    // console.log("RuleVarEdit: updated");
   },
 };
 function setMQref(mqref, mqobj) {

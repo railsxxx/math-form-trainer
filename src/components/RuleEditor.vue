@@ -99,6 +99,9 @@
     <span class="isError" v-if="isErrorIllegalIndex">{{
       locale.isErrorIllegalIndex
     }}</span>
+    <span class="isError" v-if="isErrorQuitEditMqFirst">
+      {{ locale.isErrorQuitEditMqFirst }}
+    </span>
   </div>
 
   <div class="btn-group btn__top">
@@ -153,6 +156,7 @@ export default {
       locale: this.gLocale,
       isErrorIllegalRuleNeitherVarsNorName: false,
       isErrorIllegalIndex: false,
+      isErrorQuitEditMqFirst: false,
     };
   },
   computed: {
@@ -180,6 +184,11 @@ export default {
       return showRule(rule);
     },
     onSelect(rule, index) {
+      // quit current rule edit first
+      if (this.gFocusMQref.value.id) {
+        this.isErrorQuitEditMqFirst = true;
+        return;
+      }
       // clear errors
       this.isErrorIllegalIndex = false;
       this.isErrorIllegalRuleNeihterVarsNorName = false;
@@ -190,7 +199,11 @@ export default {
       this.forceRerender += 1;
     },
     onVarEdited(varName, varValue) {
+      // clear error flag
+      this.isErrorQuitEditMqFirst = false;
+      // set change flag
       this.hasChanged = true;
+      // set value for rule variable
       switch (varName) {
         case "left":
           this.editRuleLeft = varValue;
@@ -232,15 +245,30 @@ export default {
       }
     },
     onNew() {
-      // save editRule as new
-      this.isNew = true;
+      // quit current rule edit
+      if (this.gFocusMQref.value.id) {
+        this.isErrorQuitEditMqFirst = true;
+        return;
+      }
+      // clear errors
+      this.isErrorIllegalRuleNeitherVarsNorName = false;
+      this.isErrorIllegalIndex = false;
+      // check index for new
+      if (this.editRuleIndex < 0 || this.editRuleIndex > this.rules.length) {
+        this.isErrorIllegalIndex = true;
+        return;
+      }
       // save newRuleIndex for remove onCancel
       this.newRuleIndex = this.editRuleIndex;
-      // store rules
-      // this.onSave();
-      // this.isNew = false;
+      // confirm new, insert editRule
+      this.rules.splice(this.editRuleIndex, 0, this.editRule);
     },
     onDelete() {
+      // quit current rule edit
+      if (this.gFocusMQref.value.id) {
+        this.isErrorQuitEditMqFirst = true;
+        return;
+      }
       // clear errors
       this.isErrorIllegalRuleNeitherVarsNorName = false;
       this.isErrorIllegalIndex = false;
@@ -261,10 +289,13 @@ export default {
       // clear editRule
       this.editRule = {};
       this.editRuleIndex = -1;
-      // save rules
-      //this.onSave();
     },
     onSave() {
+      // quit current rule edit
+      if (this.gFocusMQref.value.id) {
+        this.isErrorQuitEditMqFirst = true;
+        return;
+      }
       // save changes on editRule
       // clear errors
       this.isErrorIllegalRuleNeitherVarsNorName = false;
@@ -275,34 +306,20 @@ export default {
         return;
       }
       if (this.hasChanged) {
-        if (this.isNew) {
-          // check index for new
-          if (
-            this.editRuleIndex < 0 ||
-            this.editRuleIndex > this.rules.length
-          ) {
-            this.isErrorIllegalIndex = true;
-            return;
-          }
-          // confirm new, insert editRule
-          this.rules.splice(this.editRuleIndex, 0, this.editRule);
-          // clear flag new
-          this.isNew = false;
-        } else {
-          // check index for edit
-          if (
-            this.editRuleIndex < 0 ||
-            this.editRuleIndex > this.rules.length - 1
-          ) {
-            this.isErrorIllegalIndex = true;
-            return;
-          }
-          // save replaced rule for restore onCancel
-          this.deletedRule = this.rules[this.editRuleIndex];
-          this.deletedRuleIndex = this.editRuleIndex;
-          // confirm edit, replace with editRule
-          this.rules.splice(this.editRuleIndex, 1, this.editRule);
+        // check index for edit
+        if (
+          this.editRuleIndex < 0 ||
+          this.editRuleIndex > this.rules.length - 1
+        ) {
+          this.isErrorIllegalIndex = true;
+          return;
         }
+        // save replaced rule for restore onCancel
+        this.deletedRule = this.rules[this.editRuleIndex];
+        this.deletedRuleIndex = this.editRuleIndex;
+        // confirm edit, replace with editRule
+        this.rules.splice(this.editRuleIndex, 1, this.editRule);
+
         // clear change
         this.hasChanged = false;
         // offer store of rules in file
@@ -316,6 +333,11 @@ export default {
       } else console.log("onSave: nothing saved");
     },
     onCancel() {
+      // quit current rule edit
+      if (this.gFocusMQref.value.id) {
+        this.isErrorQuitEditMqFirst = true;
+        return;
+      }
       // clear errors
       this.isErrorIllegalRuleNeitherVarsNorName = false;
       this.isErrorIllegalIndex = false;
@@ -338,11 +360,11 @@ export default {
     },
   },
   mounted() {
-    // MQ.StaticMath(document.getElementById("editRule"));
+    MQ.StaticMath(document.getElementById("editRule"));
     mqifyRules(this.rules, false);
   },
   updated() {
-    // MQ.StaticMath(document.getElementById("editRule"));
+    MQ.StaticMath(document.getElementById("editRule"));
     mqifyRules(this.rules, false);
   },
 };

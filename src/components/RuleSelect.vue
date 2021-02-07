@@ -100,14 +100,15 @@ export default {
       this.selectedRule.left = this.selectedRule.right;
       this.selectedRule.right = left;
     },
-    onRuleAdded(enlargedRules) {
-      this.rules = enlargedRules;
-      this.isAdding = false;
-    },
-    onAddCancelled() {
-      this.isAdding = false;
-    },
+    // onRuleAdded(enlargedRules) {
+    //   this.rules = enlargedRules;
+    //   this.isAdding = false;
+    // },
+    // onAddCancelled() {
+    //   this.isAdding = false;
+    // },
     onSelect(selRule) {
+      // quit current rule edit first
       if (this.gFocusMQref.value.id) {
         this.isErrorQuitEditMqFirst = true;
         return;
@@ -123,6 +124,7 @@ export default {
       }
     },
     onSave() {
+      // quit current rule edit first
       if (this.gFocusMQref.value.id) {
         this.isErrorQuitEditMqFirst = true;
         return;
@@ -137,6 +139,7 @@ export default {
       this.$emit("itemedited", this.selectedRule);
     },
     onCancel() {
+      // quit current rule edit first
       if (this.gFocusMQref.value.id) {
         this.isErrorQuitEditMqFirst = true;
         return;
