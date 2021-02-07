@@ -10,14 +10,14 @@ export function initRules(initRule, arrRules) {
   });
   return arrInit;
 }
-export function initRulesArr(arrRules) {
-  let arrInit = [];
-  arrRules.forEach((item) => {
-    if (item.vars) item = compressRule(item);
-    arrInit.push(item);
-  });
-  return arrInit;
-}
+// export function initRulesArr(arrRules) {
+//   let arrInit = [];
+//   arrRules.forEach((item) => {
+//     if (item.vars) item = compressRule(item);
+//     arrInit.push(item);
+//   });
+//   return arrInit;
+// }
 function compressRule(rule) {
   rule.left = rule.left.replace(/\s+/g, "");
   rule.right = rule.right.replace(/\s+/g, "");

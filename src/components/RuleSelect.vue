@@ -54,7 +54,7 @@
 <script>
 import RuleVarEditVue from "./RuleVarEdit.vue";
 import RuleSwapEditVue from "./RuleSwapEdit.vue";
-import rulesJSON from "../assets/rules.json";
+// import rulesJSON from "../assets/rules.json";
 import {
   initRules,
   isAllVarsFilled,
@@ -76,7 +76,8 @@ export default {
   data() {
     return {
       selectedRule: this.rule,
-      rules: initRules(this.rule, rulesJSON),
+      // rules: initRules(this.rule, rulesJSON),
+      rules: initRules(this.rule, this.gRulesJSON),
       isSelected: false,
       isErrorNotAllVarsFilled: false,
       isErrorQuitEditMqFirst: false,
