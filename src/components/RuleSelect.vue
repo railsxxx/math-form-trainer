@@ -56,7 +56,7 @@ import RuleVarEditVue from "./RuleVarEdit.vue";
 import RuleSwapEditVue from "./RuleSwapEdit.vue";
 // import rulesJSON from "../assets/rules.json";
 import {
-  initRules,
+  addFrontRule,
   isAllVarsFilled,
   fillRule,
   mqifyRules,
@@ -76,7 +76,7 @@ export default {
   data() {
     return {
       selectedRule: this.rule,
-      rules: initRules(this.gRulesJSON, this.rule),
+      rules: addFrontRule(this.rule, this.gRulesJSON),
       isSelected: false,
       isErrorNotAllVarsFilled: false,
       isErrorQuitEditMqFirst: false,

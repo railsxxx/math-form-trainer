@@ -28,6 +28,7 @@
 <script>
 import { downloadRules } from "../libs/rule.js";
 import rulesJSON from "../assets/rules.json";
+import { initRules } from "../libs/rule.js";
 export default {
   data() {
     return {
@@ -45,7 +46,7 @@ export default {
           fr.onload = function (e) {
             try {
               // console.log(e.target.result, JSON.parse(fr.result));
-              this.gRulesJSON = JSON.parse(fr.result);
+              this.gRulesJSON = initRules(JSON.parse(fr.result));
               alert("new rules loaded from file: ", el.files[0].name);
             } catch (ex) {
               alert("ex when trying to parse json = " + ex);
@@ -66,7 +67,7 @@ export default {
     },
     onReset() {
       // load rules from built in rules.json
-      this.gRulesJSON = rulesJSON;
+      this.gRulesJSON = initRules(rulesJSON);
     },
   },
 };

@@ -124,10 +124,8 @@
 
 <script>
 import RuleVarEditVue from "./RuleVarEdit.vue";
-// import rulesJSON from "../assets/rules.json";
 import {
-  // initRulesArr,
-  initRules,
+  //initRules,
   showRule,
   showRuleName,
   mqifyRules,
@@ -141,8 +139,8 @@ export default {
   emits: ["ruleadded", "addcancelled"],
   data() {
     return {
-      // rules: initRulesArr(this.gRulesJSON),
-      rules: initRules(this.gRulesJSON),
+      // rules: initRules(this.gRulesJSON),
+      rules: this.gRulesJSON,
       editRule: {},
       editRuleIndex: -1,
       editRuleLeft: "",

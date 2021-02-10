@@ -1,25 +1,21 @@
 let MQ = window.MQ;
 
-export function initRules(arrRules, initRule) {
+export function initRules(arrRules) {
   let arrInit = [];
-  if (initRule && initRule.vars) {
-    initRule = compressRule(initRule);
-    arrInit.push(initRule);
-  }
   arrRules.forEach((item) => {
     if (item.vars) item = compressRule(item);
     arrInit.push(item);
   });
   return arrInit;
 }
-// export function initRulesArr(arrRules) {
-//   let arrInit = [];
-//   arrRules.forEach((item) => {
-//     if (item.vars) item = compressRule(item);
-//     arrInit.push(item);
-//   });
-//   return arrInit;
-// }
+export function addFrontRule(initRule, arrRules) {
+  let arrInit = [];
+  if (initRule && initRule.vars) {
+    initRule = compressRule(initRule);
+    arrInit.push(initRule);
+  }
+  return arrInit.concat(arrRules);
+}
 function compressRule(rule) {
   rule.left = rule.left.replace(/\s+/g, "");
   rule.right = rule.right.replace(/\s+/g, "");
