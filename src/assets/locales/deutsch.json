@@ -1,6 +1,7 @@
 {
   "navTrainer": "Trainer",
   "navEditor": "Editor",
+  "navFile": "Datei",
 
   "title": "Formeltrainer Mathematik",
   "subtitle": "Die interaktive Formelsammlung hilft dir bei der Umformung eines mathematischen Ausdrucks",
@@ -20,6 +21,9 @@
   "back": "Zurück",
   "cancel": "Abbrechen",
   "save": "Speichern",
+  "apply": "Anwenden",
+  "open": "Öffnen",
+  "reset": "Reset",
 
   "set/removeBrackets": "Klammern setzen/auflösen",
   "multiplyOut": "ausmultiplizieren",
@@ -37,7 +41,7 @@
   "clickRuleToEdit": "Tippe auf eine Formel zum Editieren,",
   "clickRuleToNew": "auf Neu zum Hinzufügen einer Formel,",
   "clickRuleToDelete": "auf Löschen zum Entfernen einer Formel,",
-  "clickRuleToSave": "auf Speichern zum Sichern von Änderungen",
+  "clickRuleToSave": "auf Anwenden zum Übernehmen von Änderungen",
   "clickRuleToCancel": "oder auf Abbrechen um die letzte Aktion zu widerrufen",
   "isErrorIllegalRuleNeitherVarsNorName": "Ungültige Regel: Weder Vars noch Name",
   "isErrorIllegalIndex": "Ungültiger Index",

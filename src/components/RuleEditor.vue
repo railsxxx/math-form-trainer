@@ -111,8 +111,8 @@
     <button type="button" class="btn btn__primary" @click="onDelete">
       {{ locale.delete }}
     </button>
-    <button type="button" class="btn btn__primary" @click="onSave">
-      {{ locale.save }}
+    <button type="button" class="btn btn__primary" @click="onApply">
+      {{ locale.apply }}
     </button>
     <button type="button" class="btn" @click="onCancel">
       {{ locale.cancel }}
@@ -130,7 +130,6 @@ import {
   showRuleName,
   mqifyRules,
   stringifyRule,
-  downloadRules,
 } from "../libs/rule.js";
 let MQ = window.MQ;
 export default {
@@ -264,6 +263,8 @@ export default {
       this.newRuleIndex = this.editRuleIndex;
       // confirm new, insert editRule
       this.rules.splice(this.editRuleIndex, 0, this.editRule);
+      // save rules globally
+      this.gRulesJSON = this.rules;
     },
     onDelete() {
       // quit current rule edit
@@ -288,11 +289,13 @@ export default {
       this.deletedRule = this.rules.splice(this.deletedRuleIndex, 1)[0];
       // console.log("onDelete: deletedRule: ", this.deletedRule);
       // console.log("onDelete: rules: ", this.rules);
+      // save rules globally
+      this.gRulesJSON = this.rules;
       // clear editRule
       this.editRule = {};
       this.editRuleIndex = -1;
     },
-    onSave() {
+    onApply() {
       // quit current rule edit
       if (this.gFocusMQref.value.id) {
         this.isErrorQuitEditMqFirst = true;
@@ -321,11 +324,11 @@ export default {
         this.deletedRuleIndex = this.editRuleIndex;
         // confirm edit, replace with editRule
         this.rules.splice(this.editRuleIndex, 1, this.editRule);
+        // save rules globally
+        this.gRulesJSON = this.rules;
 
         // clear change
         this.hasChanged = false;
-        // offer store of rules in file
-        downloadRules(this.rules, "rules.json");
         // clear keypad
         this.gFocusMQref.value = {};
         // check rules
@@ -359,6 +362,8 @@ export default {
       this.newRuleIndex = -1;
       // clear keypad
       this.gFocusMQref.value = {};
+      // save rules globally
+      this.gRulesJSON = this.rules;
     },
   },
   mounted() {
