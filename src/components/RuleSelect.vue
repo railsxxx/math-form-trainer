@@ -76,8 +76,7 @@ export default {
   data() {
     return {
       selectedRule: this.rule,
-      // rules: initRules(this.rule, rulesJSON),
-      rules: initRules(this.rule, this.gRulesJSON),
+      rules: initRules(this.gRulesJSON, this.rule),
       isSelected: false,
       isErrorNotAllVarsFilled: false,
       isErrorQuitEditMqFirst: false,

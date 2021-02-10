@@ -1,11 +1,13 @@
 <template>
-  <h1>{{ locale.ruleEditor }}</h1>
+  <h1>{{ locale.editorTitle }}</h1>
   <div>
-    <div>{{ locale.clickRuleToEdit }}</div>
-    <div>{{ locale.clickRuleToNew }}</div>
-    <div>{{ locale.clickRuleToDelete }}</div>
-    <div>{{ locale.clickRuleToSave }}</div>
-    <div>{{ locale.clickRuleToCancel }}</div>
+    <p>
+      {{ locale.editorRule }}<br />
+      {{ locale.editorNew }}<br />
+      {{ locale.editorDelete }}<br />
+      {{ locale.editorSave }}<br />
+      {{ locale.editorCancel }}
+    </p>
     <div id="scroll" class="scrolldown">
       <span
         v-for="(optRule, index) in rules"
@@ -106,16 +108,16 @@
 
   <div class="btn-group btn__top">
     <button type="button" class="btn btn__primary" @click="onNew">
-      {{ locale.new }}
+      {{ locale.editorNewButton }}
     </button>
     <button type="button" class="btn btn__primary" @click="onDelete">
-      {{ locale.delete }}
+      {{ locale.editorDeleteButton }}
     </button>
     <button type="button" class="btn btn__primary" @click="onApply">
-      {{ locale.apply }}
+      {{ locale.editorApplyButton }}
     </button>
     <button type="button" class="btn" @click="onCancel">
-      {{ locale.cancel }}
+      {{ locale.editorCancelButton }}
     </button>
   </div>
 </template>
@@ -140,7 +142,7 @@ export default {
   data() {
     return {
       // rules: initRulesArr(this.gRulesJSON),
-      rules: initRules({}, this.gRulesJSON),
+      rules: initRules(this.gRulesJSON),
       editRule: {},
       editRuleIndex: -1,
       editRuleLeft: "",

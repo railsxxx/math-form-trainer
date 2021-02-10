@@ -2,9 +2,9 @@
   <div id="nav">
     <router-link :to="{ name: 'Trainer' }">{{ locale.navTrainer }}</router-link>
     |
-    <router-link :to="{ name: 'Editor' }">{{ locale.navEditor }}</router-link>
-    |
     <router-link :to="{ name: 'File' }">{{ locale.navFile }}</router-link>
+    |
+    <router-link :to="{ name: 'Editor' }">{{ locale.navEditor }}</router-link>
   </div>
 </template>
 

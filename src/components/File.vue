@@ -1,12 +1,26 @@
 <template>
+  <h1>{{ locale.fileTitle }}</h1>
+  <p>
+    {{ locale.fileEdit }}<br />
+    {{ locale.fileSave }}<br />
+    {{ locale.fileOpen }}<br />
+    {{ locale.fileReset }}
+  </p>
   <input type="file" class="file_select" id="myRules" @change="onOpen" />
   <div class="btn-group btn__top">
-    <label for="myRules" class="btn btn__primary">{{ locale.open }}</label>
-    <button type="button" class="btn btn__primary" @click="onSave">
-      {{ locale.save }}
+    <button
+      type="button"
+      class="btn btn__primary"
+      @click="this.$router.push({ name: 'Editor' })"
+    >
+      {{ locale.fileEditButton }}
     </button>
+    <button type="button" class="btn btn__primary" @click="onSave">
+      {{ locale.fileSaveButton }}
+    </button>
+    <label for="myRules" class="btn btn__primary">{{ locale.open }}</label>
     <button type="button" class="btn" @click="onReset">
-      {{ locale.reset }}
+      {{ locale.fileResetButton }}
     </button>
   </div>
 </template>
@@ -32,17 +46,17 @@ export default {
             try {
               // console.log(e.target.result, JSON.parse(fr.result));
               this.gRulesJSON = JSON.parse(fr.result);
-              console.log("new rules loaded from file: ", el.files[0].name);
+              alert("new rules loaded from file: ", el.files[0].name);
             } catch (ex) {
               alert("ex when trying to parse json = " + ex);
             }
           };
         } else {
-          console.log("File: onOpen: file is no JSON!");
+          alert("File: onOpen: file is no JSON!");
           return;
         }
       } else {
-        console.log("File: onOpen: No files found!");
+        alert("File: onOpen: No files found!");
         return;
       }
     },
