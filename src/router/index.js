@@ -1,6 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import MathList from "@/components/MathList.vue";
-import RulEditor from "@/components/RuleEditor.vue";
+import Editor from "@/components/Editor.vue";
 import File from "@/components/File.vue";
 
 const routes = [
@@ -12,7 +12,7 @@ const routes = [
   {
     path: "/editor",
     name: "Editor",
-    component: RulEditor
+    component: Editor
   },
   {
     path: "/file",

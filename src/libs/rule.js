@@ -1,9 +1,11 @@
 let MQ = window.MQ;
 
-export function initRules(initRule, arrRules) {
+export function initRules(arrRules, initRule) {
   let arrInit = [];
-  if (initRule.vars) compressRule(initRule);
-  arrInit.push(initRule);
+  if (initRule && initRule.vars) {
+    initRule = compressRule(initRule);
+    arrInit.push(initRule);
+  }
   arrRules.forEach((item) => {
     if (item.vars) item = compressRule(item);
     arrInit.push(item);

@@ -1,7 +1,7 @@
 {
   "navTrainer": "Trainer",
-  "navEditor": "Editor",
   "navFile": "Datei",
+  "navEditor": "Editor",
 
   "title": "Formeltrainer Mathematik",
   "subtitle": "Die interaktive Formelsammlung hilft dir bei der Umformung eines mathematischen Ausdrucks",
@@ -25,6 +25,29 @@
   "open": "Öffnen",
   "reset": "Reset",
 
+  "fileTitle": "Formelsammlung",
+  "fileEdit": "Bearbeite die Formelsammlung im Formeleditor.",
+  "fileSave": "Speichere Deine Formelsammlung in eine Datei oder",
+  "fileOpen": "Öffne eine Datei mit einer Formelsammlung.",
+  "fileReset": "Die mitgelieferte Formelsammlung aktivierst Du mit Reset.",
+  "fileEditButton": "Bearbeiten",
+  "fileSaveButton": "Speichern",
+  "fileOpenButton": "Öffnen",
+  "fileResetButton": "Reset",
+
+  "editorTitle": "Formeleditor",
+  "editorRule": "Tippe auf eine Formel zum Editieren,",
+  "editorNew": "auf Neu zum Hinzufügen einer Formel,",
+  "editorDelete": "auf Löschen zum Entfernen einer Formel,",
+  "editorSave": "auf Anwenden zum Übernehmen von Änderungen",
+  "editorCancel": "oder auf Abbrechen um die letzte Aktion zu widerrufen",
+  "isErrorIllegalRuleNeitherVarsNorName": "Ungültige Regel: Weder Vars noch Name",
+  "isErrorIllegalIndex": "Ungültiger Index",
+  "editorNewButton": "Neu",
+  "editorDeleteButton": "Löschen",
+  "editorApplyButton": "Anwenden",
+  "editorCancelButton": "Abbrechen",
+
   "set/removeBrackets": "Klammern setzen/auflösen",
   "multiplyOut": "ausmultiplizieren",
   "outsideBrackets": "ausklammern",
@@ -35,16 +58,5 @@
   "abcRule": "abc Formel",
   "pqRule": "pq Formel",
   "fraction": "Brüche",
-  "power": "Potenzen",
-
-  "ruleEditor": "Formel Editor",
-  "clickRuleToEdit": "Tippe auf eine Formel zum Editieren,",
-  "clickRuleToNew": "auf Neu zum Hinzufügen einer Formel,",
-  "clickRuleToDelete": "auf Löschen zum Entfernen einer Formel,",
-  "clickRuleToSave": "auf Anwenden zum Übernehmen von Änderungen",
-  "clickRuleToCancel": "oder auf Abbrechen um die letzte Aktion zu widerrufen",
-  "isErrorIllegalRuleNeitherVarsNorName": "Ungültige Regel: Weder Vars noch Name",
-  "isErrorIllegalIndex": "Ungültiger Index",
-  "new": "Neu",
-  "delete": "Löschen"
+  "power": "Potenzen"
 }
