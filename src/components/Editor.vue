@@ -140,7 +140,7 @@ export default {
   data() {
     return {
       // rules: initRules(this.gRulesJSON),
-      rules: this.gRulesJSON,
+      rules: this.gRulesJSONref.value,
       editRule: {},
       editRuleIndex: -1,
       editRuleLeft: "",
@@ -162,7 +162,6 @@ export default {
   },
   computed: {
     jsonRule() {
-      // return JSON.stringify(this.editRule);
       return stringifyRule(this.editRule);
     },
   },
@@ -264,7 +263,7 @@ export default {
       // confirm new, insert editRule
       this.rules.splice(this.editRuleIndex, 0, this.editRule);
       // save rules globally
-      this.gRulesJSON = this.rules;
+      this.gRulesJSONref.value = this.rules;
     },
     onDelete() {
       // quit current rule edit
@@ -290,7 +289,7 @@ export default {
       // console.log("onDelete: deletedRule: ", this.deletedRule);
       // console.log("onDelete: rules: ", this.rules);
       // save rules globally
-      this.gRulesJSON = this.rules;
+      this.gRulesJSONref.value = this.rules;
       // clear editRule
       this.editRule = {};
       this.editRuleIndex = -1;
@@ -325,7 +324,7 @@ export default {
         // confirm edit, replace with editRule
         this.rules.splice(this.editRuleIndex, 1, this.editRule);
         // save rules globally
-        this.gRulesJSON = this.rules;
+        this.gRulesJSONref.value = this.rules;
 
         // clear change
         this.hasChanged = false;
@@ -363,16 +362,18 @@ export default {
       // clear keypad
       this.gFocusMQref.value = {};
       // save rules globally
-      this.gRulesJSON = this.rules;
+      this.gRulesJSONref.value = this.rules;
     },
   },
   mounted() {
     MQ.StaticMath(document.getElementById("editRule"));
     mqifyRules(this.rules, false);
+    console.log("Editor mounted !");
   },
   updated() {
     MQ.StaticMath(document.getElementById("editRule"));
     mqifyRules(this.rules, false);
+    console.log("Editor updated !");
   },
 };
 </script>

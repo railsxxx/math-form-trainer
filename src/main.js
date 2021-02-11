@@ -9,7 +9,8 @@ import { initRules } from "./libs/rule.js";
 
 const app = createApp(App).use(router);
 
-app.config.globalProperties.gRulesJSON = initRules(rulesJSON);
+// app.config.globalProperties.gRulesJSON = initRules(rulesJSON);
+app.config.globalProperties.gRulesJSONref = ref(initRules(rulesJSON));
 app.config.globalProperties.gClipboard = "clip";
 app.config.globalProperties.gFocusMQref = ref({});
 app.config.globalProperties.gLocale = locale;

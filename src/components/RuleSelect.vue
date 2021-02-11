@@ -54,7 +54,6 @@
 <script>
 import RuleVarEditVue from "./RuleVarEdit.vue";
 import RuleSwapEditVue from "./RuleSwapEdit.vue";
-// import rulesJSON from "../assets/rules.json";
 import {
   addFrontRule,
   isAllVarsFilled,
@@ -76,7 +75,7 @@ export default {
   data() {
     return {
       selectedRule: this.rule,
-      rules: addFrontRule(this.rule, this.gRulesJSON),
+      rules: addFrontRule(this.rule, this.gRulesJSONref.value),
       isSelected: false,
       isErrorNotAllVarsFilled: false,
       isErrorQuitEditMqFirst: false,

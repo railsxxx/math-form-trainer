@@ -41,13 +41,14 @@ export default {
       const el = document.getElementById("myRules");
       if ("files" in el) {
         if (el.files[0].type === "application/json") {
+          const loadOn = this.onLoad;
           const fr = new FileReader();
           fr.readAsText(el.files[0]);
           fr.onload = function (e) {
             try {
               // console.log(e.target.result, JSON.parse(fr.result));
-              this.gRulesJSON = initRules(JSON.parse(fr.result));
-              alert("new rules loaded from file: ", el.files[0].name);
+              // this.gRulesJSON = initRules(JSON.parse(fr.result));
+              loadOn(initRules(JSON.parse(fr.result)), el.files[0].name);
             } catch (ex) {
               alert("ex when trying to parse json = " + ex);
             }
@@ -61,13 +62,17 @@ export default {
         return;
       }
     },
+    onLoad(loadedRules, fileName) {
+      this.gRulesJSONref.value = loadedRules;
+      alert("new rules loaded from file: " + fileName);
+    },
     onSave() {
       // offer store of rules to file
-      downloadRules(this.gRulesJSON, "rules.json");
+      downloadRules(this.gRulesJSONref.value, "rules.json");
     },
     onReset() {
       // load rules from built in rules.json
-      this.gRulesJSON = initRules(rulesJSON);
+      this.gRulesJSONref.value = initRules(rulesJSON);
     },
   },
 };
