@@ -368,12 +368,12 @@ export default {
   mounted() {
     MQ.StaticMath(document.getElementById("editRule"));
     mqifyRules(this.rules, false);
-    console.log("Editor mounted !");
+    // console.log("Editor mounted !");
   },
   updated() {
     MQ.StaticMath(document.getElementById("editRule"));
     mqifyRules(this.rules, false);
-    console.log("Editor updated !");
+    // console.log("Editor updated !");
   },
 };
 </script>

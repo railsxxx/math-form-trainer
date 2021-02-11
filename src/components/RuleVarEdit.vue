@@ -67,7 +67,8 @@ export default {
       this.$emit(
         "varedited",
         this.varName,
-        this.varNewValue.replace(/\s+/g, "")
+        // this.varNewValue.replace(/\s+/g, "")
+        this.varNewValue
       );
     },
   },

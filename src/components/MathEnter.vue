@@ -49,7 +49,8 @@ export default {
     },
     onStart() {
       if (this.input === "") return;
-      this.$emit("newmath", this.input.replace(/\s+/g, ""));
+      // this.$emit("newmath", this.input.replace(/\s+/g, ""));
+      this.$emit("newmath", this.input);
       this.input = "";
       this.gFocusMQref.value = {};
       this.isEditing = false;

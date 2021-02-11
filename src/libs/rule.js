@@ -17,8 +17,8 @@ export function addFrontRule(initRule, arrRules) {
   return arrInit.concat(arrRules);
 }
 function compressRule(rule) {
-  rule.left = rule.left.replace(/\s+/g, "");
-  rule.right = rule.right.replace(/\s+/g, "");
+  // rule.left = rule.left.replace(/\s+/g, "");
+  // rule.right = rule.right.replace(/\s+/g, "");
   return rule;
 }
 // function compressRules(arrRules) {

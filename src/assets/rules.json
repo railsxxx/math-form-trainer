@@ -1,21 +1,13 @@
 [
-  { "name": "set/removeBrackets" },
-  {
-    "left": "\\left(a+b\\right)c",
-    "right": "ac+bc",
-    "vars": ["a", "b", "c"],
-    "name": "multiplyOut"
-  },
-  {
-    "left": "ac+bc",
-    "right": "\\left(a+b\\right)c",
-    "vars": ["a", "b", "c"],
-    "name": "outsideBrackets"
-  },
-  { "name": "sumUp/splitUp" },
+  { "name": "basicArithmetic" },
   { "left": "a+b", "right": "c", "vars": ["a", "b", "c"], "swap": "true" },
   { "left": "a-b", "right": "c", "vars": ["a", "b", "c"], "swap": "true" },
-  { "left": "a*b", "right": "c", "vars": ["a", "b", "c"], "swap": "true" },
+  {
+    "left": "a\\cdot b",
+    "right": "c",
+    "vars": ["a", "b", "c"],
+    "swap": "true"
+  },
   {
     "left": "\\frac{a}{b}",
     "right": "c",
@@ -24,7 +16,69 @@
   },
   { "name": "interchange" },
   { "left": "a+b", "right": "b+a", "vars": ["a", "b"] },
-  { "left": "a*b", "right": "b*a", "vars": ["a", "b"] },
+  { "left": "a\\cdot b", "right": "b\\cdot a", "vars": ["a", "b"] },
+  { "name": "set/removeBrackets" },
+  {
+    "left": "ab+ac",
+    "right": "a\\left(b+c\\right)",
+    "vars": ["a", "b", "c"],
+    "name": "outsideBrackets"
+  },
+  {
+    "left": "ab-ac",
+    "right": "a\\left(b-c\\right)",
+    "vars": ["a", "b", "c"],
+    "name": "outsideBrackets"
+  },
+  {
+    "left": "a\\left(b+c\\right)",
+    "right": "ab+ac",
+    "vars": ["a", "b", "c"],
+    "name": "multiplyOut"
+  },
+  {
+    "left": "a\\left(b-c\\right)",
+    "right": "ab-ac",
+    "vars": ["a", "b", "c"],
+    "name": "multiplyOut"
+  },
+  { "name": "negativeSign" },
+  {
+    "left": "\\left(-a\\right)",
+    "right": "-a",
+    "swap": "true",
+    "vars": ["a", "b"]
+  },
+  {
+    "left": "a+\\left(-b\\right)",
+    "right": "a-b",
+    "swap": "true",
+    "vars": ["a", "b"]
+  },
+  {
+    "left": "a-\\left(-b\\right)",
+    "right": "a+b",
+    "swap": "true",
+    "vars": ["a", "b"]
+  },
+  {
+    "left": "\\left(-a\\right)\\cdot\\left(-b\\right)",
+    "right": "a\\cdot b",
+    "swap": "true",
+    "vars": ["a", "b"]
+  },
+  {
+    "left": "\\left(-a\\right)\\cdot b",
+    "right": "-a\\cdot b",
+    "swap": "true",
+    "vars": ["a", "b"]
+  },
+  {
+    "left": "a\\cdot\\left(-b\\right)",
+    "right": "-a\\cdot b",
+    "swap": "true",
+    "vars": ["a", "b"]
+  },
   { "name": "binomialFormula" },
   {
     "left": "(a+b)^2",

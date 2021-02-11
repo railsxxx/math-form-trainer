@@ -47,7 +47,6 @@ export default {
           fr.onload = function (e) {
             try {
               // console.log(e.target.result, JSON.parse(fr.result));
-              // this.gRulesJSON = initRules(JSON.parse(fr.result));
               loadOn(initRules(JSON.parse(fr.result)), el.files[0].name);
             } catch (ex) {
               alert("ex when trying to parse json = " + ex);
