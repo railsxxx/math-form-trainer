@@ -18,6 +18,7 @@
   { "left": "a+b", "right": "b+a", "vars": ["a", "b"] },
   { "left": "a\\cdot b", "right": "b\\cdot a", "vars": ["a", "b"] },
   { "name": "set/removeBrackets" },
+  { "name": "association" },
   { "left": "\\left(a\\right)", "right": "a", "vars": ["a"], "swap": "true" },
   {
     "left": "a+\\left(b+c\\right)",
@@ -47,6 +48,7 @@
     "swap": "true",
     "name": "minusBracket"
   },
+  { "name": "distribution" },
   {
     "left": "\\left(a+b\\right)\\cdot\\left(c+d\\right)",
     "right": "a\\cdot c+a\\cdot d+b\\cdot c+b\\cdot d",

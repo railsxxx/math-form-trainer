@@ -68,11 +68,11 @@ export default {
       return showRule(rule);
     },
     rewriteMath() {
-      // console.log("rewriteMath: math: ", this.math);
-      // console.log("rewriteMath: rule: ", this.rule);
+      console.log("rewriteMath: math: ", this.math);
+      console.log("rewriteMath: rule: ", this.rule);
       if (!this.rule.filled) return;
       const newMath = matchRule(this.math, this.rule.filled);
-      // console.log("rewriteMath: newMath: ", newMath);
+      console.log("rewriteMath: newMath: ", newMath);
       if (newMath === "") this.isErrorNoMatch = true;
       else this.$emit("ruleapplied", newMath);
     },

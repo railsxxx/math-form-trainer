@@ -135,18 +135,33 @@ function match0(string, pattern, conclusion) {
   let result = replacePos(string, pattern, conclusion); // find pattern and replace by conclusion
   // console.log("match0: result: ", result);
   if (result.strResult !== string) {
+    // match success
     return result.strResult;
   } else if (result.posSearchFailMax) {
-    const maxPos = result.posSearchFailMax;
-    // console.log("maxPos: ", maxPos);
-    result = replacePos(pattern, "\\cdot ", "", maxPos); // remove cdot from pattern at maxPos
+    // remove cdot from pattern and retry match
+    let maxPos = result.posSearchFailMax;
+    const maxPosChar = result.posSearchFailChar;
+    // console.log("maxPos: ", maxPos, ", maxPosChar: ", maxPosChar);
+    let cdotPat = "\\cdot ";
+    switch (maxPosChar) {
+      case "c":
+        maxPos -= 1;
+        cdotPat = "\\cdot";
+        break;
+      default:
+    }
+    // console.log("maxPos adjusted: ", maxPos);
+    result = replacePos(pattern, cdotPat, "", maxPos); // remove cdot from pattern at maxPos
     const newpattern = result.strResult;
+    // console.log("newpattern: ", newpattern);
     if (newpattern !== pattern) {
       return match0(string, newpattern, conclusion); // recurse with modified pattern
     } else {
+      // no match
       return "";
     }
   } else {
+    // no match
     return "";
   }
 }
@@ -181,12 +196,15 @@ function replacePos(strInput, strSearch, strReplace, startPosInput = 0) {
       result.push(charInput);
     }
   }
+  // return object with replace and fail information
   if (matched) {
     return { strResult: result.join("") };
   } else {
+    const max = Math.max(...posFail.map((o) => o.posSearch), 0);
     return {
       strResult: result.join(""),
-      posSearchFailMax: Math.max(...posFail.map((o) => o.posSearch), 0)
+      posSearchFailMax: max,
+      posSearchFailChar: strSearch.charAt(max)
     };
   }
   function match() {
@@ -206,7 +224,16 @@ function replacePos(strInput, strSearch, strReplace, startPosInput = 0) {
           charInput = charInputStart;
           return false;
         }
-        // console.log("charInput: ", charInput, ", charSearch: ", charSearch)
+        // console.log(
+        //   "indexInput: ",
+        //   indexInput,
+        //   ", charInput: ",
+        //   charInput,
+        //   ", charSearch: ",
+        //   charSearch,
+        //   ", indexSearch: ",
+        //   indexSearch
+        // );
         if (charInput !== charSearch) {
           posFail.push({
             posInput: indexInput - 1,

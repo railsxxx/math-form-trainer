@@ -50,10 +50,11 @@
 
   "basicArithmetic": "Grundrechenarten",
   "interchange": "Vertauschen, Kommutativgesetz",
-  "set/removeBrackets": "Klammern, Assoziativgesetz",
+  "set/removeBrackets": "Klammern, setzen/auflösen",
+  "association": "Assoziativgesetz",
   "plusBracket": "Plusklammer",
   "minusBracket": "Minusklammer",
-  "distribution": "Verteilen, Distributivgesetz",
+  "distribution": "Distributivgesetz",
   "multiplyOut": "ausmultiplizieren",
   "outsideBrackets": "ausklammern",
   "binomialFormula": "Binomische Formeln",
