@@ -41,8 +41,8 @@
       {{ locale.isErrorQuitEditMqFirst }}
     </div>
     <div class="btn-group btn__top">
-      <button type="button" class="btn btn__primary" @click="onSave">
-        {{ locale.save }}
+      <button type="button" class="btn btn__primary" @click="onApply">
+        {{ locale.apply }}
       </button>
       <button type="button" class="btn" @click="onCancel">
         {{ locale.cancel }}
@@ -122,7 +122,7 @@ export default {
         this.isSelected = true;
       }
     },
-    onSave() {
+    onApply() {
       // quit current rule edit first
       if (this.gFocusMQref.value.id) {
         this.isErrorQuitEditMqFirst = true;

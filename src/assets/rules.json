@@ -18,37 +18,73 @@
   { "left": "a+b", "right": "b+a", "vars": ["a", "b"] },
   { "left": "a\\cdot b", "right": "b\\cdot a", "vars": ["a", "b"] },
   { "name": "set/removeBrackets" },
+  { "left": "\\left(a\\right)", "right": "a", "vars": ["a"], "swap": "true" },
   {
-    "left": "ab+ac",
-    "right": "a\\left(b+c\\right)",
+    "left": "a+\\left(b+c\\right)",
+    "right": "a+b+c",
     "vars": ["a", "b", "c"],
-    "name": "outsideBrackets"
+    "swap": "true",
+    "name": "plusBracket"
   },
   {
-    "left": "ab-ac",
-    "right": "a\\left(b-c\\right)",
+    "left": "a+\\left(b-c\\right)",
+    "right": "a+b-c",
     "vars": ["a", "b", "c"],
-    "name": "outsideBrackets"
+    "swap": "true",
+    "name": "plusBracket"
   },
   {
-    "left": "a\\left(b+c\\right)",
-    "right": "ab+ac",
+    "left": "a-\\left(b+c\\right)",
+    "right": "a-b-c",
+    "vars": ["a", "b", "c"],
+    "swap": "true",
+    "name": "minusBracket"
+  },
+  {
+    "left": "a-\\left(b-c\\right)",
+    "right": "a-b+c",
+    "vars": ["a", "b", "c"],
+    "swap": "true",
+    "name": "minusBracket"
+  },
+  {
+    "left": "\\left(a+b\\right)\\cdot\\left(c+d\\right)",
+    "right": "a\\cdot c+a\\cdot d+b\\cdot c+b\\cdot d",
+    "vars": ["a", "b", "c", "d"],
+    "name": "multiplyOut"
+  },
+  {
+    "left": "\\left(a-b\\right)\\cdot\\left(c-d\\right)",
+    "right": "a\\cdot c-a\\cdot d-b\\cdot c+b\\cdot d",
+    "vars": ["a", "b", "c", "d"],
+    "name": "multiplyOut"
+  },
+  {
+    "left": "a\\cdot\\left(b+c\\right)",
+    "right": "a\\cdot b+a\\cdot c",
     "vars": ["a", "b", "c"],
     "name": "multiplyOut"
   },
   {
-    "left": "a\\left(b-c\\right)",
-    "right": "ab-ac",
+    "left": "a\\cdot\\left(b-c\\right)",
+    "right": "a\\cdot b-a\\cdot c",
     "vars": ["a", "b", "c"],
     "name": "multiplyOut"
+  },
+  {
+    "left": "a\\cdot b+a\\cdot c",
+    "right": "a\\cdot\\left(b+c\\right)",
+    "vars": ["a", "b", "c"],
+    "name": "outsideBrackets"
+  },
+  {
+    "left": "a\\cdot b-a\\cdot c",
+    "right": "a\\cdot\\left(b-c\\right)",
+    "vars": ["a", "b", "c"],
+    "name": "outsideBrackets"
   },
   { "name": "negativeSign" },
-  {
-    "left": "\\left(-a\\right)",
-    "right": "-a",
-    "swap": "true",
-    "vars": ["a", "b"]
-  },
+  { "left": "\\left(-a\\right)", "right": "-a", "swap": "true", "vars": ["a"] },
   {
     "left": "a+\\left(-b\\right)",
     "right": "a-b",
@@ -82,31 +118,31 @@
   { "name": "binomialFormula" },
   {
     "left": "(a+b)^2",
-    "right": "a^2+2ab+b^2",
+    "right": "a^2+2\\cdot a\\cdot b+b^2",
     "vars": ["a", "b"],
     "swap": "true"
   },
   {
     "left": "(a-b)^2",
-    "right": "a^2-2ab+b^2",
+    "right": "a^2-2\\cdot a\\cdot b+b^2",
     "vars": ["a", "b"],
     "swap": "true"
   },
   {
     "left": "(a^2-b^2)",
-    "right": "(a-b)(a+b)",
+    "right": "(a-b)\\cdot(a+b)",
     "vars": ["a", "b"],
     "swap": "true"
   },
   { "name": "quadraticEquation" },
   {
-    "left": "ax^2+bx+c=0",
-    "right": "x_{1,2}=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+    "left": "a\\cdot x^2+b\\cdot x+c=0",
+    "right": "x_{1,2}=\\frac{-b\\pm\\sqrt{b^2-4\\cdot a\\cdot c}}{2\\cdot a}",
     "vars": ["a", "b", "c"],
     "name": "abcRule"
   },
   {
-    "left": "x^2+px+q=0",
+    "left": "x^2+p\\cdot x+q=0",
     "right": "x_{1,2}=\\frac{-p}{2}\\pm\\sqrt{(\\frac{p}{2})^2-q}",
     "vars": ["p", "q"],
     "name": "pqRule"
@@ -118,5 +154,5 @@
     "vars": ["a", "b", "c"]
   },
   { "name": "power" },
-  { "left": "(a^n)^m", "right": "a^{n*m}", "vars": ["a", "n", "m"] }
+  { "left": "(a^n)^m", "right": "a^{n\\cdot m}", "vars": ["a", "n", "m"] }
 ]

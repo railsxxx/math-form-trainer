@@ -68,10 +68,11 @@ export default {
       return showRule(rule);
     },
     rewriteMath() {
-      //console.log("rewriteMath: rule: ", this.rule);
+      // console.log("rewriteMath: math: ", this.math);
+      // console.log("rewriteMath: rule: ", this.rule);
       if (!this.rule.filled) return;
       const newMath = matchRule(this.math, this.rule.filled);
-      // console.log("rewriteMath: this.newMath: ", this.newMath);
+      // console.log("rewriteMath: newMath: ", newMath);
       if (newMath === "") this.isErrorNoMatch = true;
       else this.$emit("ruleapplied", newMath);
     },
@@ -93,8 +94,8 @@ export default {
       this.isEditing = false;
     },
     onStaticMathClick() {
-    //   this.gFocusMQobj.set(this.staticMathMQ);
-    //   console.log("onStaticMathClick: gFocusMQobj: ", this.gFocusMQobj.get());
+      //   this.gFocusMQobj.set(this.staticMathMQ);
+      //   console.log("onStaticMathClick: gFocusMQobj: ", this.gFocusMQobj.get());
       this.gFocusMQref.value = this.staticMathMQ;
       console.log(
         "onStaticMathClick: gFocusMQref.value: ",
