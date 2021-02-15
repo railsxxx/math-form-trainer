@@ -292,6 +292,10 @@ export function fillRule(selectedRule) {
   }
   restoreLatexCmds();
   // console.log("fillRule: filled restore: ", filled);
+  // skip space follwed by non-char, (e.g. after cdot char)
+  filled.left = filled.left.replace(/\s(?![a-z,A-Z])/g, "");
+  filled.right = filled.right.replace(/\s(?![a-z,A-Z])/g, "");
+  console.log("fillRule: filled cdot space skipped: ", filled);
   // store filled in selectedRule
   selectedRule.filled = filled;
   return selectedRule;
