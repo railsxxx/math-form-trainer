@@ -16,9 +16,10 @@
     Start
   </button>
 </template>
-
+ 
 <script>
 import { createMQEditField } from "../libs/mq.js";
+import evaluatex from "../libs/evaluatex/evaluatex.js";
 export default {
   emits: ["newmath"],
   data() {
@@ -50,6 +51,16 @@ export default {
     onStart() {
       if (this.input === "") return;
       // this.$emit("newmath", this.input.replace(/\s+/g, ""));
+
+      console.log("MathEnter: onStart: latex: ", this.input);
+      // let fn = evaluatex(this.input, {}, { latex: true });
+      // // console.log("expression: ", fn.expression);
+      // // console.log("tokens: string: ", fn.tokens.toString());
+      // // console.log("ast: ", fn.ast.printTree());
+      // let latex = fn.ast.toLaTeX();
+      // console.log("laTeX: ", latex);
+
+      // this.$emit("newmath", latex);
       this.$emit("newmath", this.input);
       this.input = "";
       this.gFocusMQref.value = {};

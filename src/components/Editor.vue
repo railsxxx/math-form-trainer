@@ -131,6 +131,7 @@ import {
   mqifyRules,
   stringifyRule,
 } from "../libs/rule.js";
+// import evaluatex from "../libs/evaluatex/evaluatex.js";
 let MQ = window.MQ;
 export default {
   components: {
@@ -206,11 +207,17 @@ export default {
       // set value for rule variable
       switch (varName) {
         case "left":
+          // varValue = evaluatex(varValue, {}, { latex: true }).ast.toLaTeX();
+          // console.log("varValue: laTeX: ", varValue);
+
           this.editRuleLeft = varValue;
           if (varValue === "") delete this.editRule.left;
           else this.editRule.left = varValue;
           break;
         case "right":
+          // varValue = evaluatex(varValue, {}, { latex: true }).ast.toLaTeX();
+          // console.log("varValue: laTeX: ", varValue);
+
           this.editRuleRight = varValue;
           if (varValue === "") delete this.editRule.right;
           else this.editRule.right = varValue;

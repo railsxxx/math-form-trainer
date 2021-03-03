@@ -86,7 +86,8 @@
     "name": "outsideBrackets"
   },
   { "name": "negativeSign" },
-  { "left": "\\left(-a\\right)", "right": "-a", "swap": "true", "vars": ["a"] },
+  { "left": "-a", "right": "\\left(-a\\right)", "vars": ["a"] },
+  { "left": "-\\left(-a\\right)", "right": "a", "swap": "true", "vars": ["a"] },
   {
     "left": "a+\\left(-b\\right)",
     "right": "a-b",
@@ -107,14 +108,26 @@
   },
   {
     "left": "\\left(-a\\right)\\cdot b",
-    "right": "-a\\cdot b",
+    "right": "\\left(-a\\cdot b\\right)",
     "swap": "true",
     "vars": ["a", "b"]
   },
   {
     "left": "a\\cdot\\left(-b\\right)",
-    "right": "-a\\cdot b",
+    "right": "\\left(-a\\cdot b\\right)",
     "swap": "true",
+    "vars": ["a", "b"]
+  },
+  {
+    "swap": "true",
+    "left": "\\frac{\\left(-a\\right)}{b}",
+    "right": "\\left(-\\frac{a}{b}\\right)",
+    "vars": ["a", "b"]
+  },
+  {
+    "swap": "true",
+    "left": "\\frac{a}{\\left(-b\\right)}",
+    "right": "\\left(-\\frac{a}{b}\\right)",
     "vars": ["a", "b"]
   },
   { "name": "binomialFormula" },
