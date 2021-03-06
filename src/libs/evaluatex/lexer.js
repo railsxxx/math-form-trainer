@@ -2,7 +2,6 @@ import Token from "./Token.js";
 import arities from "./util/arities.js";
 import localFunctions from "./util/localFunctions.js";
 
-
 // Single-arg tokens are those that, when in LaTeX mode, read only one character as their argument OR a block delimited by { }. For example, `x ^ 24` would be read as `SYMBOL(x) POWER NUMBER(2) NUMBER(4).
 const CHAR_ARG_TOKENS = [Token.TYPE_POWER, Token.TYPE_COMMAND];
 
@@ -58,8 +57,7 @@ class Lexer {
         for (let i = 0; i < arity; i++) {
           this.lexExpression(true);
         }
-      }
-      else if (isStartGroupToken(token)) {
+      } else if (isStartGroupToken(token)) {
         this.lexExpression(false);
       }
 
@@ -119,21 +117,26 @@ class Lexer {
         // save name of COMMAND function for debugging later
         token.name = token.value.substr(1).toLowerCase();
         switch (token.name) {
-          case "cdot":// replace cdot with times
+          case "cdot": // replace cdot with times
             token.type = Token.TYPE_TIMES;
             token.value = "*";
+            break;
           case "left(":
             token.type = Token.TYPE_LPAREN;
             token.value = "(";
+            break;
           case "right(":
             token.type = Token.TYPE_RPAREN;
             token.value = "(";
+            break;
           case "left[":
             token.type = Token.TYPE_LPAREN;
             token.value = "[";
+            break;
           case "right]":
             token.type = Token.TYPE_RPAREN;
             token.value = "]";
+            break;
           default:
             // set value to COMMAND function
             token.value = this.constants[token.name];
@@ -154,8 +157,7 @@ class Lexer {
           token.type = Token.TYPE_FUNCTION;
           token.name = token.value; // Save name of function for debugging later
           token.value = this.constants[token.value];
-        }
-        else if (typeof this.constants[token.value] === "number") {
+        } else if (typeof this.constants[token.value] === "number") {
           token.type = Token.TYPE_NUMBER;
           token.value = token.fn = this.constants[token.value];
         }
@@ -168,28 +170,32 @@ class Lexer {
     let extendedTokens = [];
     for (const token of this.tokens) {
       if (token.type === Token.TYPE_SYMBOL) {
-        if (prevToken
-          && (prevToken.type === Token.TYPE_SYMBOL
-            || prevToken.type === Token.TYPE_NUMBER
-            || prevToken.type === Token.TYPE_RPAREN)) {
+        if (
+          prevToken &&
+          (prevToken.type === Token.TYPE_SYMBOL ||
+            prevToken.type === Token.TYPE_NUMBER ||
+            prevToken.type === Token.TYPE_RPAREN)
+        ) {
+          extendedTokens.push(new Token(Token.TYPE_TIMES, "*"));
+        }
+      } else if (token.type === Token.TYPE_NUMBER) {
+        if (
+          prevToken &&
+          (prevToken.type === Token.TYPE_SYMBOL ||
+            prevToken.type === Token.TYPE_RPAREN)
+        ) {
+          extendedTokens.push(new Token(Token.TYPE_TIMES, "*"));
+        }
+      } else if (token.type === Token.TYPE_LPAREN) {
+        if (
+          prevToken &&
+          (prevToken.type === Token.TYPE_NUMBER ||
+            prevToken.type === Token.TYPE_SYMBOL)
+        ) {
           extendedTokens.push(new Token(Token.TYPE_TIMES, "*"));
         }
       }
-      else if (token.type === Token.TYPE_NUMBER) {
-        if (prevToken
-          && (prevToken.type === Token.TYPE_SYMBOL
-            || prevToken.type === Token.TYPE_RPAREN)) {
-          extendedTokens.push(new Token(Token.TYPE_TIMES, "*"));
-        }
-      }
-      else if (token.type === Token.TYPE_LPAREN) {
-        if (prevToken
-          && (prevToken.type === Token.TYPE_NUMBER
-            || prevToken.type === Token.TYPE_SYMBOL)) {
-          extendedTokens.push(new Token(Token.TYPE_TIMES, "*"));
-        }
-      }
-      prevToken = token
+      prevToken = token;
       extendedTokens.push(token);
     }
     this.tokens = extendedTokens;
@@ -199,7 +205,9 @@ class Lexer {
    * Removes whitespace from the beginning of the buffer.
    */
   skipWhitespace() {
-    const regex = new RegExp(/^/.source + Token.patterns.get(Token.TYPE_WHITESPACE).source);
+    const regex = new RegExp(
+      /^/.source + Token.patterns.get(Token.TYPE_WHITESPACE).source
+    );
     this.buffer = this.buffer.replace(regex, "");
   }
 }

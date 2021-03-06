@@ -116,20 +116,19 @@ export default class Node {
         str += this.value;
         break;
       case Node.TYPE_SUM:
-        str += "\\left( " + this.toLaTeXInfix("+") + "\\right)";
+        str += this.toLaTeXSum();
         break;
       case Node.TYPE_PRODUCT:
-        // str += this.toLaTeXInfix("*");
-        str += this.toLaTeXInfix("\\cdot");
+        str += this.toLaTeXProduct();
         break;
       case Node.TYPE_POWER:
-        str += this.toLaTeXInfix("^");
+        str += this.toLaTeXPower();
         break;
       // case Node.TYPE_INVERSE:
       //   str += "1/ " + this.child.toLaTeX();
       //   break;
       case Node.TYPE_NEGATE:
-        str += "\\left( - " + this.child.toLaTeX() + "\\right)";
+        str += this.toLaTeXNegate();
         break;
       case Node.TYPE_FUNCTION:
         str += this.toLaTeXFunction(this.name);
@@ -137,16 +136,85 @@ export default class Node {
     }
     return str;
   }
-  toLaTeXInfix(op) {
+  // toLaTeXInfix(op) {
+  //   let str = "";
+  //   // Print each child.
+  //   for (let i in this.children) {
+  //     str += this.children[i].toLaTeX();
+  //     // not last child
+  //     if (i < this.children.length - 1) {
+  //       str += op;
+  //     }
+  //   }
+  //   return str;
+  // }
+  toLaTeXPower() {
     let str = "";
-    // Print each child.
     for (let i in this.children) {
-      str += this.children[i].toLaTeX();
-      // not last child
-      if (i < this.children.length - 1) {
-        str += " " + op + " ";
+      if (i == 0) {
+        str += checkChild(this.children[i]);
+      } else {
+        str += "^" + checkChild(this.children[i]);
       }
     }
+    return str;
+
+    function checkChild(child) {
+      let str = "";
+      if (
+        child.type === Node.TYPE_NEGATE ||
+        child.type === Node.TYPE_SUM ||
+        child.type === Node.TYPE_PRODUCT ||
+        child.type === Node.TYPE_POWER
+      )
+        str += "\\left(" + child.toLaTeX() + "\\right)";
+      else {
+        str += child.toLaTeX();
+      }
+      return str;
+    }
+  }
+  toLaTeXProduct() {
+    let str = "";
+    for (let i in this.children) {
+      if (i == 0) {
+        str += checkChild(this.children[i]);
+      } else {
+        str += "\\cdot " + checkChild(this.children[i]);
+      }
+    }
+    return str;
+
+    function checkChild(child) {
+      let str = "";
+      if (child.type === Node.TYPE_NEGATE || child.type === Node.TYPE_SUM)
+        str += "\\left(" + child.toLaTeX() + "\\right)";
+      else {
+        str += child.toLaTeX();
+      }
+      return str;
+    }
+  }
+  toLaTeXSum() {
+    let str = "";
+    for (let i in this.children) {
+      if (this.children[i].type === Node.TYPE_NEGATE)
+        str += this.children[i].toLaTeX();
+      else {
+        if (i == 0) {
+          str += this.children[i].toLaTeX();
+        } else {
+          str += "+" + this.children[i].toLaTeX();
+        }
+      }
+    }
+    return str;
+  }
+  toLaTeXNegate() {
+    let str = "-";
+    if (this.child.type === Node.TYPE_SUM)
+      str += "\\left(" + this.child.toLaTeX() + "\\right)";
+    else str += this.child.toLaTeX();
     return str;
   }
   toLaTeXFunction(name) {

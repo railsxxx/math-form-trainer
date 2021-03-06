@@ -53,15 +53,15 @@ export default {
       // this.$emit("newmath", this.input.replace(/\s+/g, ""));
 
       console.log("MathEnter: onStart: latex: ", this.input);
-      // let fn = evaluatex(this.input, {}, { latex: true });
-      // // console.log("expression: ", fn.expression);
-      // // console.log("tokens: string: ", fn.tokens.toString());
-      // // console.log("ast: ", fn.ast.printTree());
-      // let latex = fn.ast.toLaTeX();
-      // console.log("laTeX: ", latex);
+      let fn = evaluatex(this.input, {}, { latex: true });
+      // console.log("expression: ", fn.expression);
+      // console.log("tokens: string: ", fn.tokens.toString());
+      // console.log("ast: ", fn.ast.printTree());
+      let latex = fn.ast.toLaTeX();
+      console.log("laTeX: ", latex);
 
-      // this.$emit("newmath", latex);
-      this.$emit("newmath", this.input);
+      this.$emit("newmath", latex);
+      // this.$emit("newmath", this.input);
       this.input = "";
       this.gFocusMQref.value = {};
       this.isEditing = false;

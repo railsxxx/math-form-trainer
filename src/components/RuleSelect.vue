@@ -62,6 +62,7 @@ import {
   showRuleName,
   showRule,
 } from "../libs/rule.js";
+import evaluatex from "../libs/evaluatex/evaluatex.js";
 export default {
   components: {
     RuleVarEdit: RuleVarEditVue,
@@ -91,6 +92,7 @@ export default {
     },
     onVarEdited(varName, varValue) {
       this.isErrorQuitEditMqFirst = false;
+      varValue = evaluatex(varValue, {}, { latex: true }).ast.toLaTeX();
       //console.log("onVarEdited: ", varName, ":", varValue);
       this.selectedRule[varName] = varValue;
     },

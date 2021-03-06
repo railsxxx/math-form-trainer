@@ -63,9 +63,9 @@ export default {
       this.MQMathField.blur();
       // clear Keypad
       this.gFocusMQref.value = {};
-      // embrace negative varNewValue
-      if (this.varNewValue[0] === "-")
-        this.varNewValue = "\\left(" + this.varNewValue + "\\right)";
+      // // embrace negative varNewValue
+      // if (this.varNewValue[0] === "-")
+      //   this.varNewValue = "\\left(" + this.varNewValue + "\\right)";
       // send input from user
       this.$emit("varedited", this.varName, this.varNewValue);
     },
