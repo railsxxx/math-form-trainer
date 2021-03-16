@@ -18,7 +18,6 @@
         :rule="item.rule"
         @itemedited="editItem(item.id, $event)"
         @itemdeleted="deleteItem(item.id)"
-        @ruleapplied="addItem"
       ></math-item>
     </li>
   </ul>
@@ -67,9 +66,10 @@ export default {
       setLast(this.MathItems);
       this.$refs.listSummary.focus();
     },
-    editItem(mathId, newRule) {
+    editItem(mathId, obj) {
       const itemToEdit = this.MathItems.find((item) => item.id === mathId);
-      itemToEdit.rule = newRule;
+      itemToEdit.rule = obj.rule;
+      this.addItem(obj.math);
     },
   },
 };

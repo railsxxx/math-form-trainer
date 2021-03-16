@@ -57,7 +57,7 @@ import RuleSwapEditVue from "./RuleSwapEdit.vue";
 import {
   addFrontRule,
   isAllVarsFilled,
-  fillRule,
+  matchRule,
   mqifyRules,
   showRuleName,
   showRule,
@@ -70,6 +70,7 @@ export default {
   },
   emits: ["editcancelled", "itemedited"],
   props: {
+    math: { type: String, required: true },
     rule: { type: Object, required: true },
     id: { type: String, required: true },
   },
@@ -114,8 +115,10 @@ export default {
         this.isErrorQuitEditMqFirst = true;
         return;
       }
+      // skip selected rule without vars
       if (!selRule.vars) return;
       if (this.isSelected) {
+        // clear selected rule
         this.selectedRule = {};
         this.isSelected = false;
       } else {
@@ -130,14 +133,14 @@ export default {
         this.isErrorQuitEditMqFirst = true;
         return;
       }
+      // skip selected rule without vars
       if (!this.selectedRule.vars) return;
-      if (isAllVarsFilled(this.selectedRule)) {
-        this.selectedRule = fillRule(this.selectedRule);
-      } else {
-        this.isErrorNotAllVarsFilled = true;
-        return;
-      }
-      this.$emit("itemedited", this.selectedRule);
+      // if (isAllVarsFilled(this.selectedRule)) {
+      //   this.selectedRule = fillRule(this.math, this.selectedRule);
+      // }
+      // match rule to math
+      const newMath = matchRule(this.math, this.selectedRule);
+      this.$emit("itemedited", this.selectedRule, newMath);
     },
     onCancel() {
       // quit current rule edit first

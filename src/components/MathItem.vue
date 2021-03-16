@@ -1,17 +1,22 @@
 <template>
   <span class="math" :id="staticMathId">{{ math }}</span>
   <div v-if="!isEditing">
+    <div v-if="isErrorNoMatch" class="editable" @click="toggleToRuleSelect">
+      <span :id="errorRule" v-html="onShowRule(errorNewRule)"></span>
+    </div>
     <div
-      v-if="rule.filled"
+      v-else-if="rule.matched"
       :class="isLast ? 'editable' : ''"
       @click="toggleToRuleSelect"
     >
-      <span :id="editRule" v-html="onShowRule(rule.filled)"></span>
+      <span :id="editRule" v-html="onShowRule(rule.matched)"></span>
     </div>
     <div v-else class="editable" @click="toggleToRuleSelect">
       {{ locale.selectRule }}
     </div>
-    <div class="isError" v-if="isErrorNoMatch">{{ locale.noMatch }}</div>
+    <div class="isError" v-if="isErrorNoMatch">
+      {{ locale.noMatch }}
+    </div>
     <div class="btn-group btn__top" v-if="isLast">
       <button type="button" class="btn btn__primary" @click="deleteStep">
         {{ locale.back }}
@@ -22,6 +27,7 @@
     v-else
     :id="id"
     :rule="rule"
+    :math="math"
     @itemedited="itemEdited"
     @editcancelled="editCancelled"
   ></rule-select>
@@ -29,7 +35,7 @@
 
 <script>
 import RuleSelectVue from "./RuleSelect.vue";
-import { matchRule, showRule } from "../libs/rule.js";
+import { showRule } from "../libs/rule.js";
 let MQ = window.MQ;
 //   :class="isLast ? 'editable' : ''"
 
@@ -43,18 +49,17 @@ export default {
     math: String,
     rule: Object,
   },
-  emits: ["itemedited", "itemdeleted", "ruleapplied"],
+  emits: ["itemedited", "itemdeleted"],
   data: function () {
     return {
       isEditing: false,
       isLast: this.last,
       isErrorNoMatch: false,
-      //newMath: this.math,
       staticMathMQ: {},
       locale: this.gLocale,
+      errorNewRule: {},
     };
   },
-  // {{ rule.filled ? rule.filled.left + " &rArr; " + rule.filled.right : "" }}
   computed: {
     staticMathId() {
       return "static-math-" + this.id;
@@ -62,19 +67,13 @@ export default {
     editRule() {
       return "edit-rule-" + this.id;
     },
+    errorRule() {
+      return "error-rule-" + this.id;
+    },
   },
   methods: {
     onShowRule(rule) {
       return showRule(rule);
-    },
-    rewriteMath() {
-      console.log("rewriteMath: math: ", this.math);
-      console.log("rewriteMath: rule: ", this.rule);
-      if (!this.rule.filled) return;
-      const newMath = matchRule(this.math, this.rule.filled);
-      console.log("rewriteMath: newMath: ", newMath);
-      if (newMath === "") this.isErrorNoMatch = true;
-      else this.$emit("ruleapplied", newMath);
     },
     deleteStep() {
       this.$emit("itemdeleted");
@@ -83,11 +82,17 @@ export default {
       //console.log(this.$refs.editButton);
       if (this.isLast) this.isEditing = true;
     },
-    itemEdited(newRule) {
-      // console.log("ToDoItem: itemEdited: ", newRule);
-      this.$emit("itemedited", newRule);
+    itemEdited(newRule, newMath) {
+      console.log("MathItem: itemEdited: newRule: ", newRule);
+      console.log("MathItem: itemEdited: newMath: ", newMath);
       this.isEditing = false;
-      this.isErrorNoMatch = false;
+      if (newMath === this.math) {
+        this.isErrorNoMatch = true;
+        this.errorNewRule = newRule;
+      } else {
+        this.isErrorNoMatch = false;
+        this.$emit("itemedited", { rule: newRule, math: newMath });
+      }
     },
     editCancelled() {
       // console.log("ToDoItem: editCancelled: ");
@@ -107,18 +112,19 @@ export default {
     last: function (newVal) {
       this.isLast = newVal;
     },
-    rule() {
-      this.rewriteMath();
-    },
   },
   mounted() {
     let el = document.getElementById(this.staticMathId);
     this.staticMathMQ = MQ.StaticMath(el);
     el = document.getElementById(this.editRule);
     MQ.StaticMath(el);
+    el = document.getElementById(this.errorRule);
+    MQ.StaticMath(el);
   },
   updated() {
-    const el = document.getElementById(this.editRule);
+    let el = document.getElementById(this.editRule);
+    MQ.StaticMath(el);
+    el = document.getElementById(this.errorRule);
     MQ.StaticMath(el);
   },
 };

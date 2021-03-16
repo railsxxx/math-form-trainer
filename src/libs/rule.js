@@ -1,3 +1,6 @@
+import evaluatex from "./evaluatex/evaluatex.js";
+import Node from "./evaluatex/Node.js";
+
 let MQ = window.MQ;
 
 export function initRules(arrRules) {
@@ -21,53 +24,12 @@ function compressRule(rule) {
   // rule.right = rule.right.replace(/\s+/g, "");
   return rule;
 }
-// function compressRules(arrRules) {
-//   arrRules.forEach((item, index, arr) => {
-//     arr[index].left = item.left.replace(/\s+/g, "");
-//     arr[index].right = item.right.replace(/\s+/g, "");
-//   });
-//   return arrRules;
-// }
 export function isAllVarsFilled(selectedRule) {
   for (let v of selectedRule.vars) {
     if (!selectedRule[v]) return false;
   }
   return true;
 }
-// export function fillRule(selectedRule) {
-//   console.log("fillRule: ", JSON.stringify(selectedRule));
-//   let filled = {};
-//   filled.left = selectedRule.left;
-//   filled.right = selectedRule.right;
-//   let rx;
-//   let vars$ = {};
-//   let v1 = "";
-//   for (let v of selectedRule.vars) {
-//     v1 = "ö" + v;
-//     //v$ = v;
-//     vars$[v1] = selectedRule[v];
-//     rx = new RegExp(v, "g");
-//     filled.left = filled.left.replace(rx, v1); // replace v with v1
-//     filled.right = filled.right.replace(rx, v1);
-//   }
-//   for (let v1 in vars$) {
-//     // console.log("fillRule: ", v, ":", vars$[v]);
-//     rx = new RegExp(v1, "g");
-//     filled.left = filled.left.replace(rx, vars$[v1]); // replace v1 with value of v
-//     filled.right = filled.right.replace(rx, vars$[v1]);
-//   }
-//   console.log("fillRule: filled: ", filled);
-//   selectedRule.filled = filled;
-//   return selectedRule;
-// }
-// export function matchRule(math, ruleFilled) {
-//   console.log("matchRule: math:", math);
-//   console.log("matchRule: rule:", ruleFilled);
-//   if (!ruleFilled.left || !ruleFilled.right) return;
-//   const newMath = math.replace(ruleFilled.left, ruleFilled.right);
-//   if (newMath === math) return "";
-//   else return newMath;
-// }
 export function mqifyRules(rules, isSelected) {
   if (isSelected) {
     MQ.StaticMath(document.getElementById("selectedRule"));
@@ -120,219 +82,252 @@ export function stringifyRule(rule) {
   }
   return JSON.stringify(sortedObj);
 }
-export function matchRule(math, ruleFilled) {
-  // console.log("matchRule: math:", math);
-  // console.log("matchRule: rule:", ruleFilled);
-  if (!ruleFilled.left || !ruleFilled.right) return;
-  // // embrace replacement
-  // const embracedFilledRight = "\\left(" + ruleFilled.right + "\\right)";
-  // return match0(math, ruleFilled.left, embracedFilledRight);
-  return match0(math, ruleFilled.left, ruleFilled.right);
-  // return replacePos(math, ruleFilled.left, ruleFilled.right);
-  // return replacePos("4\\cdot 5 + 4d + b\\cdot 5 + b\\cdot d", "\\cdot ", "",17);
-}
-function match0(string, pattern, conclusion) {
-  // console.log("string: ", string);
-  // console.log("pattern: ", pattern);
-  // console.log("conclusion: ", conclusion);
-  let result = replacePos(string, pattern, conclusion); // find pattern and replace by conclusion
-  console.log("match0: result: ", result);
-  if (result.strResult !== string) {
-    // match success
-    return result.strResult;
-  } else if (result.posSearchFailMax) {
-    // remove cdot from pattern and retry match
-    let maxPos = result.posSearchFailMax;
-    const maxPosChar = result.posSearchFailChar;
-    // console.log("match0: maxPos: ", maxPos, ", maxPosChar: ", maxPosChar);
-    switch (maxPosChar) {
-      case "c":
-        maxPos -= 1;
-        break;
-      default:
+
+export function matchRule(math, selectedRule) {
+  console.log("matchRule: math: ", math);
+  console.log("matchRule: selectedRule: ", selectedRule);
+  const mathAst = evaluatex(math, {}, { latex: true }).ast;
+  const leftAst = evaluatex(selectedRule.left, {}, { latex: true }).ast;
+  const rightAst = evaluatex(selectedRule.right, {}, { latex: true }).ast;
+  console.log("matchRule: before: mathAst: ", mathAst.printTree());
+  // convert bindings in selectedRule to ast nodes
+  const prebindings = {};
+  for (let v of selectedRule.vars) {
+    console.log("v: ", v, ", selectedRule[v]: ", selectedRule[v]);
+    if (selectedRule[v] !== undefined) {
+      prebindings[v] = evaluatex(selectedRule[v], {}, { latex: true }).ast;
     }
-    // console.log("match0: maxPos adjusted: ", maxPos);
-    result = replacePos(pattern, "\\cdot", "", maxPos); // remove cdot from pattern at maxPos
-    const newpattern = result.strResult;
-    // console.log("match0: newpattern: ", newpattern);
-    if (newpattern !== pattern) {
-      return match0(string, newpattern, conclusion); // recurse with modified pattern
-    } else {
-      // no match
-      return "";
-    }
+  }
+  // unify rule with prebindings
+  unify(leftAst, prebindings);
+  unify(rightAst, prebindings);
+  console.log("matchRule: prebinding: prebindings: ", prebindings);
+  console.log("matchRule: prebinding: leftAst: ", leftAst.printTree());
+  console.log("matchRule: prebinding: rightAst: ", rightAst.printTree());
+  // compute newMath
+  const bindings = {};
+  if (!match(mathAst, leftAst, bindings)) {
+    return math;
   } else {
-    // no match
-    return "";
+    unify(rightAst, bindings);
+    replace(mathAst, leftAst, rightAst, bindings);
+    unify(leftAst, bindings);
+    console.log("matchRule: after: bindings: ", bindings);
+    console.log("matchRule: after: mathAst: ", mathAst.printTree());
+    console.log("matchRule: after: leftAst: ", leftAst.printTree());
+    console.log("matchRule: after: rightAst: ", rightAst.printTree());
+    // map return values
+    let matched = {};
+    matched.left = leftAst.toLaTeX();
+    matched.right = rightAst.toLaTeX();
+    selectedRule.matched = matched;
+    const newMath = mathAst.toLaTeX();
+    return newMath;
   }
 }
-/**
- * returns new string with either strInput having all strSearch replaced by strReplace,
- * or empty string and strSearch first position of missmath to strInput
- */
-function replacePos(strInput, strSearch, strReplace, startPosInput = 0) {
-  console.log("strInput: ", strInput);
-  console.log("strSearch: ", strSearch);
-  console.log("strReplace: ", strReplace);
 
-  let indexInput = 0,
-    indexSearch = 0;
-  let charInput = "";
-  let matched = false;
-  let result = "";
-  let posFail = [];
+function match(astNode, patNode, outbindings) {
+  let bindings = {};
+  const astNodeIter = astNode.iterator();
+  const patNodeIter = patNode.iterator();
+  return match_aux(astNodeIter.next(), patNodeIter.next());
 
-  // init result
-  while (indexInput < startPosInput) {
-    result += advanceInput();
-  }
-  // find match
-  while (!eOfInput()) {
-    charInput = advanceInput();
-    if (!matched && match()) {
-      // first match only
-      result = result.concat(strReplace);
-      matched = true;
-    } else {
-      result += charInput;
-    }
-  }
-  // return object with replace and fail information
-  if (matched) {
-    return { strResult: result };
-  } else {
-    const max = Math.max(...posFail.map((o) => o.posSearch), 0);
-    return {
-      strResult: result,
-      posSearchFailMax: max,
-      posSearchFailChar: strSearch.charAt(max)
-    };
-  }
-  function match() {
-    let indexInputStart = indexInput;
-    let charInputStart = charInput;
-    let charSearch = advanceSearch();
-    if (charInput !== charSearch) {
-      indexSearch = 0;
-      return false;
-    } else {
-      while (!eOfSearch()) {
-        charSearch = advanceSearch();
-        if (!eOfInput()) {
-          charInput = advanceInput();
-        } else {
-          indexInput = indexInputStart;
-          charInput = charInputStart;
-          return false;
-        }
-        console.log(
-          "indexInput: ",
-          indexInput,
-          ", charInput: ",
-          charInput,
-          ", charSearch: ",
-          charSearch,
-          ", indexSearch: ",
-          indexSearch
-        );
-        if (charInput !== charSearch) {
-          posFail.push({
-            posInput: indexInput - 1,
-            posSearch: indexSearch - 1
-          });
-          indexInput = indexInputStart;
-          charInput = charInputStart;
-          indexSearch = 0;
-          return false;
-        }
-      }
+  function match_aux(astNode, patNode) {
+    // console.log("match astNode: ", astNode.toString(), ", patNode: ", patNode.toString(), ", bindings: ", bindings);
+    // matchComplete
+    if (patNode.type === Node.TYPE_EOS) {
+      console.log("Match Complete!");
+      // insert bindings into outbindings
+      insertBindings(bindings, outbindings);
       return true;
     }
+    // End of ast
+    if (astNode.type === Node.TYPE_EOS) {
+      console.log("End of ast");
+      return false;
+    }
+    // match type
+    if (astNode.type === patNode.type) {
+      // same type
+      // store start node of match to bindings start
+      if (patNodeIter.isReset())
+        bindings.start = bindings[patNode.id] = astNode.id;
+      // track end node of match in bindings end
+      if (bindings.start !== undefined) bindings[patNode.id] = astNode.id;
+      // check equal types
+      switch (astNode.type) {
+        case Node.TYPE_NUMBER:
+          if (astNode.value !== patNode.value) {
+            // values do not match, match fails,
+            // reset patNode and bindings
+            patNodeIter.reset();
+            bindings = {};
+          }
+          break;
+        case Node.TYPE_SYMBOL:
+          if (bindings[patNode.value]) {
+            // binding with this key already exists
+            if (bindings[patNode.value] !== astNode.value) {
+              // values do not match, match fails,
+              // reset patNode and bindings
+              patNodeIter.reset();
+              bindings = {};
+            }
+          } else {
+            // binding with this key does not exists
+            // set binding and match ok
+            bindings[patNode.value] = astNode;
+          }
+          break;
+        default:
+          break;
+      }
+      // let astNext = astNodeIter.next();
+      // let patNext = patNodeIter.next();
+      // // console.log("same: astNext: ",astNext.toString(),", patNext: ",patNext.toString());
+      // return match_aux(astNext, patNext);
+      return match_aux(astNodeIter.next(), patNodeIter.next());
+    } else if (patNode.type === Node.TYPE_SYMBOL) {
+      // different types and patNode is symbol
+      // bind patNode symbol to astNode and all its children
+      if (bindings[patNode.value]) {
+        // binding with this key already exists
+        if (bindings[patNode.value] !== astNode) {
+          // values do not match, match fails,
+          // reset patNode and bindings
+          patNodeIter.reset();
+          bindings = {};
+        }
+      } else {
+        // binding with this key does not exists
+        // set binding and match ok
+        bindings[patNode.value] = astNode;
+      }
+      // track end node of match in bindings end
+      if (bindings.start !== undefined) bindings[patNode.id] = astNode.id;
+      // keep going match
+      return match_aux(astNodeIter.leap(), patNodeIter.next());
+    } else {
+      // different types,
+      if (patNodeIter.isReset()) {
+        // patNode already reset, try next astNode with given patNode
+        return match_aux(astNodeIter.next(), patNode);
+      } else {
+        // reset patNode and bindings and retry astNode
+        patNodeIter.reset();
+        bindings = {};
+        return match_aux(astNode, patNodeIter.next());
+      }
+    }
+    // console.log("should not get to here");
+    // return false;
   }
-  function eOfInput() {
-    if (indexInput < strInput.length) return false;
+
+  function insertBindings(newBind, oldBind) {
+    // console.log("before oldBind: ", oldBind, ", newBind: ", newBind);
+    for (let key in newBind) {
+      // binding with this key already exists and has different values
+      if (oldBind[key] && oldBind[key] !== newBind[key]) {
+        // do not touch oldBind
+        return false;
+      }
+    }
+    for (let key in newBind) {
+      // update oldBind wirh newBind
+      oldBind[key] = newBind[key];
+    }
+    // console.log("after oldBind: ", oldBind, ", newBind: ", newBind);
     return true;
   }
-  function advanceInput() {
-    indexInput++;
-    return strInput.charAt(indexInput - 1);
-  }
-  function eOfSearch() {
-    if (indexSearch < strSearch.length) return false;
-    return true;
-  }
-  function advanceSearch() {
-    indexSearch++;
-    return strSearch.charAt(indexSearch - 1);
+}
+
+function unify(ruleAst, bindings) {
+  const ruleAstIter = ruleAst.iterator();
+  let ruleAstNode = ruleAstIter.next();
+  let success = false;
+  // run down rightAst
+  while (ruleAstNode.type !== Node.TYPE_EOS) {
+    success = false;
+    // console.log("unify: ruleAstNode: ", ruleAstNode);
+    // console.log("unify: nodeStack: ", ruleAstIter.stack());
+    // if symbol node
+    if (ruleAstNode.type === Node.TYPE_SYMBOL) {
+      // if binding for symbol
+      if (bindings[ruleAstNode.value] !== undefined)
+        // replace symbol node with binding node
+        // [success, newRightAst] = ruleAstIter.replace(ruleAstNode, bindings[ruleAstNode.value]);
+        success = ruleAstIter.replace(ruleAstNode, bindings[ruleAstNode.value]);
+    }
+    if (success)
+      // leap over replaced binding node
+      ruleAstNode = ruleAstIter.leap();
+    // check next node
+    else ruleAstNode = ruleAstIter.next();
   }
 }
-export function fillRule(selectedRule) {
-  let filled = {};
-  filled.left = selectedRule.left;
-  filled.right = selectedRule.right;
 
-  let rx;
-  let latexCmds = {};
-  replaceLatexCmds();
-  // console.log("fillRule: filled replace: ", filled);
+function replace(exprAst, leftAst, rightAst, bindings) {
+  const exprAstIter = exprAst.iterator();
+  let exprAstNode = exprAstIter.next();
+  let success = false;
 
-  let vars$ = {};
-  let v1 = "";
-  for (let v of selectedRule.vars) {
-    v1 = "ö" + v;
-    vars$[v1] = selectedRule[v];
-    rx = new RegExp(v, "g");
-    filled.left = filled.left.replace(rx, v1); // replace v with v1
-    filled.right = filled.right.replace(rx, v1);
-  }
-  for (let v1 in vars$) {
-    // console.log("fillRule: ", v, ":", vars$[v]);
-    rx = new RegExp(v1, "g");
-    filled.left = filled.left.replace(rx, vars$[v1]); // replace v1 with value of v
-    filled.right = filled.right.replace(rx, vars$[v1]);
-  }
-  restoreLatexCmds();
-  // console.log("fillRule: filled restore: ", filled);
-  // skip space follwed by non-char, (e.g. after cdot char)
-  filled.left = filled.left.replace(/\s(?![a-z,A-Z])/g, "");
-  filled.right = filled.right.replace(/\s(?![a-z,A-Z])/g, "");
-  console.log("fillRule: filled cdot space skipped: ", filled);
-  // store filled in selectedRule
-  selectedRule.filled = filled;
-  return selectedRule;
-  // helper -----------------------------------------------------------
-  function replaceLatexCmds() {
-    // extract latex commands from rule
-    const patt1 = /\\[a-z]+/g;
-    latexCmds.left = filled.left.match(patt1) || [];
-    latexCmds.left = latexCmds.left.map((item) => item.match(/[a-z]+/));
-    latexCmds.right = filled.right.match(patt1) || [];
-    latexCmds.right = latexCmds.right.map((item) => item.match(/[a-z]+/));
-    // console.log("fillRule: latexCmds: ", latexCmds);
-    // replace latexCmds
-    filled.left = replace(filled.left, latexCmds.left);
-    filled.right = replace(filled.right, latexCmds.right);
-    // helper -----------------------------------------------------------
-    function replace(arr, arrCmds) {
-      // replace latexCmds[i] with öi
-      for (let i = 0; i < arrCmds.length; i++) {
-        rx = new RegExp(arrCmds[i], "g");
-        arr = arr.replace(rx, "ö" + i);
+  while (exprAstNode.type !== Node.TYPE_EOS) {
+    // go to matching node in exprAst
+    if (exprAstNode.id === bindings[leftAst.id]) {
+      // console.log("rulejs: replace before: exprAstNode: ", exprAstNode.printTree());
+      if (exprAstNode.children.length === leftAst.children.length) {
+        // matching nodes have same children
+        // replace rightAst in exprAst
+        success = exprAstIter.replace(exprAstNode, rightAst);
+        break;
+      } else {
+        // exprAst node has matching and unmatching children
+        if (
+          exprAstNode.type === Node.TYPE_SUM ||
+          exprAstNode.type === Node.TYPE_PRODUCT
+        ) {
+          // replace matching children with rightAst and add unmatching children
+          const newChildren = replaceMatchingChildren(
+            exprAstNode.children,
+            leftAst,
+            rightAst,
+            bindings
+          );
+          // console.log("rulejs: replace: newChildren: ", newChildren);
+          // replace children of exprAst with newChildren
+          success = exprAstIter.replaceChildren(exprAstNode, newChildren);
+          // console.log("rulejs: replace after: exprAstNode: ", exprAstNode.printTree());
+          break;
+        }
       }
-      return arr;
     }
+    exprAstNode = exprAstIter.next();
   }
-  function restoreLatexCmds() {
-    filled.left = restore(filled.left, latexCmds.left);
-    filled.right = restore(filled.right, latexCmds.right);
-    // helper -----------------------------------------------------------
-    function restore(arr, arrCmds) {
-      // restore latexCmds[i] for öi
-      for (let i = 0; i < arrCmds.length; i++) {
-        rx = new RegExp("ö" + i, "g");
-        arr = arr.replace(rx, arrCmds[i]);
-      }
-      return arr;
+  if (!success) console.log("No replace !!!! ");
+
+  return;
+
+  function replaceMatchingChildren(children, leftAst, rightAst, bindings) {
+    let newChildren = [];
+    // rightAst is newChildren
+    newChildren.push(rightAst);
+    // get ids of matching children
+    const ids = leftAst.children.map((child) =>
+      bindings[child.id] ? bindings[child.id] : -1
+    );
+    // unmatching children are newChildren
+    for (let child of children) {
+      if (ids.indexOf(child.id) === -1) newChildren.push(child);
     }
+    // console.log("rulejs: replaceMatchingChildren: newChildren: ", newChildren);
+    return newChildren;
   }
 }
+
+// const rule = {
+//   match: match,
+//   unify: unify,
+//   replace: replace
+// };
+
+//export default rule;
