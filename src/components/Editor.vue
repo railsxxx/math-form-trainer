@@ -116,6 +116,13 @@
     <button type="button" class="btn btn__primary" @click="onApply">
       {{ locale.editorApplyButton }}
     </button>
+    <button
+      type="button"
+      class="btn btn__primary"
+      @click="this.$router.push({ name: 'File' })"
+    >
+      {{ locale.editorSaveButton }}
+    </button>
     <button type="button" class="btn" @click="onCancel">
       {{ locale.editorCancelButton }}
     </button>
