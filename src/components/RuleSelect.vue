@@ -7,7 +7,7 @@
         @click="onSelect(selectedRule)"
         v-html="onShowRule(selectedRule)"
       ></span>
-      <div id="adaptVar">{{ locale.setVarToAdapt }}</div>
+      <div id="adaptVar">{{ varMessage }}</div>
     </div>
     <div v-else>
       <span>{{ locale.clickRuleToSelect }}</span>
@@ -34,9 +34,6 @@
     <div v-if="selectedRule.swap">
       <rule-swap-edit @swapedited="onSwapEdited"> </rule-swap-edit>
     </div>
-    <div class="isError" v-if="isErrorNotAllVarsFilled">
-      {{ locale.isErrorNotAllVarsFilled }}
-    </div>
     <div class="isError" v-if="isErrorQuitEditMqFirst">
       {{ locale.isErrorQuitEditMqFirst }}
     </div>
@@ -56,13 +53,13 @@ import RuleVarEditVue from "./RuleVarEdit.vue";
 import RuleSwapEditVue from "./RuleSwapEdit.vue";
 import {
   addFrontRule,
-  isAllVarsFilled,
   matchRule,
+  isAllVarsFilled,
   mqifyRules,
   showRuleName,
   showRule,
 } from "../libs/rule.js";
-import evaluatex from "../libs/evaluatex/evaluatex.js";
+// import evaluatex from "../libs/evaluatex/evaluatex.js";
 export default {
   components: {
     RuleVarEdit: RuleVarEditVue,
@@ -79,11 +76,12 @@ export default {
       selectedRule: this.rule,
       rules: addFrontRule(this.rule, this.gRulesJSONref.value),
       isSelected: false,
-      isErrorNotAllVarsFilled: false,
       isErrorQuitEditMqFirst: false,
       locale: this.gLocale,
+      varMessage: "",
     };
   },
+  computed: {},
   methods: {
     onShowRuleName(rule) {
       return showRuleName(rule, this.locale);
@@ -93,30 +91,33 @@ export default {
     },
     onVarEdited(varName, varValue) {
       this.isErrorQuitEditMqFirst = false;
-      varValue = evaluatex(varValue, {}, { latex: true }).ast.toLaTeX();
-      //console.log("onVarEdited: ", varName, ":", varValue);
-      this.selectedRule[varName] = varValue;
+      // save varValue in property of selectedRule
+      if (varValue !== "") this.selectedRule[varName] = varValue;
+      else {
+        // empty varValue deletes property
+        delete this.selectedRule[varName];
+      }
+      // match rule to math
+      let match, newMath;
+      ({ match, newMath } = matchRule(this.math, this.selectedRule));
+      if (match === 0) this.varMessage = this.locale.setVarToAdaptNoMatch;
+      else if (match === 1) this.varMessage = this.locale.setVarToAdaptOK;
+      else this.varMessage = this.locale.setVarToAdapt;
     },
     onSwapEdited() {
       const left = this.selectedRule.left;
       this.selectedRule.left = this.selectedRule.right;
       this.selectedRule.right = left;
     },
-    // onRuleAdded(enlargedRules) {
-    //   this.rules = enlargedRules;
-    //   this.isAdding = false;
-    // },
-    // onAddCancelled() {
-    //   this.isAdding = false;
-    // },
     onSelect(selRule) {
-      // quit current rule edit first
+      // first quit current rule edit
       if (this.gFocusMQref.value.id) {
         this.isErrorQuitEditMqFirst = true;
         return;
       }
       // skip selected rule without vars
       if (!selRule.vars) return;
+      // toggle flag
       if (this.isSelected) {
         // clear selected rule
         this.selectedRule = {};
@@ -125,22 +126,35 @@ export default {
         // copy selected rule
         this.selectedRule = JSON.parse(JSON.stringify(selRule));
         this.isSelected = true;
+
+        let match, newMath;
+        ({ match, newMath } = matchRule(this.math, this.selectedRule));
+        if (match === 0) this.varMessage = this.locale.setVarToAdaptWrongRule;
+        else this.varMessage = this.locale.setVarToAdapt;
       }
     },
     onApply() {
-      // quit current rule edit first
+      // first quit current rule edit
       if (this.gFocusMQref.value.id) {
         this.isErrorQuitEditMqFirst = true;
         return;
       }
       // skip selected rule without vars
       if (!this.selectedRule.vars) return;
-      // if (isAllVarsFilled(this.selectedRule)) {
-      //   this.selectedRule = fillRule(this.math, this.selectedRule);
-      // }
+      if (!isAllVarsFilled(this.selectedRule)) {
+        this.varMessage = this.locale.setVarToAdaptNotAll;
+        return;
+      }
       // match rule to math
-      const newMath = matchRule(this.math, this.selectedRule);
-      this.$emit("itemedited", this.selectedRule, newMath);
+      const obj = matchRule(this.math, this.selectedRule);
+      const match = obj.match;
+      const newMath = obj.math;
+      // console.log("RuleSelect:onApply: match: ", match);
+      // console.log("RuleSelect:onApply: newMath: ", newMath);
+      if (match === 1)
+        this.$emit("itemedited", { rule: this.selectedRule, math: newMath });
+      else if (match === 0) this.varMessage = this.locale.setVarToAdaptNoMatch;
+      else this.varMessage = this.locale.setVarToAdapt;
     },
     onCancel() {
       // quit current rule edit first

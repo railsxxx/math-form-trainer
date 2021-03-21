@@ -10,7 +10,8 @@ export default class Node {
     this.value = value;
     this.name = null; // Used in function and command nodes to retain the fn name when minified
     this.children = [];
-    this.id = getID.next();
+    // this.id = getID.next();
+    this.id = getID();
   }
 
   /**
@@ -106,7 +107,8 @@ export default class Node {
 
   toString() {
     const val = typeof this.value === "function" ? this.name : this.value;
-    return `${this.children.length} ${this.type} [${val}]`;
+    // return `${this.children.length} ${this.type} [${val}] id ${this.id}`;
+    return `${this.children.length} ${this.type} [${val}] ${this.id}`;
   }
 
   toLaTeX() {
@@ -218,19 +220,19 @@ export default class Node {
   iterator() {
     let nodeStart = this;
     let node, index, nodeStack;
-    reset();
+    reinit();
 
     return {
-      stack: printNodeStack,
+      stack: nodeStackToString,
       next: nextChild,
       leap: nextSiblings,
-      reset: reset,
-      isReset: () => node === nodeStart,
+      reinit: reinit,
+      restartAt: restartAt,
       replace: replace,
       replaceChildren: replaceChildren
     };
 
-    function reset() {
+    function reinit() {
       node = nodeStart;
       index = -1;
       nodeStack = [];
@@ -242,12 +244,11 @@ export default class Node {
           // check children
           // get next child
           const next = node.children[index];
-          // save this node and index of its next child
-          nodeStack.push({ node: node, index: ++index });
+          // for next node save its parent node and its child index
+          nodeStack.push({ node: node, index: index });
           // init iterator for next node
           node = next;
           index = 0;
-          // console.log("iterator: next: node: ", node.toString());
           return node;
         } else {
           return nextSiblings();
@@ -256,7 +257,6 @@ export default class Node {
         // increment index for first child
         index = 0;
         // first time return this
-        // console.log("iterator: first: node: ", node.toString());
         return node;
       }
     }
@@ -266,23 +266,28 @@ export default class Node {
         // get previous back from stack
         ({ node, index } = nodeStack.pop());
         // continue with previous
-        // console.log("iterator: continue: node: ", node.toString());
+        // console.log("iterator: nextSiblings: node: ", node.toString());
+        index++;
         return nextChild();
       } else {
         // console.log("iterator: EndOfStack: node: ", node.toString());
         return new Node(Node.TYPE_EOS, "EndOfStack");
       }
     }
+    function restartAt(oldNodeID) {
+      reinit();
+      while (node.id !== oldNodeID) {
+        nextChild();
+      }
+    }
     function replace(oldNode, newNode) {
       if (nodeStack.length > 0) {
-        // get previous back from stack
+        // get parent of oldNode back from stack
         ({ node, index } = nodeStack.pop());
-        // console.log("replace: pop: node: ", node);
-        index = index - 1;
         if (index >= 0 && index < node.children.length) {
-          // if node from stack ist oldNode
+          // if parent child is oldNode
           if (node.children[index].id === oldNode.id) {
-            // replace stack node3 with newNode
+            // replace oldNode with newNode as parent child
             node.children[index] = newNode;
           } else {
             return false;
@@ -291,8 +296,7 @@ export default class Node {
           console.log("ERROR: Node: iterator: replace: index out of bound");
           return false;
         }
-        // push back updated node
-        index = index + 1;
+        // push back updated parent
         nodeStack.push({ node, index });
       } else {
         // stack empty, so nodeStart itself gets changed
@@ -318,7 +322,7 @@ export default class Node {
       // return success
       return true;
     }
-    function printNodeStack() {
+    function nodeStackToString() {
       let str = "";
       for (let item of nodeStack) {
         str += "\n" + item.node.toString() + " @ " + item.index;
@@ -344,5 +348,6 @@ const UNARY_NODES = ["FACTORIAL", "FUNCTION", "INVERSE", "NEGATE"];
 
 const getID = (function () {
   let id = 1;
-  return { next: () => id++ };
+  // return { next: () => id++ };
+  return () => id++;
 })();

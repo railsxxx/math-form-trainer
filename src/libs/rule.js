@@ -27,6 +27,7 @@ function compressRule(rule) {
 export function isAllVarsFilled(selectedRule) {
   for (let v of selectedRule.vars) {
     if (!selectedRule[v]) return false;
+    if (selectedRule[v].value === "") return false;
   }
   return true;
 }
@@ -84,94 +85,119 @@ export function stringifyRule(rule) {
 }
 
 export function matchRule(math, selectedRule) {
-  console.log("matchRule: math: ", math);
-  console.log("matchRule: selectedRule: ", selectedRule);
+  // console.log("matchRule: math: ", math);
+  // console.log("matchRule: selectedRule: ", selectedRule);
   const mathAst = evaluatex(math, {}, { latex: true }).ast;
   const leftAst = evaluatex(selectedRule.left, {}, { latex: true }).ast;
   const rightAst = evaluatex(selectedRule.right, {}, { latex: true }).ast;
-  console.log("matchRule: before: mathAst: ", mathAst.printTree());
+  // console.log("matchRule: before: mathAst: ", mathAst.printTree());
   // convert bindings in selectedRule to ast nodes
   const prebindings = {};
   for (let v of selectedRule.vars) {
-    console.log("v: ", v, ", selectedRule[v]: ", selectedRule[v]);
+    // console.log("v: ", v, ", selectedRule[v]: ", selectedRule[v]);
     if (selectedRule[v] !== undefined) {
       prebindings[v] = evaluatex(selectedRule[v], {}, { latex: true }).ast;
     }
   }
-  // unify rule with prebindings
-  unify(leftAst, prebindings);
-  unify(rightAst, prebindings);
-  console.log("matchRule: prebinding: prebindings: ", prebindings);
-  console.log("matchRule: prebinding: leftAst: ", leftAst.printTree());
-  console.log("matchRule: prebinding: rightAst: ", rightAst.printTree());
+  // console.log("matchRule: prebindings: ", prebindings);
   // compute newMath
-  const bindings = {};
-  if (!match(mathAst, leftAst, bindings)) {
-    return math;
+  const outbindings = [];
+  if (!match_bind(mathAst, leftAst, prebindings, outbindings, -1)) {
+    // no match
+    return { match: 0, math: math };
+  } else if (outbindings.length > 1) {
+    // more than 1 match
+    // console.log("matchRule: after: outbindings: ", outbindings);
+    return { match: outbindings.length, math: math };
   } else {
-    unify(rightAst, bindings);
-    replace(mathAst, leftAst, rightAst, bindings);
-    unify(leftAst, bindings);
-    console.log("matchRule: after: bindings: ", bindings);
-    console.log("matchRule: after: mathAst: ", mathAst.printTree());
-    console.log("matchRule: after: leftAst: ", leftAst.printTree());
-    console.log("matchRule: after: rightAst: ", rightAst.printTree());
+    // only 1 match
+    unify(rightAst, outbindings[0]);
+    replace(mathAst, leftAst, rightAst, outbindings[0]);
+    unify(leftAst, outbindings[0]);
+    // console.log("matchRule: after: outbindings: ", outbindings);
+    // console.log("matchRule: after: mathAst: ", mathAst.printTree());
+    // console.log("matchRule: after: leftAst: ", leftAst.printTree());
+    // console.log("matchRule: after: rightAst: ", rightAst.printTree());
     // map return values
     let matched = {};
     matched.left = leftAst.toLaTeX();
     matched.right = rightAst.toLaTeX();
     selectedRule.matched = matched;
     const newMath = mathAst.toLaTeX();
-    return newMath;
+    // console.log("matchRule: after: newMath: ", newMath);
+    return { match: 1, math: newMath };
   }
 }
 
-function match(astNode, patNode, outbindings) {
+/**
+ * @param: count: number of matches: 1 default, < 0 all matches
+ **/
+function match_bind(
+  astNode,
+  patNode,
+  inbindings = {},
+  outbindings = [],
+  count = 100
+) {
+  // init bindings with inbindings
   let bindings = {};
+  insertBindings(inbindings, bindings);
+  // init iterators
   const astNodeIter = astNode.iterator();
   const patNodeIter = patNode.iterator();
-  return match_aux(astNodeIter.next(), patNodeIter.next());
+  // run matches
+  while (match_bind_aux(astNodeIter.next(), patNodeIter.next())) {
+    // match complete
+    // insert bindings into outbindings
+    const outbind = {};
+    insertBindings(bindings, outbind);
+    outbindings.push(outbind);
+    // console.log("match: outbindings: ", outbindings);
+    // check count
+    count--;
+    if (count === 0) break;
+    // restart match
+    resetMatch();
+  }
+  // no more natches, either end of ast or end of count
+  if (outbindings.length > 0) return true;
+  // match
+  else return false; // no match
 
-  function match_aux(astNode, patNode) {
-    // console.log("match astNode: ", astNode.toString(), ", patNode: ", patNode.toString(), ", bindings: ", bindings);
+  function match_bind_aux(astNode, patNode) {
+    // console.log("match_bind_aux astNode: ", astNode.toString(), ", patNode: ", patNode.toString(), ", bindings: ", bindings);
     // matchComplete
     if (patNode.type === Node.TYPE_EOS) {
-      console.log("Match Complete!");
-      // insert bindings into outbindings
-      insertBindings(bindings, outbindings);
+      // console.log("Match Complete!");
       return true;
     }
     // End of ast
     if (astNode.type === Node.TYPE_EOS) {
-      console.log("End of ast");
+      // console.log("End of ast");
       return false;
     }
     // match type
     if (astNode.type === patNode.type) {
       // same type
-      // store start node of match to bindings start
-      if (patNodeIter.isReset())
+      // store start node of match to bindings.start
+      if (bindings.start === undefined)
         bindings.start = bindings[patNode.id] = astNode.id;
-      // track end node of match in bindings end
-      if (bindings.start !== undefined) bindings[patNode.id] = astNode.id;
+      // track match in bindings
+      else bindings[patNode.id] = astNode.id;
       // check equal types
       switch (astNode.type) {
         case Node.TYPE_NUMBER:
           if (astNode.value !== patNode.value) {
             // values do not match, match fails,
-            // reset patNode and bindings
-            patNodeIter.reset();
-            bindings = {};
+            resetMatch();
           }
           break;
         case Node.TYPE_SYMBOL:
           if (bindings[patNode.value]) {
             // binding with this key already exists
-            if (bindings[patNode.value] !== astNode.value) {
+            if (bindings[patNode.value].value !== astNode.value) {
               // values do not match, match fails,
-              // reset patNode and bindings
-              patNodeIter.reset();
-              bindings = {};
+              resetMatch();
             }
           } else {
             // binding with this key does not exists
@@ -182,47 +208,76 @@ function match(astNode, patNode, outbindings) {
         default:
           break;
       }
-      // let astNext = astNodeIter.next();
-      // let patNext = patNodeIter.next();
-      // // console.log("same: astNext: ",astNext.toString(),", patNext: ",patNext.toString());
-      // return match_aux(astNext, patNext);
-      return match_aux(astNodeIter.next(), patNodeIter.next());
+      return match_bind_aux(astNodeIter.next(), patNodeIter.next());
     } else if (patNode.type === Node.TYPE_SYMBOL) {
       // different types and patNode is symbol
       // bind patNode symbol to astNode and all its children
-      if (bindings[patNode.value]) {
-        // binding with this key already exists
-        if (bindings[patNode.value] !== astNode) {
+      if (bindings[patNode.value] !== undefined) {
+        // binding for patNode already exists
+        // console.log("differnt but symbol: bindings exist: ", bindings, "\n astNode: ", astNode);
+        // start new match from this astnode and binding
+        const bindMatch = match_strict(astNode, bindings[patNode.value]);
+        // console.log("differnt but symbol: bindings exist: bindMatch: ", bindMatch);
+        if (bindMatch === false) {
           // values do not match, match fails,
-          // reset patNode and bindings
-          patNodeIter.reset();
-          bindings = {};
+          resetMatch();
+        } else {
+          // track match in bindings
+          if (bindings.start !== undefined) bindings[patNode.id] = astNode.id;
         }
+        // console.log("match_bind_aux: differnt but symbol: bindings exist: astNodeIter.stack(): ", astNodeIter.stack());
+        return match_bind_aux(astNodeIter.next(), patNodeIter.next());
       } else {
-        // binding with this key does not exists
+        // no binding for patNode
         // set binding and match ok
         bindings[patNode.value] = astNode;
+        // track match in bindings
+        if (bindings.start !== undefined) bindings[patNode.id] = astNode.id;
+        // leap to next astNode
+        return match_bind_aux(astNodeIter.leap(), patNodeIter.next());
       }
-      // track end node of match in bindings end
-      if (bindings.start !== undefined) bindings[patNode.id] = astNode.id;
-      // keep going match
-      return match_aux(astNodeIter.leap(), patNodeIter.next());
     } else {
-      // different types,
-      if (patNodeIter.isReset()) {
-        // patNode already reset, try next astNode with given patNode
-        return match_aux(astNodeIter.next(), patNode);
-      } else {
-        // reset patNode and bindings and retry astNode
-        patNodeIter.reset();
-        bindings = {};
-        return match_aux(astNode, patNodeIter.next());
-      }
+      // different types, match fails
+      resetMatch();
+      return match_bind_aux(astNodeIter.next(), patNodeIter.next());
     }
-    // console.log("should not get to here");
-    // return false;
   }
+  function match_strict(astNode, patNode) {
+    const astNodeIter = astNode.iterator();
+    const patNodeIter = patNode.iterator();
+    return match_strict_aux(astNodeIter.next(), patNodeIter.next());
 
+    function match_strict_aux(astNode, patNode) {
+      // console.log("match_bind_aux astNode: ", astNode.toString(), ", patNode: ", patNode.toString());
+      if (patNode.type === Node.TYPE_EOS) return true;
+      if (astNode.type === Node.TYPE_EOS) return false;
+      if (astNode.type === patNode.type) {
+        if (
+          astNode.type === Node.TYPE_NUMBER &&
+          astNode.value !== patNode.value
+        )
+          return false;
+        if (
+          astNode.type === Node.TYPE_SYMBOL &&
+          astNode.value !== patNode.value
+        )
+          return false;
+        return match_strict_aux(astNodeIter.next(), patNodeIter.next());
+      }
+      return false;
+    }
+  }
+  function resetMatch() {
+    // rewind astNode, reinit patNode and clear bindings
+    if (bindings.start !== undefined) {
+      // console.log("resetMatch: astNodeIter.stack(): ", astNodeIter.stack());
+      astNodeIter.restartAt(bindings.start);
+    }
+    patNodeIter.reinit();
+    // init bindings with inbindings
+    bindings = {};
+    insertBindings(inbindings, bindings);
+  }
   function insertBindings(newBind, oldBind) {
     // console.log("before oldBind: ", oldBind, ", newBind: ", newBind);
     for (let key in newBind) {
@@ -241,28 +296,31 @@ function match(astNode, patNode, outbindings) {
   }
 }
 
-function unify(ruleAst, bindings) {
-  const ruleAstIter = ruleAst.iterator();
-  let ruleAstNode = ruleAstIter.next();
+function unify(rightAst, bindings) {
+  const rightAstIter = rightAst.iterator();
+  let rightAstNode = rightAstIter.next();
   let success = false;
   // run down rightAst
-  while (ruleAstNode.type !== Node.TYPE_EOS) {
+  while (rightAstNode.type !== Node.TYPE_EOS) {
     success = false;
-    // console.log("unify: ruleAstNode: ", ruleAstNode);
-    // console.log("unify: nodeStack: ", ruleAstIter.stack());
+    // console.log("unify: rightAstNode: ", rightAstNode);
+    // console.log("unify: nodeStack: ", rightAstIter.stack());
     // if symbol node
-    if (ruleAstNode.type === Node.TYPE_SYMBOL) {
+    if (rightAstNode.type === Node.TYPE_SYMBOL) {
       // if binding for symbol
-      if (bindings[ruleAstNode.value] !== undefined)
+      if (bindings[rightAstNode.value] !== undefined)
         // replace symbol node with binding node
-        // [success, newRightAst] = ruleAstIter.replace(ruleAstNode, bindings[ruleAstNode.value]);
-        success = ruleAstIter.replace(ruleAstNode, bindings[ruleAstNode.value]);
+        // [success, newRightAst] = rightAstIter.replace(rightAstNode, bindings[rightAstNode.value]);
+        success = rightAstIter.replace(
+          rightAstNode,
+          bindings[rightAstNode.value]
+        );
     }
     if (success)
       // leap over replaced binding node
-      ruleAstNode = ruleAstIter.leap();
+      rightAstNode = rightAstIter.leap();
     // check next node
-    else ruleAstNode = ruleAstIter.next();
+    else rightAstNode = rightAstIter.next();
   }
 }
 

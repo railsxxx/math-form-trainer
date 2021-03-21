@@ -27,7 +27,6 @@
 import MathHeaderVue from "./MathHeader.vue";
 import MathItemVue from "./MathItem.vue";
 import MathEnterVue from "./MathEnter.vue";
-import uniqueId from "lodash.uniqueid";
 export default {
   components: {
     MathHeader: MathHeaderVue,
@@ -78,5 +77,9 @@ function setLast(itemList) {
   if (lastIndex >= 0) itemList[lastIndex].last = true;
   if (lastIndex > 0) itemList[lastIndex - 1].last = false;
 }
+const uniqueId = (function () {
+  let id = 1;
+  return (str) => str + id++;
+})();
 </script>
  

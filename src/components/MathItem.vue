@@ -82,9 +82,12 @@ export default {
       //console.log(this.$refs.editButton);
       if (this.isLast) this.isEditing = true;
     },
-    itemEdited(newRule, newMath) {
-      console.log("MathItem: itemEdited: newRule: ", newRule);
-      console.log("MathItem: itemEdited: newMath: ", newMath);
+    itemEdited(eventArgs) {
+      let newRule, newMath;
+      newRule = eventArgs.rule;
+      newMath = eventArgs.math;
+      // console.log("MathItem:itemEdited: newRule: ", newRule);
+      // console.log("MathItem:itemEdited: newMath: ", newMath);
       this.isEditing = false;
       if (newMath === this.math) {
         this.isErrorNoMatch = true;
