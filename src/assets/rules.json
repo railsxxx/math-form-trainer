@@ -17,37 +17,6 @@
   { "name": "interchange" },
   { "left": "a+b", "right": "b+a", "vars": ["a", "b"] },
   { "left": "a\\cdot b", "right": "b\\cdot a", "vars": ["a", "b"] },
-  { "name": "set/removeBrackets" },
-  { "name": "association" },
-  { "left": "\\left(a\\right)", "right": "a", "vars": ["a"], "swap": "true" },
-  {
-    "left": "a+\\left(b+c\\right)",
-    "right": "a+b+c",
-    "vars": ["a", "b", "c"],
-    "swap": "true",
-    "name": "plusBracket"
-  },
-  {
-    "left": "a+\\left(b-c\\right)",
-    "right": "a+b-c",
-    "vars": ["a", "b", "c"],
-    "swap": "true",
-    "name": "plusBracket"
-  },
-  {
-    "left": "a-\\left(b+c\\right)",
-    "right": "a-b-c",
-    "vars": ["a", "b", "c"],
-    "swap": "true",
-    "name": "minusBracket"
-  },
-  {
-    "left": "a-\\left(b-c\\right)",
-    "right": "a-b+c",
-    "vars": ["a", "b", "c"],
-    "swap": "true",
-    "name": "minusBracket"
-  },
   { "name": "distribution" },
   {
     "left": "\\left(a+b\\right)\\cdot\\left(c+d\\right)",
@@ -77,28 +46,29 @@
     "left": "a\\cdot b+a\\cdot c",
     "right": "a\\cdot\\left(b+c\\right)",
     "vars": ["a", "b", "c"],
-    "name": "outsideBrackets"
+    "name": "outsideParens"
   },
   {
     "left": "a\\cdot b-a\\cdot c",
     "right": "a\\cdot\\left(b-c\\right)",
     "vars": ["a", "b", "c"],
-    "name": "outsideBrackets"
+    "name": "outsideParens"
   },
   { "name": "negativeSign" },
-  { "left": "-a", "right": "\\left(-a\\right)", "vars": ["a"] },
   { "left": "-\\left(-a\\right)", "right": "a", "swap": "true", "vars": ["a"] },
   {
-    "left": "a+\\left(-b\\right)",
-    "right": "a-b",
+    "left": "-\\left(a+b\\right)",
+    "right": "-a-b",
     "swap": "true",
-    "vars": ["a", "b"]
+    "vars": ["a", "b"],
+    "name": "negativeParens"
   },
   {
-    "left": "a-\\left(-b\\right)",
-    "right": "a+b",
+    "left": "-\\left(a-b\\right)",
+    "right": "-a+b",
     "swap": "true",
-    "vars": ["a", "b"]
+    "vars": ["a", "b"],
+    "name": "negativeParens"
   },
   {
     "left": "\\left(-a\\right)\\cdot\\left(-b\\right)",
@@ -108,26 +78,32 @@
   },
   {
     "left": "\\left(-a\\right)\\cdot b",
-    "right": "\\left(-a\\cdot b\\right)",
+    "right": "-a\\cdot b",
     "swap": "true",
     "vars": ["a", "b"]
   },
   {
-    "left": "a\\cdot\\left(-b\\right)",
-    "right": "\\left(-a\\cdot b\\right)",
+    "left": "a\\cdot \\left(-b\\right)",
+    "right": "-a\\cdot b",
     "swap": "true",
     "vars": ["a", "b"]
   },
   {
     "swap": "true",
-    "left": "\\frac{\\left(-a\\right)}{b}",
-    "right": "\\left(-\\frac{a}{b}\\right)",
+    "left": "\\frac{-a}{-b}",
+    "right": "\\frac{a}{b}",
     "vars": ["a", "b"]
   },
   {
     "swap": "true",
-    "left": "\\frac{a}{\\left(-b\\right)}",
-    "right": "\\left(-\\frac{a}{b}\\right)",
+    "left": "\\frac{-a}{b}",
+    "right": "-\\frac{a}{b}",
+    "vars": ["a", "b"]
+  },
+  {
+    "swap": "true",
+    "left": "\\frac{a}{-b}",
+    "right": "-\\frac{a}{b}",
     "vars": ["a", "b"]
   },
   { "name": "binomialFormula" },
