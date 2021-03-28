@@ -14,7 +14,7 @@ import { fact } from "./util/localFunctions.js";
 export default function parser(tokens) {
   let p = new Parser(tokens);
   return p.parse();
-};
+}
 
 class Parser {
   constructor(tokens = []) {
@@ -38,8 +38,12 @@ class Parser {
     // Throw an exception if there are still tokens remaining after parsing
     if (this.currentToken !== undefined) {
       console.log("parser: parse: ast: ", ast.printTree());
-      throw "Parsing error: Expected end of input, but got " + this.currentToken.type +
-      " " + this.currentToken.value;
+      throw (
+        "Parsing error: Expected end of input, but got " +
+        this.currentToken.type +
+        " " +
+        this.currentToken.value
+      );
     }
 
     return ast;
@@ -75,8 +79,12 @@ class Parser {
    */
   expect(type) {
     if (!this.accept(type)) {
-      throw "Expected " + type + " but got " +
-      (this.currentToken ? this.currentToken.toString() : "end of input.");
+      throw (
+        "Expected " +
+        type +
+        " but got " +
+        (this.currentToken ? this.currentToken.toString() : "end of input.")
+      );
     }
   }
 
@@ -94,11 +102,9 @@ class Parser {
       // Continue to accept chained addends
       if (this.accept(Token.TYPE_PLUS)) {
         node.addChild(this.product());
-      }
-      else if (this.accept(Token.TYPE_MINUS)) {
+      } else if (this.accept(Token.TYPE_MINUS)) {
         node.addChild(new Node(Node.TYPE_NEGATE).addChild(this.product()));
-      }
-      else {
+      } else {
         break;
       }
     }
@@ -115,15 +121,12 @@ class Parser {
 
       if (this.accept(Token.TYPE_TIMES)) {
         node.addChild(this.power());
-      }
-      else if (this.accept(Token.TYPE_DIVIDE)) {
+      } else if (this.accept(Token.TYPE_DIVIDE)) {
         node.addChild(new Node(Node.TYPE_INVERSE).addChild(this.power()));
-      }
-      else if (this.accept(Token.TYPE_LPAREN)) {
+      } else if (this.accept(Token.TYPE_LPAREN)) {
         this.cursor--;
         node.addChild(this.power());
-      }
-      else {
+      } else {
         break;
       }
     }
@@ -151,11 +154,9 @@ class Parser {
 
     if (this.accept(Token.TYPE_SYMBOL)) {
       node = new Node(Node.TYPE_SYMBOL, this.prevToken.value);
-    }
-    else if (this.accept(Token.TYPE_NUMBER)) {
+    } else if (this.accept(Token.TYPE_NUMBER)) {
       node = new Node(Node.TYPE_NUMBER, parseFloat(this.prevToken.value));
-    }
-    else if (this.accept(Token.TYPE_COMMAND)) {
+    } else if (this.accept(Token.TYPE_COMMAND)) {
       const cmdToken = this.prevToken;
       node = new Node(Node.TYPE_FUNCTION, cmdToken.value);
       node.marker = cmdToken.name;
@@ -164,8 +165,7 @@ class Parser {
         node.addChild(this.val());
       }
       // console.log("parser: val: TYPE_COMMAND: node: ", node);
-    }
-    else if (this.accept(Token.TYPE_FUNCTION)) {
+    } else if (this.accept(Token.TYPE_FUNCTION)) {
       node = new Node(Node.TYPE_FUNCTION, this.prevToken.value);
       node.name = this.prevToken.name;
 
@@ -185,21 +185,26 @@ class Parser {
         node.addChild(this.power());
       }
       // console.log("parser: val: TYPE_FUNCTION: node: ", node);
-    }
-    else if (this.accept(Token.TYPE_MINUS)) {
+    } else if (this.accept(Token.TYPE_MINUS)) {
+      // negative sign
       node = new Node(Node.TYPE_NEGATE).addChild(this.power());
-    }
-    else if (this.accept(Token.TYPE_LPAREN)) {
+    } else if (this.accept(Token.TYPE_PLUS)) {
+      // positive sign
+      node = this.sum();
+    } else if (this.accept(Token.TYPE_LPAREN)) {
       node = this.sum();
       this.expect(Token.TYPE_RPAREN);
-    }
-    else if (this.accept(Token.TYPE_ABS)) {
+    } else if (this.accept(Token.TYPE_ABS)) {
       node = new Node(Node.TYPE_FUNCTION, Math.abs);
       node.addChild(this.sum());
       this.expect(Token.TYPE_ABS);
-    }
-    else {
-      throw "Unexpected " + this.currentToken.toString() + " at token " + this.cursor;
+    } else {
+      throw (
+        "Unexpected " +
+        this.currentToken.toString() +
+        " at token " +
+        this.cursor
+      );
     }
 
     if (this.accept(Token.TYPE_BANG)) {
@@ -246,31 +251,25 @@ class Parser {
 // factorials, which come at the END of values.
 //var node = {};
 
-
 // Parse negative values like -42.
 // The lexer can't differentiate between a difference and a negative,
 // so that distinction is done here.
 // Notice the `power()` rule that comes after a negative sign so that
 // expressions like `-4^2` return -16 instead of 16.
 
-
 // Parse nested expression with parentheses.
 // Notice that the parser expects an RPAREN token after the expression.
-
 
 // Parse absolute value.
 // Absolute values are contained in pipes (`|`) and are treated quite
 // like parens.
 
-
 // All parsing rules should have terminated or recursed by now.
 // Throw an exception if this is not the case.
-
 
 // Process postfix operations like factorials.
 
 // Parse factorial.
-
 
 //return node;
 //};

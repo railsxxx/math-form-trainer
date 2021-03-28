@@ -19,7 +19,7 @@
  
 <script>
 import { createMQEditField } from "../libs/mq.js";
-import evaluatex from "../libs/evaluatex/evaluatex.js";
+import evaluatex from "../libs/evaluatexExtended/evaluatex.js";
 export default {
   emits: ["newmath"],
   data() {

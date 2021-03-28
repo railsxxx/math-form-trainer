@@ -96,12 +96,18 @@ export default {
       else {
         // empty varValue deletes property
         delete this.selectedRule[varName];
+        this.varMessage = this.locale.setVarToAdaptNotAll;
       }
       // match rule to math
       let match, newMath;
       ({ match, newMath } = matchRule(this.math, this.selectedRule));
       if (match === 0) this.varMessage = this.locale.setVarToAdaptNoMatch;
-      else if (match === 1) this.varMessage = this.locale.setVarToAdaptOK;
+      else if (match === 1)
+        if (isAllVarsFilled(this.selectedRule)) {
+          this.varMessage = this.locale.setVarToAdaptAll;
+        } else {
+          this.varMessage = this.locale.setVarToAdaptOK;
+        }
       else this.varMessage = this.locale.setVarToAdapt;
     },
     onSwapEdited() {
@@ -162,6 +168,9 @@ export default {
         this.isErrorQuitEditMqFirst = true;
         return;
       }
+      // reset varMessage
+      this.varMessage = this.locale.setVarToAdapt;
+      // notify
       this.$emit("editcancelled");
     },
   },

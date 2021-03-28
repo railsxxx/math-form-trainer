@@ -10,7 +10,6 @@ export default class Node {
     this.value = value;
     this.name = null; // Used in function and command nodes to retain the fn name when minified
     this.children = [];
-    // this.id = getID.next();
     this.id = getID();
   }
 
@@ -189,21 +188,21 @@ export default class Node {
     function toLaTeXSum(node) {
       let str = "";
       for (let i in node.children) {
-        if (node.children[i].type === Node.TYPE_NEGATE)
+        // console.log("toLaTeXSum: node: ",node.toString());
+        if (i == 0 || node.children[i].type === Node.TYPE_NEGATE) {
           str += node.children[i].toLaTeX();
-        else {
-          if (i == 0) {
-            str += node.children[i].toLaTeX();
-          } else {
-            str += "+" + node.children[i].toLaTeX();
-          }
+        } else {
+          str += "+" + node.children[i].toLaTeX();
         }
       }
       return str;
     }
     function toLaTeXNegate(node) {
       let str = "-";
-      if (node.child.type === Node.TYPE_SUM)
+      if (
+        node.child.type === Node.TYPE_SUM ||
+        node.child.type === Node.TYPE_NEGATE
+      )
         str += "\\left(" + node.child.toLaTeX() + "\\right)";
       else str += node.child.toLaTeX();
       return str;
@@ -219,7 +218,7 @@ export default class Node {
 
   iterator() {
     let nodeStart = this;
-    let node, index, nodeStack;
+    let node, childIndex, nodeStack;
     reinit();
 
     return {
@@ -234,40 +233,42 @@ export default class Node {
 
     function reinit() {
       node = nodeStart;
-      index = -1;
+      childIndex = -1;
       nodeStack = [];
     }
 
     function nextChild() {
-      if (index >= 0)
-        if (index < node.children.length) {
-          // check children
-          // get next child
-          const next = node.children[index];
-          // for next node save its parent node and its child index
-          nodeStack.push({ node: node, index: index });
+      if (childIndex >= 0)
+        if (childIndex < node.children.length) {
+          // index points to next child
+          // current node is parent of next child
+          const next = node.children[childIndex];
+          // for next child save its parent node and its child index
+          nodeStack.push({ node: node, childIndex: childIndex });
           // init iterator for next node
           node = next;
-          index = 0;
+          childIndex = 0;
           return node;
         } else {
+          // no more children on this parent node
           return nextSiblings();
         }
       else {
-        // increment index for first child
-        index = 0;
-        // first time return this
+        // set index for first child of nodestart
+        childIndex = 0;
+        // first time return nodeStart
         return node;
       }
     }
     function nextSiblings() {
       // no next child
       if (nodeStack.length > 0) {
-        // get previous back from stack
-        ({ node, index } = nodeStack.pop());
+        // get previous from stack
+        ({ node, childIndex } = nodeStack.pop());
         // continue with previous
-        // console.log("iterator: nextSiblings: node: ", node.toString());
-        index++;
+        // console.log("iterator:nextSiblings: node: ", node.toString());
+        // set index for next child
+        childIndex++;
         return nextChild();
       } else {
         // console.log("iterator: EndOfStack: node: ", node.toString());
@@ -276,6 +277,8 @@ export default class Node {
     }
     function restartAt(oldNodeID) {
       reinit();
+      // set index for first child of nodeStart after reinit
+      childIndex = 0;
       while (node.id !== oldNodeID) {
         nextChild();
       }
@@ -283,21 +286,21 @@ export default class Node {
     function replace(oldNode, newNode) {
       if (nodeStack.length > 0) {
         // get parent of oldNode back from stack
-        ({ node, index } = nodeStack.pop());
-        if (index >= 0 && index < node.children.length) {
+        ({ node, childIndex } = nodeStack.pop());
+        if (childIndex >= 0 && childIndex < node.children.length) {
           // if parent child is oldNode
-          if (node.children[index].id === oldNode.id) {
+          if (node.children[childIndex].id === oldNode.id) {
             // replace oldNode with newNode as parent child
-            node.children[index] = newNode;
+            node.children[childIndex] = newNode;
           } else {
             return false;
           }
         } else {
-          console.log("ERROR: Node: iterator: replace: index out of bound");
+          console.log("ERROR: Node:iterator:replace: index out of bound");
           return false;
         }
         // push back updated parent
-        nodeStack.push({ node, index });
+        nodeStack.push({ node, childIndex });
       } else {
         // stack empty, so nodeStart itself gets changed
         if (node.id === oldNode.id) {
@@ -348,6 +351,6 @@ const UNARY_NODES = ["FACTORIAL", "FUNCTION", "INVERSE", "NEGATE"];
 
 const getID = (function () {
   let id = 1;
-  // return { next: () => id++ };
+  // return { next: () => id++ }
   return () => id++;
 })();

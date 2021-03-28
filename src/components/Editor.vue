@@ -138,7 +138,7 @@ import {
   mqifyRules,
   stringifyRule,
 } from "../libs/rule.js";
-import evaluatex from "../libs/evaluatex/evaluatex.js";
+import evaluatex from "../libs/evaluatexExtended/evaluatex.js";
 let MQ = window.MQ;
 export default {
   components: {

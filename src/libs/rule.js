@@ -1,5 +1,5 @@
-import evaluatex from "./evaluatex/evaluatex.js";
-import Node from "./evaluatex/Node.js";
+import evaluatex from "./evaluatexExtended/evaluatex.js";
+import Node from "./evaluatexExtended/Node.js";
 
 let MQ = window.MQ;
 
@@ -63,8 +63,8 @@ export function showRuleName(rule, locale) {
   return rule.name ? (locale[rule.name] ? locale[rule.name] : rule.name) : "";
 }
 export function showRule(rule) {
-  return rule.filled
-    ? rule.filled.left + " \\<space> &rArr; \\<space> " + rule.filled.right
+  return rule.matched
+    ? rule.matched.left + " \\<space> &rArr; \\<space> " + rule.matched.right
     : rule.left
     ? rule.left + " \\<space> &rArr; \\<space> " + rule.right
     : "";
@@ -123,8 +123,14 @@ export function matchRule(math, selectedRule) {
     matched.left = leftAst.toLaTeX();
     matched.right = rightAst.toLaTeX();
     selectedRule.matched = matched;
-    const newMath = mathAst.toLaTeX();
-    // console.log("matchRule: after: newMath: ", newMath);
+    // rewrite math to newMath
+    const newMath = evaluatex(
+      mathAst.toLaTeX(),
+      {},
+      { latex: true }
+    ).ast.toLaTeX();
+    // const newMath = mathAst.toLaTeX();
+    // console.log("matchRule: newMath: ", newMath);
     return { match: 1, math: newMath };
   }
 }
@@ -137,7 +143,7 @@ function match_bind(
   patNode,
   inbindings = {},
   outbindings = [],
-  count = 100
+  count = 5
 ) {
   // init bindings with inbindings
   let bindings = {};
@@ -152,7 +158,7 @@ function match_bind(
     const outbind = {};
     insertBindings(bindings, outbind);
     outbindings.push(outbind);
-    // console.log("match: outbindings: ", outbindings);
+    console.log("match: outbindings: ", outbindings);
     // check count
     count--;
     if (count === 0) break;
@@ -168,12 +174,12 @@ function match_bind(
     // console.log("match_bind_aux astNode: ", astNode.toString(), ", patNode: ", patNode.toString(), ", bindings: ", bindings);
     // matchComplete
     if (patNode.type === Node.TYPE_EOS) {
-      // console.log("Match Complete!");
+      console.log("Match Complete!");
       return true;
     }
     // End of ast
     if (astNode.type === Node.TYPE_EOS) {
-      // console.log("End of ast");
+      console.log("End of ast");
       return false;
     }
     // match type
@@ -248,10 +254,11 @@ function match_bind(
     return match_strict_aux(astNodeIter.next(), patNodeIter.next());
 
     function match_strict_aux(astNode, patNode) {
-      // console.log("match_bind_aux astNode: ", astNode.toString(), ", patNode: ", patNode.toString());
+      // console.log("match_strict_aux astNode: ", astNode.toString(), ", patNode: ", patNode.toString());
       if (patNode.type === Node.TYPE_EOS) return true;
       if (astNode.type === Node.TYPE_EOS) return false;
       if (astNode.type === patNode.type) {
+        // console.log("match_strict_aux:sameType: astNode.value: ", astNode.value, ", patNode.value: ", patNode.value);
         if (
           astNode.type === Node.TYPE_NUMBER &&
           astNode.value !== patNode.value
@@ -264,14 +271,18 @@ function match_bind(
           return false;
         return match_strict_aux(astNodeIter.next(), patNodeIter.next());
       }
+      // console.log("match_strict_aux:return last: false");
       return false;
     }
   }
   function resetMatch() {
     // rewind astNode, reinit patNode and clear bindings
     if (bindings.start !== undefined) {
+      // console.log("resetMatch: bindings.start: ", bindings.start);
       // console.log("resetMatch: astNodeIter.stack(): ", astNodeIter.stack());
       astNodeIter.restartAt(bindings.start);
+    } else {
+      // continue astNode
     }
     patNodeIter.reinit();
     // init bindings with inbindings
@@ -381,11 +392,3 @@ function replace(exprAst, leftAst, rightAst, bindings) {
     return newChildren;
   }
 }
-
-// const rule = {
-//   match: match,
-//   unify: unify,
-//   replace: replace
-// };
-
-//export default rule;
