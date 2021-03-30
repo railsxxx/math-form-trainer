@@ -22,10 +22,13 @@ import { createMQEditField } from "../libs/mq.js";
 import evaluatex from "../libs/evaluatexExtended/evaluatex.js";
 export default {
   emits: ["newmath"],
+  props: {
+    initMath: String,
+    var: Number,
+  },
   data() {
     return {
-      init: "(a-(b+5))^2",
-      input: "(a-(b+5))^2",
+      input: this.initMath,
       MQMathField: {},
       isEditing: false,
       locale: this.gLocale,
@@ -34,7 +37,7 @@ export default {
   computed: {},
   methods: {
     onInit() {
-      this.MQMathField.latex(this.init);
+      this.MQMathField.latex(this.initMath);
     },
     onClick() {
       this.isEditing = true;
@@ -68,7 +71,7 @@ export default {
     },
   },
   mounted() {
-    // console.log("MathEnter mounted:");
+    // // console.log("MathEnter mounted:");
   },
   updated() {
     // console.log("MathEnter updated:");

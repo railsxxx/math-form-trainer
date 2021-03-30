@@ -1,6 +1,10 @@
 <template>
   <math-header></math-header>
-  <math-enter v-if="MathItems.length == 0" @newmath="newMath"></math-enter>
+  <math-enter
+    v-if="MathItems.length == 0"
+    :initMath="initMath"
+    @newmath="newMath"
+  ></math-enter>
   <h2
     id="list-summary"
     ref="listSummary"
@@ -35,6 +39,7 @@ export default {
   },
   data() {
     return {
+      initMath: localStorage.initMath ? localStorage.initMath : "(x-3)^2",
       MathItems: [],
     };
   },
@@ -47,6 +52,9 @@ export default {
     newMath: function (math) {
       this.MathItems = [];
       this.addItem(math);
+      // permanently store newMath
+      this.initMath = math;
+      localStorage.initMath = math;
     },
     addItem: function (math) {
       this.MathItems.push({
