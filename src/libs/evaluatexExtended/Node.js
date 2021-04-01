@@ -142,14 +142,14 @@ export default class Node {
       let str = "";
       for (let i in node.children) {
         if (i == 0) {
-          str += checkChild(node.children[i]);
+          str += parensChild(node.children[i]);
         } else {
-          str += "^" + checkChild(node.children[i]);
+          str += "^" + parensChild(node.children[i]);
         }
       }
       return str;
 
-      function checkChild(child) {
+      function parensChild(child) {
         let str = "";
         if (
           child.type === Node.TYPE_NEGATE ||
@@ -168,14 +168,14 @@ export default class Node {
       let str = "";
       for (let i in node.children) {
         if (i == 0) {
-          str += checkChild(node.children[i]);
+          str += parensChild(node.children[i]);
         } else {
-          str += "\\cdot " + checkChild(node.children[i]);
+          str += "\\cdot " + parensChild(node.children[i]);
         }
       }
       return str;
 
-      function checkChild(child) {
+      function parensChild(child) {
         let str = "";
         if (child.type === Node.TYPE_NEGATE || child.type === Node.TYPE_SUM)
           str += "\\left(" + child.toLaTeX() + "\\right)";
@@ -186,13 +186,15 @@ export default class Node {
       }
     }
     function toLaTeXSum(node) {
-      let str = "";
+      let str = "",
+        childStr = "";
       for (let i in node.children) {
-        // console.log("toLaTeXSum: node: ",node.toString());
-        if (i == 0 || node.children[i].type === Node.TYPE_NEGATE) {
-          str += node.children[i].toLaTeX();
+        childStr = node.children[i].toLaTeX();
+        if (i == 0) {
+          str += childStr;
         } else {
-          str += "+" + node.children[i].toLaTeX();
+          if (childStr.charAt(0) === "-") str += childStr;
+          else str += "+" + childStr;
         }
       }
       return str;
@@ -201,6 +203,7 @@ export default class Node {
       let str = "-";
       if (
         node.child.type === Node.TYPE_SUM ||
+        node.child.type === Node.TYPE_PRODUCT ||
         node.child.type === Node.TYPE_NEGATE
       )
         str += "\\left(" + node.child.toLaTeX() + "\\right)";

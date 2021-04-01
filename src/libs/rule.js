@@ -69,6 +69,11 @@ export function showRule(rule) {
     ? rule.left + " \\<space> &rArr; \\<space> " + rule.right
     : "";
 }
+export function showRuleNoMatch(rule) {
+  return rule.left
+    ? rule.left + " \\<space> &rArr; \\<space> " + rule.right
+    : "";
+}
 export function stringifyRule(rule) {
   const sortedObj = {};
   const arrKeys = Object.keys(rule);
@@ -97,6 +102,8 @@ export function matchRule(math, selectedRule) {
     // console.log("v: ", v, ", selectedRule[v]: ", selectedRule[v]);
     if (selectedRule[v] !== undefined) {
       prebindings[v] = evaluatex(selectedRule[v], {}, { latex: true }).ast;
+      // update selectedRule with latex for vars
+      selectedRule[v] = prebindings[v].toLaTeX();
     }
   }
   // console.log("matchRule: prebindings: ", prebindings);
@@ -148,6 +155,7 @@ function match_bind(
   // init bindings with inbindings
   let bindings = {};
   insertBindings(inbindings, bindings);
+  console.log("match: inbindings: ", inbindings);
   // init iterators
   const astNodeIter = astNode.iterator();
   const patNodeIter = patNode.iterator();
@@ -220,10 +228,18 @@ function match_bind(
       // bind patNode symbol to astNode and all its children
       if (bindings[patNode.value] !== undefined) {
         // binding for patNode already exists
-        // console.log("differnt but symbol: bindings exist: ", bindings, "\n astNode: ", astNode);
+        // console.log(
+        //   "differnt but symbol: bindings exist: \n bindings[patNode.value]",
+        //   bindings[patNode.value],
+        //   "\n astNode: ",
+        //   astNode
+        // );
         // start new match from this astnode and binding
         const bindMatch = match_strict(astNode, bindings[patNode.value]);
-        // console.log("differnt but symbol: bindings exist: bindMatch: ", bindMatch);
+        // console.log(
+        //   "differnt but symbol: bindings exist: bindMatch: ",
+        //   bindMatch
+        // );
         if (bindMatch === false) {
           // values do not match, match fails,
           resetMatch();
@@ -232,7 +248,7 @@ function match_bind(
           if (bindings.start !== undefined) bindings[patNode.id] = astNode.id;
         }
         // console.log("match_bind_aux: differnt but symbol: bindings exist: astNodeIter.stack(): ", astNodeIter.stack());
-        return match_bind_aux(astNodeIter.next(), patNodeIter.next());
+        return match_bind_aux(astNodeIter.leap(), patNodeIter.next());
       } else {
         // no binding for patNode
         // set binding and match ok

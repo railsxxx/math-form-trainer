@@ -24,7 +24,6 @@ export default {
   emits: ["newmath"],
   props: {
     initMath: String,
-    var: Number,
   },
   data() {
     return {

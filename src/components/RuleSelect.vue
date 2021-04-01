@@ -5,7 +5,7 @@
         id="selectedRule"
         class="editable"
         @click="onSelect(selectedRule)"
-        v-html="onShowRule(selectedRule)"
+        v-html="onShowRuleNoMatch(selectedRule)"
       ></span>
       <div id="adaptVar">{{ varMessage }}</div>
     </div>
@@ -58,6 +58,7 @@ import {
   mqifyRules,
   showRuleName,
   showRule,
+  showRuleNoMatch,
 } from "../libs/rule.js";
 // import evaluatex from "../libs/evaluatex/evaluatex.js";
 export default {
@@ -89,6 +90,9 @@ export default {
     onShowRule(rule) {
       return showRule(rule);
     },
+    onShowRuleNoMatch(rule) {
+      return showRuleNoMatch(rule);
+    },
     onVarEdited(varName, varValue) {
       this.isErrorQuitEditMqFirst = false;
       // save varValue in property of selectedRule
@@ -97,6 +101,7 @@ export default {
         // empty varValue deletes property
         delete this.selectedRule[varName];
         this.varMessage = this.locale.setVarToAdaptNotAll;
+        return;
       }
       // match rule to math
       let match, newMath;
@@ -109,6 +114,8 @@ export default {
           this.varMessage = this.locale.setVarToAdaptOK;
         }
       else this.varMessage = this.locale.setVarToAdapt;
+      // update varValue from match if any
+      if (varValue !== "") varValue = this.selectedRule[varName];
     },
     onSwapEdited() {
       const left = this.selectedRule.left;
@@ -132,7 +139,7 @@ export default {
         // copy selected rule
         this.selectedRule = JSON.parse(JSON.stringify(selRule));
         this.isSelected = true;
-
+        // check selectedRule for any matches and inform user
         let match, newMath;
         ({ match, newMath } = matchRule(this.math, this.selectedRule));
         if (match === 0) this.varMessage = this.locale.setVarToAdaptWrongRule;

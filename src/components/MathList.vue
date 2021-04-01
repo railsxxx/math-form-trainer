@@ -1,20 +1,15 @@
 <template>
   <math-header></math-header>
   <math-enter
-    v-if="MathItems.length == 0"
+    v-if="mathItems.length == 0"
     :initMath="initMath"
     @newmath="newMath"
   ></math-enter>
-  <h2
-    id="list-summary"
-    ref="listSummary"
-    tabindex="-1"
-    v-if="MathItems.length > 0"
-  >
+  <h2 v-else id="list-summary" ref="listSummary" tabindex="-1">
     {{ listSummary }}
   </h2>
   <ul>
-    <li v-for="item in MathItems" :key="item.id">
+    <li v-for="item in mathItems" :key="item.id">
       <math-item
         :id="item.id"
         :last="item.last"
@@ -40,41 +35,46 @@ export default {
   data() {
     return {
       initMath: localStorage.initMath ? localStorage.initMath : "(x-3)^2",
-      MathItems: [],
+      mathItems: localStorage.mathItems
+        ? JSON.parse(localStorage.mathItems)
+        : [],
     };
   },
   computed: {
     listSummary: function () {
-      return `Schritt ${this.MathItems.length}`;
+      return `Schritt ${this.mathItems.length}`;
     },
   },
   methods: {
     newMath: function (math) {
-      this.MathItems = [];
+      // clear previous work
+      this.mathItems = [];
+      localStorage.mathItems = "";
+      // start new work
       this.addItem(math);
       // permanently store newMath
       this.initMath = math;
       localStorage.initMath = math;
     },
     addItem: function (math) {
-      this.MathItems.push({
+      this.mathItems.push({
         id: uniqueId("item-"),
         label: math,
         rule: {},
       });
-      setLast(this.MathItems);
-    },
-    updateDoneStatus: function (mathId) {
-      const toDoToUpdate = this.MathItems.find((item) => item.id === mathId);
-      toDoToUpdate.done = !toDoToUpdate.done;
+      setLast(this.mathItems);
+      // permanently store mathItems
+      localStorage.mathItems = JSON.stringify(this.mathItems);
     },
     deleteItem() {
-      this.MathItems.pop();
-      setLast(this.MathItems);
+      this.mathItems.pop();
+      setLast(this.mathItems);
       this.$refs.listSummary.focus();
+      // permanently store mathItems
+      localStorage.mathItems = JSON.stringify(this.mathItems);
     },
     editItem(mathId, obj) {
-      const itemToEdit = this.MathItems.find((item) => item.id === mathId);
+      const itemToEdit = this.mathItems.find((item) => item.id === mathId);
       itemToEdit.rule = obj.rule;
       this.addItem(obj.math);
     },

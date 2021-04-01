@@ -26,7 +26,7 @@
   },
   {
     "left": "\\left(a-b\\right)\\cdot\\left(c-d\\right)",
-    "right": "a\\cdot c-a\\cdot d-b\\cdot c+b\\cdot d",
+    "right": "a\\cdot c-\\left(a\\cdot d\\right)-\\left(b\\cdot c\\right)+b\\cdot d",
     "vars": ["a", "b", "c", "d"],
     "name": "multiplyOut"
   },
@@ -38,7 +38,7 @@
   },
   {
     "left": "a\\cdot\\left(b-c\\right)",
-    "right": "a\\cdot b-a\\cdot c",
+    "right": "a\\cdot b-\\left(a\\cdot c\\right)",
     "vars": ["a", "b", "c"],
     "name": "multiplyOut"
   },
@@ -49,8 +49,8 @@
     "name": "outsideParens"
   },
   {
-    "left": "a\\cdot b-a\\cdot c",
-    "right": "a\\cdot\\left(b-c\\right)",
+    "left": "a\\cdot b-\\left(a\\cdot c\\right)",
+    "right": "a\\cdot \\left(b-c\\right)",
     "vars": ["a", "b", "c"],
     "name": "outsideParens"
   },
@@ -78,13 +78,13 @@
   },
   {
     "left": "\\left(-a\\right)\\cdot b",
-    "right": "-a\\cdot b",
+    "right": "-\\left(a\\cdot b\\right)",
     "swap": "true",
     "vars": ["a", "b"]
   },
   {
     "left": "a\\cdot \\left(-b\\right)",
-    "right": "-a\\cdot b",
+    "right": "-\\left(a\\cdot b\\right)",
     "swap": "true",
     "vars": ["a", "b"]
   },
@@ -145,5 +145,9 @@
     "vars": ["a", "b", "c"]
   },
   { "name": "power" },
-  { "left": "(a^n)^m", "right": "a^{n\\cdot m}", "vars": ["a", "n", "m"] }
+  {
+    "left": "\\left(a^n\\right)^m",
+    "right": "a^\\left(n\\cdot m\\right)",
+    "vars": ["a", "n", "m"]
+  }
 ]
