@@ -25,6 +25,11 @@ export default {
 * {
   box-sizing: border-box;
 }
+.math {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: #d7f8bb;
+}
 .editable {
   border: 1px solid gray;
   width: 100%;

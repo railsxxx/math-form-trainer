@@ -203,7 +203,7 @@ export default class Node {
       let str = "-";
       if (
         node.child.type === Node.TYPE_SUM ||
-        node.child.type === Node.TYPE_PRODUCT ||
+        // node.child.type === Node.TYPE_PRODUCT ||
         node.child.type === Node.TYPE_NEGATE
       )
         str += "\\left(" + node.child.toLaTeX() + "\\right)";
@@ -282,8 +282,13 @@ export default class Node {
       reinit();
       // set index for first child of nodeStart after reinit
       childIndex = 0;
+      let next;
       while (node.id !== oldNodeID) {
-        nextChild();
+        next = nextChild();
+        if (next.type === Node.TYPE_EOS) {
+          console.log("Iterator:restartAt: nodeID not found: ", oldNodeID);
+          throw "";
+        }
       }
     }
     function replace(oldNode, newNode) {

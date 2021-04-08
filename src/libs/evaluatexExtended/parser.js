@@ -187,7 +187,8 @@ class Parser {
       // console.log("parser: val: TYPE_FUNCTION: node: ", node);
     } else if (this.accept(Token.TYPE_MINUS)) {
       // negative sign
-      node = new Node(Node.TYPE_NEGATE).addChild(this.power());
+      // node = new Node(Node.TYPE_NEGATE).addChild(this.power());
+      node = new Node(Node.TYPE_NEGATE).addChild(this.product());
     } else if (this.accept(Token.TYPE_PLUS)) {
       // positive sign
       node = this.sum();

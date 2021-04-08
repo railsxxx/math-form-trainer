@@ -134,9 +134,9 @@ export default {
 </script>
 
 <style scoped>
-.math {
+/* .math {
   margin-top: 1rem;
   margin-bottom: 1rem;
   background-color: #d7f8bb;
-}
+} */
 </style>

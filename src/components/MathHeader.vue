@@ -4,21 +4,32 @@
   <p class="exp-top">{{ locale.example }}:</p>
   <div>
     <span class="exp-label">{{ locale.example1 }}:</span>
-    <span class="exp-value" id="example1">(x-3)^2</span>
+    <span class="exp-value">
+      <span class="math" id="example1">(x-3)^2</span>
+    </span>
   </div>
   <div>
     <span class="exp-label">{{ locale.example2 }}:</span>
-    <span class="exp-value" id="example2" v-html="'(a-b)^2 \\<space> &rArr; \\<space> a^2-2ab+b^2'"></span>
+    <span
+      class="exp-value"
+      id="example2"
+      v-html="'(a-b)^2 \\<space> &rArr; \\<space> a^2-2ab+b^2'"
+    ></span>
   </div>
   <div>
     <span class="exp-label">{{ locale.example3 }}:</span>
-    <span class="exp-value" style="vertical-align: 0.3rem" id="example3"
-       v-html="'a=x, \\<space> b=3'"></span
-    >
+    <span
+      class="exp-value"
+      style="vertical-align: 0.3rem"
+      id="example3"
+      v-html="'a=x, \\<space> b=3'"
+    ></span>
   </div>
   <div class="exp-bottom">
     <span class="exp-label">{{ locale.example4 }}:</span>
-    <span class="exp-value" id="example4">x^2-2x3+3^2</span>
+    <span class="exp-value">
+      <span class="math" id="example4">x^2-2x3+3^2</span>
+    </span>
   </div>
 </template>
 
