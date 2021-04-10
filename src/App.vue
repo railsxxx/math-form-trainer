@@ -14,6 +14,9 @@ export default {
     AppNavigation: AppNavigationVue,
     MathKeypad: MathKeypadVue,
   },
+  mounted() {
+    this.$router.push({ name: "Trainer" });
+  },
 };
 </script>
 
