@@ -1,5 +1,5 @@
 {
-  "name": "math-rules",
+  "name": "math-form-trainer",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -28,20 +28,13 @@
     "env": {
       "node": true
     },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
+    "extends": ["plugin:vue/vue3-essential", "eslint:recommended"],
     "parserOptions": {
       "parser": "babel-eslint"
     },
     "rules": {}
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
+  "browserslist": ["> 1%", "last 2 versions", "not dead"],
   "keywords": [],
   "description": ""
 }
