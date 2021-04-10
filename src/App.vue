@@ -1,9 +1,6 @@
 <template>
   <router-view />
-  <math-keypad
-    class="keypad"
-    :mqmathfieldref:="this.gFocusMQref.value"
-  ></math-keypad>
+  <math-keypad class="keypad"></math-keypad>
   <app-navigation class="nav"></app-navigation>
 </template>
 
@@ -26,8 +23,8 @@ export default {
   box-sizing: border-box;
 }
 .math {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   background-color: #d7f8bb;
 }
 .editable {
