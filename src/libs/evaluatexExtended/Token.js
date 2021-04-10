@@ -11,8 +11,7 @@ export default class Token {
   }
 
   equals(token) {
-    return this.type === token.type &&
-      this.value === token.value;
+    return this.type === token.type && this.value === token.value;
   }
 
   toString() {
@@ -58,9 +57,19 @@ export default class Token {
     [Token.TYPE_POWER, /\^/],
     [Token.TYPE_NUMBER, /\d+(\.\d+)?/]
   ]);
-};
+}
 
 /**
  * Trivial tokens are those that can only have a single value, so printing their value is unnecessary.
  */
-const TRIVIAL_TOKENS = ["TPLUS", "TMINUS", "TTIMES", "TDIVIDE", "TWS", "TABS", "TBANG", "TCOMMA", "TPOWER"];
+const TRIVIAL_TOKENS = [
+  "TPLUS",
+  "TMINUS",
+  "TTIMES",
+  "TDIVIDE",
+  "TWS",
+  "TABS",
+  "TBANG",
+  "TCOMMA",
+  "TPOWER"
+];

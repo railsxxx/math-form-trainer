@@ -25,8 +25,7 @@ export default {
     },
   },
   watch: {
-    varValue(newValue) {
-      // console.log("RuleVarEdit: watch: varValue: newValue: ", newValue);
+    varValue() {
       // reinit on changes of varValue
       this.onInit();
     },

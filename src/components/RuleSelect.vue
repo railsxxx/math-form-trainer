@@ -114,6 +114,7 @@ export default {
           this.varMessage = this.locale.setVarToAdaptOK;
         }
       else this.varMessage = this.locale.setVarToAdapt;
+      this.doNothing(newMath);
       // update varValue from match if any
       if (varValue !== "") varValue = this.selectedRule[varName];
     },
@@ -121,6 +122,9 @@ export default {
       const left = this.selectedRule.left;
       this.selectedRule.left = this.selectedRule.right;
       this.selectedRule.right = left;
+      // reselect selectedRule
+      this.isSelected = false;
+      this.onSelect(this.selectedRule);
     },
     onSelect(selRule) {
       // first quit current rule edit
@@ -144,6 +148,7 @@ export default {
         ({ match, newMath } = matchRule(this.math, this.selectedRule));
         if (match === 0) this.varMessage = this.locale.setVarToAdaptWrongRule;
         else this.varMessage = this.locale.setVarToAdapt;
+        this.doNothing(newMath);
       }
     },
     onApply() {
@@ -180,6 +185,7 @@ export default {
       // notify
       this.$emit("editcancelled");
     },
+    doNothing() {},
   },
   mounted: function () {
     mqifyRules(this.rules, this.isSelected);

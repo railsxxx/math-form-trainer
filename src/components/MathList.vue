@@ -17,6 +17,7 @@
         :rule="item.rule"
         @itemedited="editItem(item.id, $event)"
         @itemdeleted="deleteItem(item.id)"
+        @deleteall="deleteAll"
       ></math-item>
     </li>
   </ul>
@@ -47,9 +48,8 @@ export default {
   },
   methods: {
     newMath: function (math) {
-      // clear previous work
-      this.mathItems = [];
-      localStorage.mathItems = "";
+      // clear all  work
+      this.deleteAll();
       // start new work
       this.addItem(math);
       // permanently store newMath
@@ -66,6 +66,11 @@ export default {
       // permanently store mathItems
       localStorage.mathItems = JSON.stringify(this.mathItems);
     },
+    editItem(mathId, obj) {
+      const itemToEdit = this.mathItems.find((item) => item.id === mathId);
+      itemToEdit.rule = obj.rule;
+      this.addItem(obj.math);
+    },
     deleteItem() {
       this.mathItems.pop();
       setLast(this.mathItems);
@@ -73,10 +78,10 @@ export default {
       // permanently store mathItems
       localStorage.mathItems = JSON.stringify(this.mathItems);
     },
-    editItem(mathId, obj) {
-      const itemToEdit = this.mathItems.find((item) => item.id === mathId);
-      itemToEdit.rule = obj.rule;
-      this.addItem(obj.math);
+    deleteAll() {
+      // clear all work
+      this.mathItems = [];
+      localStorage.mathItems = "";
     },
   },
 };

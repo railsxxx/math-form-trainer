@@ -21,6 +21,9 @@
       <button type="button" class="btn btn__primary" @click="deleteStep">
         {{ locale.back }}
       </button>
+      <button type="button" class="btn btn__primary" @click="deleteAll">
+        {{ locale.delete }}
+      </button>
     </div>
   </div>
   <rule-select
@@ -49,7 +52,7 @@ export default {
     math: String,
     rule: Object,
   },
-  emits: ["itemedited", "itemdeleted"],
+  emits: ["itemedited", "itemdeleted", "deleteall"],
   data: function () {
     return {
       isEditing: false,
@@ -77,6 +80,9 @@ export default {
     },
     deleteStep() {
       this.$emit("itemdeleted");
+    },
+    deleteAll() {
+      this.$emit("deleteall");
     },
     toggleToRuleSelect() {
       //console.log(this.$refs.editButton);
@@ -134,9 +140,4 @@ export default {
 </script>
 
 <style scoped>
-/* .math {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  background-color: #d7f8bb;
-} */
 </style>

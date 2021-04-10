@@ -135,7 +135,8 @@
 const MQ = window.MQ;
 export default {
   props: {
-    mqmathfieldref: Object, //triggering update of Keypad
+    //mqmathfieldref: Object, //triggering update of Keypad
+    // call from App.vue: :mqmathfieldref:="this.gFocusMQref.value"
   },
   data() {
     return {

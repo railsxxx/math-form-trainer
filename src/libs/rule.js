@@ -229,6 +229,7 @@ function match_bind(
       // track match in bindings
       bindings[patNode.id] = astNode.id;
       // check equal types
+      let countDiff;
       switch (astNode.type) {
         case Node.TYPE_NUMBER:
           if (astNode.value !== patNode.value) {
@@ -253,7 +254,7 @@ function match_bind(
           break;
         case Node.TYPE_SUM:
         case Node.TYPE_PRODUCT:
-          const countDiff = astNode.childrenCount - patNode.childrenCount;
+          countDiff = astNode.childrenCount - patNode.childrenCount;
           if (astNode.childrenCount > 2 && countDiff > 0) {
             // more children in astNode than in patNode, check additional matches
             let astNext = astNodeIter.next();

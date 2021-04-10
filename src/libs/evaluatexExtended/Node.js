@@ -40,10 +40,10 @@ export default class Node {
    */
   evaluate(vars) {
     let result = 0;
-
+    let evaluatedChildren;
     switch (this.type) {
       case Node.TYPE_FUNCTION:
-        const evaluatedChildren = this.children.map((childNode) =>
+        evaluatedChildren = this.children.map((childNode) =>
           childNode.evaluate(vars)
         );
         result = this.value.apply(this, evaluatedChildren);
@@ -356,6 +356,9 @@ export default class Node {
 }
 
 const UNARY_NODES = ["FACTORIAL", "FUNCTION", "INVERSE", "NEGATE"];
+
+doNothing(UNARY_NODES);
+function doNothing() {}
 
 const getID = (function () {
   let id = 1;

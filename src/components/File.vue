@@ -44,7 +44,8 @@ export default {
           const loadOn = this.onLoad;
           const fr = new FileReader();
           fr.readAsText(el.files[0]);
-          fr.onload = function (e) {
+          // fr.onload = function (e) {
+          fr.onload = function () {
             try {
               // console.log(e.target.result, JSON.parse(fr.result));
               loadOn(initRules(JSON.parse(fr.result)), el.files[0].name);

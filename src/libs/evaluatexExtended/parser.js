@@ -97,8 +97,8 @@ class Parser {
   sum() {
     let node = new Node(Node.TYPE_SUM);
     node.addChild(this.product());
-
-    while (true) {
+    const always = true;
+    while (always) {
       // Continue to accept chained addends
       if (this.accept(Token.TYPE_PLUS)) {
         node.addChild(this.product());
@@ -116,7 +116,8 @@ class Parser {
     let node = new Node(Node.TYPE_PRODUCT);
     node.addChild(this.power());
 
-    while (true) {
+    const always = true;
+    while (always) {
       // Continue to accept chained multiplicands
 
       if (this.accept(Token.TYPE_TIMES)) {
@@ -151,13 +152,13 @@ class Parser {
     // Don't create a new node immediately, since we need to parse postfix
     // operators like factorials, which come after a value.
     let node = {};
-
+    let cmdToken;
     if (this.accept(Token.TYPE_SYMBOL)) {
       node = new Node(Node.TYPE_SYMBOL, this.prevToken.value);
     } else if (this.accept(Token.TYPE_NUMBER)) {
       node = new Node(Node.TYPE_NUMBER, parseFloat(this.prevToken.value));
     } else if (this.accept(Token.TYPE_COMMAND)) {
-      const cmdToken = this.prevToken;
+      cmdToken = this.prevToken;
       node = new Node(Node.TYPE_FUNCTION, cmdToken.value);
       node.marker = cmdToken.name;
       node.name = cmdToken.name;
