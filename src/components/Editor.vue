@@ -135,11 +135,12 @@ import {
   //initRules,
   showRule,
   showRuleName,
-  mqifyRules,
+  // mqifyRules,
   stringifyRule,
 } from "../libs/rule.js";
 import evaluatex from "../libs/evaluatexExtended/evaluatex.js";
-let MQ = window.MQ;
+import { mqifyRules, createMQStaticField } from "../libs/mq.js";
+// let MQ = window.MQ;
 export default {
   components: {
     RuleVarEdit: RuleVarEditVue,
@@ -380,12 +381,14 @@ export default {
     },
   },
   mounted() {
-    MQ.StaticMath(document.getElementById("editRule"));
+    // MQ.StaticMath(document.getElementById("editRule"));
+    createMQStaticField("editRule");
     mqifyRules(this.rules, false);
     // console.log("Editor mounted !");
   },
   updated() {
-    MQ.StaticMath(document.getElementById("editRule"));
+    // MQ.StaticMath(document.getElementById("editRule"));
+    createMQStaticField("editRule");
     mqifyRules(this.rules, false);
     // console.log("Editor updated !");
   },

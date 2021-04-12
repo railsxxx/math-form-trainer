@@ -132,7 +132,8 @@
 </template>
 
 <script>
-const MQ = window.MQ;
+import { isMQEditField, createMQStaticField } from "../libs/mq.js";
+// const MQ = window.MQ;
 export default {
   props: {
     //mqmathfieldref: Object, //triggering update of Keypad
@@ -150,7 +151,8 @@ export default {
     },
     mqmathfield() {
       const refVal = this.gFocusMQref.value;
-      if (refVal instanceof MQ.EditableField && Object.keys(refVal).length > 0)
+      // if (refVal instanceof MQ.EditableField && Object.keys(refVal).length > 0)
+      if (isMQEditField(refVal) && Object.keys(refVal).length > 0)
         return refVal;
       return undefined;
     },
@@ -226,15 +228,24 @@ export default {
     // console.log("keypad: mounted ");
   },
   updated() {
-    MQ.StaticMath(document.getElementById("power2"));
-    MQ.StaticMath(document.getElementById("powerN"));
-    MQ.StaticMath(document.getElementById("sqrt"));
-    MQ.StaticMath(document.getElementById("sqrtN"));
-    MQ.StaticMath(document.getElementById("fOfX"));
-    MQ.StaticMath(document.getElementById("ePowerX"));
-    MQ.StaticMath(document.getElementById("ln"));
-    MQ.StaticMath(document.getElementById("sin"));
-    MQ.StaticMath(document.getElementById("cos"));
+    // MQ.StaticMath(document.getElementById("power2"));
+    // MQ.StaticMath(document.getElementById("powerN"));
+    // MQ.StaticMath(document.getElementById("sqrt"));
+    // MQ.StaticMath(document.getElementById("sqrtN"));
+    // MQ.StaticMath(document.getElementById("fOfX"));
+    // MQ.StaticMath(document.getElementById("ePowerX"));
+    // MQ.StaticMath(document.getElementById("ln"));
+    // MQ.StaticMath(document.getElementById("sin"));
+    // MQ.StaticMath(document.getElementById("cos"));
+    createMQStaticField("power2");
+    createMQStaticField("powerN");
+    createMQStaticField("sqrt");
+    createMQStaticField("sqrtN");
+    createMQStaticField("fOfX");
+    createMQStaticField("ePowerX");
+    createMQStaticField("ln");
+    createMQStaticField("sin");
+    createMQStaticField("cos");
     // console.log("keypad: updated ");
   },
 };

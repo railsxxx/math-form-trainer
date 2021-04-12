@@ -39,7 +39,8 @@
 <script>
 import RuleSelectVue from "./RuleSelect.vue";
 import { showRule } from "../libs/rule.js";
-let MQ = window.MQ;
+import { createMQStaticField } from "../libs/mq.js";
+// let MQ = window.MQ;
 //   :class="isLast ? 'editable' : ''"
 
 export default {
@@ -123,18 +124,23 @@ export default {
     },
   },
   mounted() {
-    let el = document.getElementById(this.staticMathId);
-    this.staticMathMQ = MQ.StaticMath(el);
-    el = document.getElementById(this.editRule);
-    MQ.StaticMath(el);
-    el = document.getElementById(this.errorRule);
-    MQ.StaticMath(el);
+    // let el = document.getElementById(this.staticMathId);
+    // this.staticMathMQ = MQ.StaticMath(el);
+    // el = document.getElementById(this.editRule);
+    // MQ.StaticMath(el);
+    // el = document.getElementById(this.errorRule);
+    // MQ.StaticMath(el);
+    this.staticMathMQ = createMQStaticField(this.staticMathId);
+    createMQStaticField(this.editRule);
+    createMQStaticField(this.errorRule);
   },
   updated() {
-    let el = document.getElementById(this.editRule);
-    MQ.StaticMath(el);
-    el = document.getElementById(this.errorRule);
-    MQ.StaticMath(el);
+    // let el = document.getElementById(this.editRule);
+    // MQ.StaticMath(el);
+    // el = document.getElementById(this.errorRule);
+    // MQ.StaticMath(el);
+    createMQStaticField(this.editRule);
+    createMQStaticField(this.errorRule);
   },
 };
 </script>

@@ -34,7 +34,8 @@
 </template>
 
 <script>
-let MQ = window.MQ;
+import { createMQStaticField } from "../libs/mq.js";
+// let MQ = window.MQ;
 export default {
   data() {
     return {
@@ -42,10 +43,14 @@ export default {
     };
   },
   mounted() {
-    MQ.StaticMath(document.getElementById("example1"));
-    MQ.StaticMath(document.getElementById("example2"));
-    MQ.StaticMath(document.getElementById("example3"));
-    MQ.StaticMath(document.getElementById("example4"));
+    // MQ.StaticMath(document.getElementById("example1"));
+    // MQ.StaticMath(document.getElementById("example2"));
+    // MQ.StaticMath(document.getElementById("example3"));
+    // MQ.StaticMath(document.getElementById("example4"));
+    createMQStaticField("example1");
+    createMQStaticField("example2");
+    createMQStaticField("example3");
+    createMQStaticField("example4");
   },
 };
 </script>

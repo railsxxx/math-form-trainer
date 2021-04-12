@@ -55,11 +55,12 @@ import {
   addFrontRule,
   matchRule,
   isAllVarsFilled,
-  mqifyRules,
+  //mqifyRules,
   showRuleName,
   showRule,
   showRuleNoMatch,
 } from "../libs/rule.js";
+import { mqifyRules } from "../libs/mq.js";
 // import evaluatex from "../libs/evaluatex/evaluatex.js";
 export default {
   components: {
