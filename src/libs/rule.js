@@ -1,7 +1,7 @@
 import evaluatex from "./evaluatexExtended/evaluatex.js";
 import Node from "./evaluatexExtended/Node.js";
 
-let MQ = window.MQ;
+// let MQ = window.MQ;
 
 export function initRules(arrRules) {
   let arrInit = [];
@@ -31,19 +31,19 @@ export function isAllVarsFilled(selectedRule) {
   }
   return true;
 }
-export function mqifyRules(rules, isSelected) {
-  if (isSelected) {
-    MQ.StaticMath(document.getElementById("selectedRule"));
-  } else {
-    let ruleId = "";
-    rules.forEach((item, index) => {
-      if (item.vars) {
-        ruleId = "rule_" + index;
-        MQ.StaticMath(document.getElementById(ruleId));
-      }
-    });
-  }
-}
+// export function mqifyRules(rules, isSelected) {
+//   if (isSelected) {
+//     MQ.StaticMath(document.getElementById("selectedRule"));
+//   } else {
+//     let ruleId = "";
+//     rules.forEach((item, index) => {
+//       if (item.vars) {
+//         ruleId = "rule_" + index;
+//         MQ.StaticMath(document.getElementById(ruleId));
+//       }
+//     });
+//   }
+// }
 export function downloadRules(obj, filename) {
   const json = JSON.stringify(obj);
   const element = document.createElement("a");
